@@ -1,4 +1,4 @@
-package com.group.hotel.commom.response;
+package com.group.hotel.common.response;
 
 import lombok.*;
 import java.util.List;

@@ -4,6 +4,8 @@ import com.group.hotel.enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
@@ -19,6 +21,7 @@ public class Booking {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private User customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
