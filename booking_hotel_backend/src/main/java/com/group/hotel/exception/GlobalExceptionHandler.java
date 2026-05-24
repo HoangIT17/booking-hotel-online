@@ -10,13 +10,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.stream.Collectors;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,11 +51,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(BaseResponse.error(403, "Bạn không có quyền thực hiện chức năng này!"));
     }
-    @ExceptionHandler(FurnitureConflictException.class)
-    public ResponseEntity<BaseResponse<Void>> handleFurnitureConflict(FurnitureConflictException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(BaseResponse.error(409, ex.getMessage()));
-    }
 
     // 4. Bắt lỗi Security: Sai tài khoản / mật khẩu lúc Login
     @ExceptionHandler(BadCredentialsException.class)
@@ -93,18 +82,28 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(BaseResponse.error(500, "Hệ thống đang gặp sự cố, vui lòng thử lại sau!"));
     }
+
     @ExceptionHandler(FurnitureNotFoundException.class)
-    public ResponseEntity<BaseResponse<Void>> handleFurnitureNotFound(FurnitureNotFoundException ex){
+    public ResponseEntity<BaseResponse<Void>> handleFurnitureNotFound(FurnitureNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(BaseResponse.error(404, ex.getMessage()));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<BaseResponse<Void>> handleValidation(MethodArgumentNotValidException ex) {
-        String message = ex.getBindingResult().getFieldErrors().stream()
-                .map(err -> err.getField() + ": " + err.getDefaultMessage())
-                .collect(Collectors.joining(", "));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(BaseResponse.error(400, message));
+    @ExceptionHandler(FurnitureConflictException.class)
+    public ResponseEntity<BaseResponse<Void>> handleFurnitureConflict(FurnitureConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(BaseResponse.error(409, ex.getMessage()));
+    }
+
+    @ExceptionHandler(RoomTypeNotFoundException.class)
+    public ResponseEntity<BaseResponse<Void>> handleRoomTypeNotFound(RoomTypeNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(BaseResponse.error(404, ex.getMessage()));
+    }
+
+    @ExceptionHandler(RoomImageNotFoundException.class)
+    public ResponseEntity<BaseResponse<Void>> handleRoomImageNotFound(RoomImageNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(BaseResponse.error(404, ex.getMessage()));
     }
 }
