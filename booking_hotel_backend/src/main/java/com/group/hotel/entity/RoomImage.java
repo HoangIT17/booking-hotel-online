@@ -16,6 +16,9 @@ public class RoomImage {
     @JoinColumn(name = "room_type_id")
     private RoomType roomType;
 
-    @Column(name = "image_url", length = 255)
+    @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(name = "is_thumbnail")
+    private Boolean isThumbnail;
 }
