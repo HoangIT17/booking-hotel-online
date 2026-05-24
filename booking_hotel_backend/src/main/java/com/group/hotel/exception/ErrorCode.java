@@ -16,6 +16,7 @@ public enum ErrorCode {
     EMAIL_EXISTED(400, "Email đã tồn tại trong hệ thống", HttpStatus.BAD_REQUEST),
     ROLE_NOT_FOUND(400, "Role không hợp lệ hoặc không tồn tại", HttpStatus.BAD_REQUEST),
     UNAUTHORIZED(401, "Bạn chưa đăng nhập hoặc token hết hạn", HttpStatus.UNAUTHORIZED),
+    TOKEN_NOT_FOUND(1008, "Token không hợp lệ hoặc không tồn tại", HttpStatus.BAD_REQUEST),
     FORBIDDEN(403, "Bạn không có quyền thực hiện hành động này", HttpStatus.FORBIDDEN);
 
     private final int code;
