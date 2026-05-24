@@ -2,6 +2,7 @@ package com.group.hotel.service.impl;
 
 import com.group.hotel.dto.request.ChangePasswordRequest;
 import com.group.hotel.dto.request.LoginRequest;
+import com.group.hotel.dto.request.LogoutRequest;
 import com.group.hotel.dto.request.RegisterRequest;
 import com.group.hotel.dto.response.LoginResponse;
 import com.group.hotel.entity.Profile;
@@ -134,7 +135,14 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
     }
 
-
+    @Override
+    public void logout(LogoutRequest request) {
+        // Vì hệ thống chạy Stateless JWT (không lưu DB), nên khi nhận lệnh logout,
+        // Backend chỉ cần kiểm tra xem Client có gửi kèm Refresh Token lên không.
+        if (request.getRefreshToken() == null || request.getRefreshToken().isBlank()) {
+            throw new AppException(ErrorCode.TOKEN_NOT_FOUND);
+        }
+    }
 
 
 }

@@ -3,6 +3,7 @@ package com.group.hotel.controller.auth;
 import com.group.hotel.common.response.BaseResponse;
 import com.group.hotel.dto.request.ChangePasswordRequest;
 import com.group.hotel.dto.request.LoginRequest;
+import com.group.hotel.dto.request.LogoutRequest;
 import com.group.hotel.dto.request.RegisterRequest;
 import com.group.hotel.dto.response.LoginResponse;
 import com.group.hotel.service.AuthService;
@@ -46,5 +47,15 @@ public class AuthController {
     public ResponseEntity<BaseResponse<Void>> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
         authService.changePassword(request);
         return ResponseEntity.ok(BaseResponse.success(null, "Đổi mật khẩu thành công!"));
+    }
+
+    /**
+     * API: Đăng xuất hệ thống.
+     * URI: POST /api/v1/auth/logout
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<BaseResponse<Void>> logout(@Valid @RequestBody LogoutRequest request) {
+        authService.logout(request);
+        return ResponseEntity.ok(BaseResponse.success(null, "Đăng xuất thành công!"));
     }
 }
