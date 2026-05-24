@@ -3,6 +3,9 @@ package com.group.hotel.entity;
 import com.group.hotel.enums.HousekeepingStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,6 +21,7 @@ public class HousekeepingLog {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "staff_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private User staff;
 
     @Column(name = "start_time")

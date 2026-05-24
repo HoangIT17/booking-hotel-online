@@ -3,6 +3,9 @@ package com.group.hotel.entity;
 import com.group.hotel.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.LocalDate;
 
 @Entity
@@ -15,6 +18,7 @@ public class Profile {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private User user;
 
     @Column(name = "full_name", length = 100)
@@ -23,6 +27,9 @@ public class Profile {
     @Column(length = 20)
     private String phone;
 
+    @Column(columnDefinition = "TEXT")
+    private String avatar;
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
@@ -30,6 +37,7 @@ public class Profile {
 
     @Column(columnDefinition = "TEXT")
     private String address;
+
 
     @Column(name = "experience_years")
     private Integer experienceYears;
