@@ -32,6 +32,9 @@ public class Room {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    private boolean isDeleted = false;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

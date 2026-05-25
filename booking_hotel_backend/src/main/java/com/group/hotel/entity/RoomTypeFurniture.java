@@ -8,6 +8,7 @@ import lombok.Setter;
 @Table(name = "room_type_furniture")
 @Getter
 @Setter
+
 public class RoomTypeFurniture {
 
     @Id
