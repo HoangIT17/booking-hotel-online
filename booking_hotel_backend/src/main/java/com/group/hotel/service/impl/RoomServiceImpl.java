@@ -1,42 +1,50 @@
 package com.group.hotel.service.impl;
 
+import com.group.hotel.dto.request.MaintenanceRequest;
 import com.group.hotel.dto.request.RoomCreateRequest;
 import com.group.hotel.dto.request.RoomSearchRequest;
 import com.group.hotel.dto.request.RoomUpdateRequest;
-import com.group.hotel.dto.response.RoomResponse;
-import com.group.hotel.entity.Room;
-import com.group.hotel.entity.RoomType;
+import com.group.hotel.dto.response.*;
+import com.group.hotel.entity.*;
+import com.group.hotel.enums.IncidentStatus;
 import com.group.hotel.exception.RoomConflictException;
 import com.group.hotel.exception.RoomNotFoundException;
 import com.group.hotel.exception.RoomTypeNotFoundException;
 import com.group.hotel.mapper.RoomMapper;
-import com.group.hotel.repository.RoomRepository;
-import com.group.hotel.repository.RoomTypeRepository;
+import com.group.hotel.repository.*;
 import com.group.hotel.service.RoomService;
 import com.group.hotel.enums.RoomStatus;
 import com.group.hotel.specification.RoomSpecification;
 import com.group.hotel.common.response.PageResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.Arrays;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
     private final RoomTypeRepository roomTypeRepository;
+    private final RoomTypeFurnitureRepository roomTypeFurnitureRepository;
+    private final IncidentRepository incidentRepository;
+    private final UserRepository userRepository;
 
-    public RoomServiceImpl(RoomRepository roomRepository,
-                           RoomMapper roomMapper,
-                           RoomTypeRepository roomTypeRepository) {
-        this.roomRepository = roomRepository;
-        this.roomMapper = roomMapper;
-        this.roomTypeRepository = roomTypeRepository;
-    }
+//    public RoomServiceImpl(RoomRepository roomRepository,
+//                           RoomMapper roomMapper,
+//                           RoomTypeRepository roomTypeRepository, RoomTypeFurnitureRepository roomTypeFurnitureRepository, IncidentRepository incidentRepository) {
+//        this.roomRepository = roomRepository;
+//        this.roomMapper = roomMapper;
+//        this.roomTypeRepository = roomTypeRepository;
+//        this.roomTypeFurnitureRepository = roomTypeFurnitureRepository;
+//        this.incidentRepository = incidentRepository;
+//    }
 
     @Override
     public List<String> getStatuses() {
@@ -128,5 +136,107 @@ public class RoomServiceImpl implements RoomService {
 
         room.setDeleted(false);
         return roomMapper.toResponse(roomRepository.save(room));
+    }
+
+    @Override
+    public RoomTypeDetailResponse getRoomTypeDetail(String roomNumber) {
+
+        // 1. Validate input
+        if (roomNumber == null || roomNumber.isBlank()) {
+            throw new RoomConflictException("Số phòng không được phép để trống");
+        }
+
+        // 2. Get room
+        Room room = (Room) roomRepository
+                .findByRoomNumberAndIsDeletedFalse(roomNumber)
+                .orElseThrow(RoomNotFoundException::new);
+
+        // 3. Get furniture list by room type
+        List<RoomTypeFurniture> roomFurnitures =
+                roomTypeFurnitureRepository.findByRoomType(room.getRoomType());
+
+        List<FurnitureItemResponse> furnitureResponses = roomFurnitures.stream()
+                .map((RoomTypeFurniture item) -> {
+
+                    var furniture = item.getFurniture();
+
+                    String type = (furniture.getFurnitureType() != null)
+                            ? furniture.getFurnitureType().name()
+                            : "UNKNOWN";
+
+                    String desc = (furniture.getDescription() != null)
+                            ? furniture.getDescription()
+                            : "";
+
+                    return FurnitureItemResponse.builder()
+                            .furnitureId(furniture.getId())
+                            .furnitureName(furniture.getFurnitureName())
+                            .furnitureType(type)
+                            .quantity(item.getQuantity())
+                            .description(desc)
+                            .incidentStatus(null)
+                            .build();
+                })
+                .toList();
+
+        // 4. Get incident history (null-safe + type-safe)
+        List<IncidentHistoryResponse> incidentResponses =
+                incidentRepository
+                        .findByRoom_IdOrderByCreatedAtDesc(room.getId())
+                        .stream()
+                        .map((com.group.hotel.entity.Incident incident) ->
+                                IncidentHistoryResponse.builder()
+                                        .id(incident.getId())
+                                        .description(incident.getDescription())
+                                        .status(incident.getStatus() != null
+                                                ? incident.getStatus().name()
+                                                : null)
+                                        .createdAt(incident.getCreatedAt())
+                                        .build()
+                        )
+                        .toList();
+
+        // 5. Return response
+        return RoomTypeDetailResponse.builder()
+                .id(room.getRoomType().getId())
+                .typeName(String.valueOf(room.getRoomType().getTypeName()))
+                .basePrice(room.getRoomType().getBasePrice())
+                .area(room.getRoomType().getArea())
+                .maxPeople(room.getRoomType().getMaxPeople())
+                .description(room.getRoomType().getDescription())
+                .incidentHistory(incidentResponses)
+                .createdAt(room.getRoomType().getCreatedAt())
+                .updatedAt(room.getRoomType().getUpdatedAt())
+                .build();
+    }
+
+    @Override
+    public MaintenanceResponse createMaintenanceRequest(MaintenanceRequest request, Long staffId) {
+
+        Room room = roomRepository.findByRoomNumber(request.getRoomNumber())
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
+        User staff = userRepository.findById(staffId)
+                .orElseThrow(() -> new RuntimeException("Staff not found"));
+
+        // TODO: upload image (AWS/S3/local)
+        String imageUrl = null;
+        if (request.getImage() != null && !request.getImage().isEmpty()) {
+            imageUrl = request.getImage().getOriginalFilename();
+        }
+
+        Incident incident = new Incident();
+        incident.setRoom(room);        // ✅ FIX
+        incident.setStaff(staff);      // ✅ FIX
+        incident.setDescription(request.getIncidentDescription());
+        incident.setStatus(IncidentStatus.PENDING);
+
+        incidentRepository.save(incident);
+
+        MaintenanceResponse response = new MaintenanceResponse();
+        response.setTicketId("MT-" + incident.getId());
+        response.setStatus(incident.getStatus().name());
+
+        return response;
     }
 }

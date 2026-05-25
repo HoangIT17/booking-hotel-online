@@ -1,6 +1,7 @@
 package com.group.hotel.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class RoomTypeDetailResponse {
     private Long id;
     private String typeName;
@@ -20,6 +22,7 @@ public class RoomTypeDetailResponse {
     private String description;
     private List<RoomImageResponse> images;
     private List<FurnitureInRoomTypeResponse> furniture;
+    private List<IncidentHistoryResponse> incidentHistory;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

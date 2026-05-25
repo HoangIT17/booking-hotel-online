@@ -26,4 +26,7 @@ public class RoomTypeFurniture {
 
     @Column(name = "quantity")
     private Integer quantity;
+
+    public RoomTypeFurniture(Object o, RoomType roomType, Furniture furniture, Integer quantity) {
+    }
 }
