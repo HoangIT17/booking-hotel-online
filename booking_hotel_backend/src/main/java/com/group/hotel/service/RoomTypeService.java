@@ -13,4 +13,5 @@ public interface RoomTypeService {
     RoomTypeDetailResponse getRoomTypeById(Long id);
     RoomTypeResponse update(Long id, RoomTypeUpdateRequest roomTypeUpdateRequest);
     void furnituresMapping(Long id, RoomTypeFurnitureRequest roomTypeFurnitureRequest);
+    List<String> getTypes();
 }

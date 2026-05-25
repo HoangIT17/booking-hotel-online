@@ -12,4 +12,5 @@ public interface FurnitureService {
     FurnitureResponse create(FurnitureCreateRequest furnitureCreateRequest);
     FurnitureResponse update(Long id, FurnitureUpdateRequest furnitureUpdateRequest);
     void delete(Long id);
+    List<String> getTypes();
 }

@@ -10,12 +10,14 @@ import com.group.hotel.exception.FurnitureNotFoundException;
 import com.group.hotel.mapper.FurnitureMapper;
 import com.group.hotel.repository.FurnitureRepository;
 import com.group.hotel.repository.RoomTypeFurnitureRepository;
+import com.group.hotel.enums.FurnitureType;
 import com.group.hotel.service.FurnitureService;
 import com.group.hotel.specification.FurnitureSpecification;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -79,5 +81,12 @@ public class FurnitureServiceImpl implements FurnitureService {
         }
 
         furnitureRepository.delete(furniture);
+    }
+
+    @Override
+    public List<String> getTypes() {
+        return Arrays.stream(FurnitureType.values())
+                .map(Enum::name)
+                .toList();
     }
 }

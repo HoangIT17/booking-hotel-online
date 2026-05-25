@@ -21,17 +21,20 @@ public class FurnitureController {
     }
 
     @GetMapping("/api/admin/furnitures")
-    public ResponseEntity<BaseResponse<List<FurnitureResponse>>> getAll(@ModelAttribute FurnitureSearchRequest furnitureSearchRequest){
+    public ResponseEntity<BaseResponse<List<FurnitureResponse>>> getAll(
+            @ModelAttribute FurnitureSearchRequest furnitureSearchRequest){
         return ResponseEntity.ok(BaseResponse.success(furnitureService.getAll(furnitureSearchRequest)));
     }
 
     @PostMapping("/api/admin/furnitures")
-    public ResponseEntity<BaseResponse<FurnitureResponse>> create(@Valid @RequestBody FurnitureCreateRequest furnitureCreateRequest){
+    public ResponseEntity<BaseResponse<FurnitureResponse>> create(
+            @Valid @RequestBody FurnitureCreateRequest furnitureCreateRequest){
         return ResponseEntity.ok(BaseResponse.success(furnitureService.create(furnitureCreateRequest)));
     }
 
     @PutMapping("/api/admin/furnitures/{id}")
-    public ResponseEntity<BaseResponse<FurnitureResponse>> update(@PathVariable Long id, @RequestBody FurnitureUpdateRequest furnitureUpdateRequest){
+    public ResponseEntity<BaseResponse<FurnitureResponse>> update(
+            @PathVariable Long id, @Valid @RequestBody FurnitureUpdateRequest furnitureUpdateRequest){
         return ResponseEntity.ok(BaseResponse.success(furnitureService.update(id, furnitureUpdateRequest)));
     }
 
@@ -39,5 +42,10 @@ public class FurnitureController {
     public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id){
         furnitureService.delete(id);
         return ResponseEntity.ok(BaseResponse.success(null));
+    }
+
+    @GetMapping("/api/admin/furnitures/types")
+    public ResponseEntity<BaseResponse<List<String>>> getTypes() {
+        return ResponseEntity.ok(BaseResponse.success(furnitureService.getTypes()));
     }
 }

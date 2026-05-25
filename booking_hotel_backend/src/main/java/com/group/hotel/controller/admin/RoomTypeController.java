@@ -7,6 +7,7 @@ import com.group.hotel.dto.request.RoomTypeUpdateRequest;
 import com.group.hotel.dto.response.RoomTypeDetailResponse;
 import com.group.hotel.dto.response.RoomTypeResponse;
 import com.group.hotel.service.RoomTypeService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,7 @@ public class RoomTypeController {
     @PutMapping("/api/admin/room-types/{id}")
     public ResponseEntity<BaseResponse<RoomTypeResponse>> update(
             @PathVariable Long id,
-            @RequestBody RoomTypeUpdateRequest roomTypeUpdateRequest){
+            @Valid @RequestBody RoomTypeUpdateRequest roomTypeUpdateRequest){
         return ResponseEntity.ok(BaseResponse.success(roomTypeService.update(id, roomTypeUpdateRequest)));
     }
 
@@ -45,5 +46,10 @@ public class RoomTypeController {
             @RequestBody RoomTypeFurnitureRequest request) {
         roomTypeService.furnituresMapping(id, request);
         return ResponseEntity.ok(BaseResponse.success(null));
+    }
+
+    @GetMapping("/api/admin/room-types/types")
+    public ResponseEntity<BaseResponse<List<String>>> getTypes() {
+        return ResponseEntity.ok(BaseResponse.success(roomTypeService.getTypes()));
     }
 }

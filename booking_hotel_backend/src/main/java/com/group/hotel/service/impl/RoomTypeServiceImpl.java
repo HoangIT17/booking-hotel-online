@@ -16,12 +16,14 @@ import com.group.hotel.repository.FurnitureRepository;
 import com.group.hotel.repository.RoomImageRepository;
 import com.group.hotel.repository.RoomTypeFurnitureRepository;
 import com.group.hotel.repository.RoomTypeRepository;
+import com.group.hotel.enums.RoomTypeName;
 import com.group.hotel.service.RoomTypeService;
 import com.group.hotel.specification.RoomTypeSpecification;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -131,5 +133,12 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 .toList();
 
         roomTypeFurnitureRepository.saveAll(newList);
+    }
+
+    @Override
+    public List<String> getTypes() {
+        return Arrays.stream(RoomTypeName.values())
+                .map(Enum::name)
+                .toList();
     }
 }
