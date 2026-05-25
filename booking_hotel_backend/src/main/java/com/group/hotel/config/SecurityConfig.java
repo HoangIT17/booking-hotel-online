@@ -59,6 +59,7 @@ public class SecurityConfig {
                         .requestMatchers("/RoomImages/**").permitAll()
                         .requestMatchers("/api/admin/furnitures/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/admin/room-types/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")
                         .anyRequest().authenticated()
                 );
 

@@ -106,4 +106,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(BaseResponse.error(404, ex.getMessage()));
     }
+
+    @ExceptionHandler(RoomConflictException.class)
+    public ResponseEntity<BaseResponse<Void>> handleRoomConflict(RoomConflictException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(BaseResponse.error(409, ex.getMessage()));
+    }
+
+    @ExceptionHandler(RoomNotFoundException.class)
+    public ResponseEntity<BaseResponse<Void>> handleRoomNotFound(RoomNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(BaseResponse.error(404, ex.getMessage()));
+    }
 }
