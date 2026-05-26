@@ -1,6 +1,6 @@
 package com.group.hotel.security;
 
-import com.group.hotel.entity.User;
+import com.group.hotel.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

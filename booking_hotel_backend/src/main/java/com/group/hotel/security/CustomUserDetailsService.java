@@ -1,7 +1,7 @@
 package com.group.hotel.security;
 
-import com.group.hotel.entity.User;
-import com.group.hotel.repository.UserRepository;
+import com.group.hotel.user.entity.User;
+import com.group.hotel.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

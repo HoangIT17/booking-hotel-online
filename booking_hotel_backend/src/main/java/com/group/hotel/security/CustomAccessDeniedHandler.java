@@ -2,7 +2,7 @@ package com.group.hotel.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.group.hotel.common.response.BaseResponse;
-import com.group.hotel.exception.ErrorCode;
+import com.group.hotel.common.exception.ErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,6 +1,6 @@
 package com.group.hotel.security;
 
-import com.group.hotel.entity.User;
+import com.group.hotel.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
