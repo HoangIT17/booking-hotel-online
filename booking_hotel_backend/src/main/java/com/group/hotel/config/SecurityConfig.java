@@ -18,18 +18,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-<<<<<<< HEAD
+
 import org.springframework.security.config.Customizer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-=======
+
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
->>>>>>> feature/auth
+
 
 @Configuration
 @EnableWebSecurity
@@ -66,17 +66,17 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
-<<<<<<< HEAD
+
                         .requestMatchers("/RoomImages/**").permitAll()
                         .requestMatchers("/api/admin/furnitures/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/admin/room-types/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")
-=======
+
 
                         // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
-                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
 
->>>>>>> feature/auth
+
                         .anyRequest().authenticated()
                 );
 
@@ -86,7 +86,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-<<<<<<< HEAD
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
@@ -96,11 +96,10 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
-=======
-
+    }
 
     @Bean
-    public CorsFilter corsFilter() {
+    public CorsFilter corsFilter () {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
@@ -119,6 +118,5 @@ public class SecurityConfig {
         // Áp dụng cấu hình trên cho toàn bộ các endpoint API
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
->>>>>>> feature/auth
     }
 }

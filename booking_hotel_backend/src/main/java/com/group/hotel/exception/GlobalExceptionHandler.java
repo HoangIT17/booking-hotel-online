@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
                 .body(BaseResponse.error(500, "Hệ thống đang gặp sự cố, vui lòng thử lại sau!"));
     }
 
-<<<<<<< HEAD
+
     @ExceptionHandler(FurnitureNotFoundException.class)
     public ResponseEntity<BaseResponse<Void>> handleFurnitureNotFound(FurnitureNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -118,9 +118,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<BaseResponse<Void>> handleRoomNotFound(RoomNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(BaseResponse.error(404, ex.getMessage()));
+
     }
-}
-=======
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
@@ -132,5 +131,5 @@ public class GlobalExceptionHandler {
         // Trả về mã 400 Bad Request kèm nội dung lỗi
         return ResponseEntity.badRequest().body(response);
     }
+
 }
->>>>>>> feature/auth
