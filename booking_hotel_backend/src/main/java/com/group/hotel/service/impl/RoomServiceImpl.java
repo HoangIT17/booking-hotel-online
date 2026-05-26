@@ -17,6 +17,8 @@ import com.group.hotel.enums.RoomStatus;
 import com.group.hotel.specification.RoomSpecification;
 import com.group.hotel.common.response.PageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -226,8 +228,8 @@ public class RoomServiceImpl implements RoomService {
         }
 
         Incident incident = new Incident();
-        incident.setRoom(room);        // ✅ FIX
-        incident.setStaff(staff);      // ✅ FIX
+        incident.setRoom(room);
+        incident.setStaff(staff);
         incident.setDescription(request.getIncidentDescription());
         incident.setStatus(IncidentStatus.PENDING);
 
@@ -239,4 +241,36 @@ public class RoomServiceImpl implements RoomService {
 
         return response;
     }
+
+    @Override
+    public Page<CleaningTaskResponse> getCleaningTasks(
+            String shift,
+            Integer floor,
+            Long staffId,
+            int page
+    ) {
+
+        Pageable pageable = PageRequest.of(page, 10); // 10 items / page
+
+        Page<Room> rooms = roomRepository.findByStatus(RoomStatus.DIRTY, pageable);
+
+        return rooms.map(room -> new CleaningTaskResponse(
+                room.getRoomNumber(),
+                room.getFloor(),
+                room.getStatus().name()
+        ));
+    }
+//    public List<CleaningTaskResponse> getCleaningTasks(String shift, Integer floor, Long staffId) {
+//
+//        List<Room> rooms = roomRepository.findByFloorAndStatus(floor, RoomStatus.DIRTY);
+//
+//        return rooms.stream()
+//                .map(room -> new CleaningTaskResponse(
+//                        room.getRoomNumber(),
+//                        room.getFloor(),
+//                        room.getStatus().name()
+//                ))
+//                .toList();
+//    }
+
 }

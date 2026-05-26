@@ -2,15 +2,16 @@ package com.group.hotel.controller.staff;
 
 import com.group.hotel.common.response.BaseResponse;
 import com.group.hotel.dto.request.MaintenanceRequest;
+import com.group.hotel.dto.response.CleaningTaskResponse;
 import com.group.hotel.dto.response.MaintenanceResponse;
 import com.group.hotel.dto.response.RoomTypeDetailResponse;
+import com.group.hotel.security.UserPrincipal;
 import com.group.hotel.service.RoomService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -27,11 +28,26 @@ public class StaffRoomController {
                 BaseResponse.success(roomService.getRoomTypeDetail(roomNumber))
         );
     }
-    @PostMapping("/maintenance-requests")
+    @PostMapping("s")
     public MaintenanceResponse createMaintenance(
             @ModelAttribute MaintenanceRequest request,
             @RequestHeader("staffId") Long staffId
     ) {
         return roomService.createMaintenanceRequest(request, staffId);
+    }
+    @GetMapping("/cleaning-tasks")
+    public ResponseEntity<?> getTasks(
+            Authentication authentication,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) String shift,
+            @RequestParam(required = false) Integer floor
+    ) {
+
+        UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
+        Long staffId = user.getId();
+
+        return ResponseEntity.ok(
+                roomService.getCleaningTasks(shift, floor, staffId, page)
+        );
     }
 }
