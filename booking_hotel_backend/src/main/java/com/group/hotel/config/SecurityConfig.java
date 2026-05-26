@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/RoomImages/**").permitAll()
+                        .requestMatchers("/api/customer/rooms/search/**").permitAll()
                         .requestMatchers("/api/admin/furnitures/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/admin/room-types/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")
