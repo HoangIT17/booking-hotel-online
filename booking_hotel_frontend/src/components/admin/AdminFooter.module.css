@@ -1,0 +1,21 @@
+.footer {
+  height: 40px;
+  background-color: #ffffff;
+  border-top: 1px solid #dee2e6;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #adb5bd;
+}
+
+.statusIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #198754; /* Success green */
+  display: inline-block;
+  margin-right: 5px;
+  box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.2);
+}   

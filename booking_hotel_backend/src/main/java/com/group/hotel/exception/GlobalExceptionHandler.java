@@ -82,4 +82,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(BaseResponse.error(500, "Hệ thống đang gặp sự cố, vui lòng thử lại sau!"));
     }
+
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
+
+        // Tạo một object JSON chứa trường "message" để Front-end dễ lấy
+        Map<String, String> response = new HashMap<>();
+        response.put("message", ex.getMessage()); // ex.getMessage() chính là "Tên đăng nhập đã tồn tại!"
+
+        // Trả về mã 400 Bad Request kèm nội dung lỗi
+        return ResponseEntity.badRequest().body(response);
+    }
 }

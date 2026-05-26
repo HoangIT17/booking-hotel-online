@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +18,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -27,6 +33,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,6 +48,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception
                         // Xử lý lỗi 401 (Chưa đăng nhập, Token sai/hết hạn)
@@ -53,7 +61,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
 
                         // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
-                        // .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
+                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
 
                         .anyRequest().authenticated()
                 );
@@ -62,5 +70,29 @@ public class SecurityConfig {
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+
+        // 1. Cho phép đính kèm Cookie / Token Auth hệ Stateless
+        config.setAllowCredentials(true);
+
+        // 2. 🌟 Sử dụng Pattern để chấp nhận TẤT CẢ các cổng từ localhost
+        config.setAllowedOriginPatterns(List.of("http://localhost:*"));
+
+        // 3. Cho phép tất cả các Header (Authorization, Content-Type,...)
+        config.setAllowedHeaders(List.of("*"));
+
+        // 4. Định nghĩa tường minh các HTTP Methods theo yêu cầu của bạn
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Áp dụng cấu hình trên cho toàn bộ các endpoint API
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 }
