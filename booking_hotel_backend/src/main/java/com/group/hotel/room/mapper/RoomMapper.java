@@ -2,7 +2,7 @@ package com.group.hotel.room.mapper;
 
 import com.group.hotel.room.dto.request.RoomCreateRequest;
 import com.group.hotel.room.dto.request.RoomUpdateRequest;
-import com.group.hotel.room.dto.response.RoomAvailableResponse;
+import com.group.hotel.booking.dto.response.RoomAvailableResponse;
 import com.group.hotel.room.dto.response.RoomResponse;
 import com.group.hotel.room.entity.Room;
 import org.mapstruct.BeanMapping;

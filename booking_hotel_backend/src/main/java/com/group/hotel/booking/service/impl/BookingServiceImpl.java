@@ -2,7 +2,7 @@ package com.group.hotel.booking.service.impl;
 
 import com.group.hotel.common.response.PageResponse;
 import com.group.hotel.booking.dto.request.SearchRoomAvailableRequest;
-import com.group.hotel.room.dto.response.RoomAvailableResponse;
+import com.group.hotel.booking.dto.response.RoomAvailableResponse;
 import com.group.hotel.room.entity.Room;
 import com.group.hotel.common.exception.RoomConflictException;
 import com.group.hotel.room.mapper.RoomMapper;

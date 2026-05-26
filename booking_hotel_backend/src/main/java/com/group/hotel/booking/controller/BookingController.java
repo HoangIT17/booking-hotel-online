@@ -3,7 +3,7 @@ package com.group.hotel.booking.controller;
 import com.group.hotel.common.response.BaseResponse;
 import com.group.hotel.common.response.PageResponse;
 import com.group.hotel.booking.dto.request.SearchRoomAvailableRequest;
-import com.group.hotel.room.dto.response.RoomAvailableResponse;
+import com.group.hotel.booking.dto.response.RoomAvailableResponse;
 import com.group.hotel.booking.service.BookingService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;

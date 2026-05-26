@@ -1,4 +1,4 @@
-package com.group.hotel.room.dto.response;
+package com.group.hotel.booking.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
