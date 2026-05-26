@@ -66,12 +66,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/RoomImages/**").permitAll()
-
-
-                        // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
-                        .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
-
-
+                        .requestMatchers("/api/customer/rooms/search/**").permitAll()
+                        .requestMatchers("/api/admin/furnitures/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/admin/room-types/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")
                         .anyRequest().authenticated()
                 );
 
