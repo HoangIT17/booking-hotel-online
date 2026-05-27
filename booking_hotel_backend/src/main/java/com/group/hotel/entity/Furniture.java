@@ -10,9 +10,15 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "furniture")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Furniture {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "furniture_name", length = 100)
@@ -22,8 +28,8 @@ public class Furniture {
     @Column(name = "furniture_type")
     private FurnitureType furnitureType;
 
-    @Column(name = "icon_name", length = 100)
-    private String iconName;
+    @Column(length = 100)
+    private String icon;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -33,5 +39,4 @@ public class Furniture {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
 }

@@ -1,5 +1,13 @@
 package com.group.hotel.enums;
 
 public enum FurnitureType {
-    ELECTRONIC, WOODEN, FABRIC, DECOR
+    BED,
+    ELECTRONIC,
+    BATHROOM,
+    TABLE,
+    CHAIR,
+    DECOR,
+    LIGHTING,
+    STORAGE,
+    KITCHEN
 }

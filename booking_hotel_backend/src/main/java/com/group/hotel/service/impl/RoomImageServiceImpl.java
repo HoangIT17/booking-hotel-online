@@ -1,7 +1,6 @@
 package com.group.hotel.service.impl;
 
 import com.group.hotel.dto.response.RoomImageResponse;
-import com.group.hotel.entity.RoomImage;
 import com.group.hotel.entity.RoomType;
 import com.group.hotel.exception.RoomImageNotFoundException;
 import com.group.hotel.exception.RoomTypeNotFoundException;

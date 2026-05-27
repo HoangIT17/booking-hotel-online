@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Bell, UserCircle, User, Key } from 'lucide-react';
+// import { Bell, UserCircle, User, Key } from 'lucide-react';
+import { UserCircle, User, Key } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { logoutThunk } from '../../redux/slices/authSlice';
 import styles from './Header.module.css';
@@ -8,9 +9,12 @@ const Header = ({ portalName }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    // 🌟 Lấy đúng Key từ localStorage dựa theo data hiện tại
-    const username = localStorage.getItem('username') || 'Admin';
-    const role = localStorage.getItem('role') || 'ADMIN';
+    // const username = localStorage.getItem('username')
+    // const role = localStorage.getItem('role')
+    const storedUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+
+const username = storedUser ? storedUser.username : 'Admin';
+const role = storedUser ? storedUser.role : 'ADMIN';
 
     const onLogout = async () => {
         // Gọi Redux để xóa state + local storage, sau đó đá về login
@@ -30,10 +34,10 @@ const Header = ({ portalName }) => {
 
         {/* Cụm bên phải */}
         <div className="d-flex align-items-center gap-3">
-          <button className={`${styles.notificationBtn} position-relative`}>
+          {/* <button className={`${styles.notificationBtn} position-relative`}>
             <Bell size={20} />
             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white" style={{ fontSize: '10px' }}>3</span>
-          </button>
+          </button> */}
 
           <div className="dropdown">
             <div 

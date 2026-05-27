@@ -1,6 +1,5 @@
 package com.group.hotel.repository;
 
-import com.group.hotel.entity.RoomImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
