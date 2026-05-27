@@ -11,6 +11,6 @@ public class RoomSearchRequest {
     private String roomNumber;
     private Integer floor;
     private String status;
-    private Long roomTypeId;
+    private String roomTypeName;
     private Boolean isDeleted;
 }

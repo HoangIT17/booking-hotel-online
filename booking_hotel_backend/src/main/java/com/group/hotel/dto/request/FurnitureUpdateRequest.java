@@ -13,7 +13,6 @@ public class FurnitureUpdateRequest {
     private String furnitureName;
     @NotBlank
     private String furnitureType;
-    @NotBlank
-    private String iconName;
+    private String icon;
     private String description;
 }

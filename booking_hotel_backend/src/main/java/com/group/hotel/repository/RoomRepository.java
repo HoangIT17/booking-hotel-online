@@ -8,7 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,9 @@ public interface RoomRepository
             @NotBlank String roomNumber,
             @NotNull Integer floor
     );
+    @Query("SELECT r FROM Room r LEFT JOIN FETCH r.furnitures WHERE r.id = :id")
+    Optional<Room> findByIdWithFurnitures(@Param("id") Long id);
+
     Optional<Room> findByRoomNumberAndIsDeletedFalse(String roomNumber);
     Page<Room> findByStatus(RoomStatus status, Pageable pageable);
 

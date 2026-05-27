@@ -9,7 +9,6 @@ import com.group.hotel.exception.FurnitureConflictException;
 import com.group.hotel.exception.FurnitureNotFoundException;
 import com.group.hotel.mapper.FurnitureMapper;
 import com.group.hotel.repository.FurnitureRepository;
-import com.group.hotel.repository.RoomTypeFurnitureRepository;
 import com.group.hotel.enums.FurnitureType;
 import com.group.hotel.service.FurnitureService;
 import com.group.hotel.specification.FurnitureSpecification;
@@ -24,22 +23,22 @@ import java.util.List;
 public class FurnitureServiceImpl implements FurnitureService {
     private final FurnitureRepository furnitureRepository;
     private final FurnitureMapper furnitureMapper;
-    private final RoomTypeFurnitureRepository roomTypeFurnitureRepository;
 
     public FurnitureServiceImpl(FurnitureRepository furnitureRepository,
-                                FurnitureMapper furnitureMapper,
-                                RoomTypeFurnitureRepository roomTypeFurnitureRepository){
+                                FurnitureMapper furnitureMapper){
         this.furnitureRepository = furnitureRepository;
         this.furnitureMapper = furnitureMapper;
-        this.roomTypeFurnitureRepository = roomTypeFurnitureRepository;
     }
 
     @Override
     public List<FurnitureResponse> getAll(FurnitureSearchRequest furnitureSearchRequest) {
         Specification<Furniture> spec = (root, query, builder) -> builder.conjunction();
 
-        if(furnitureSearchRequest.getFurnitureType() != null && !furnitureSearchRequest.getFurnitureType().isBlank()){
+        if (furnitureSearchRequest.getFurnitureType() != null && !furnitureSearchRequest.getFurnitureType().isBlank()) {
             spec = spec.and(FurnitureSpecification.hasFurnitureType(furnitureSearchRequest.getFurnitureType()));
+        }
+        if (furnitureSearchRequest.getFurnitureName() != null && !furnitureSearchRequest.getFurnitureName().isBlank()) {
+            spec = spec.and(FurnitureSpecification.hasNameContaining(furnitureSearchRequest.getFurnitureName()));
         }
 
         List<Furniture> furnitures = furnitureRepository.findAll(spec);
@@ -75,10 +74,6 @@ public class FurnitureServiceImpl implements FurnitureService {
     public void delete(Long id) {
         Furniture furniture = furnitureRepository.findById(id)
                 .orElseThrow(() -> new FurnitureNotFoundException());
-
-        if(roomTypeFurnitureRepository.existsByFurnitureId(id)){
-            throw new FurnitureConflictException("Không thể xóa - nội thất đang được sử dụng");
-        }
 
         furnitureRepository.delete(furniture);
     }

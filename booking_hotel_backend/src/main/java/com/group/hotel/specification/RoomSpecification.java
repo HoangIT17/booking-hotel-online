@@ -21,9 +21,9 @@ public class RoomSpecification {
                 builder.equal(root.get("status").as(String.class), status);
     }
 
-    public static Specification<Room> hasRoomTypeId(Long roomTypeId) {
+    public static Specification<Room> hasRoomType(String roomTypeName) {
         return (root, query, builder) ->
-                builder.equal(root.get("roomType").get("id"), roomTypeId);
+                builder.equal(root.get("roomType").as(String.class), roomTypeName);
     }
 
     public static Specification<Room> hasIsDeleted(Boolean isDeleted) {

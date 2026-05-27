@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoomUpdateRequest {
-    @NotNull
-    private Long roomTypeId;
+    @NotBlank
+    private String roomType;
     @NotBlank
     private String status;
     private String description;

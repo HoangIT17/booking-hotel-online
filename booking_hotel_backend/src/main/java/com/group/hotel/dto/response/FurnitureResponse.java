@@ -13,7 +13,7 @@ public class FurnitureResponse {
     private Long id;
     private String furnitureName;
     private String furnitureType;
-    private String iconName;
+    private String icon;
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

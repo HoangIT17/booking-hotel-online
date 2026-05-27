@@ -13,8 +13,8 @@ public class FurnitureCreateRequest {
     private String furnitureName;
     @NotBlank
     private String furnitureType;
-    @NotBlank
-    private String iconName;
-    @NotBlank
+
+    private String icon;
+
     private String description;
 }

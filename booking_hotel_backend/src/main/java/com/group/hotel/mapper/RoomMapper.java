@@ -2,20 +2,24 @@ package com.group.hotel.mapper;
 
 import com.group.hotel.dto.request.RoomCreateRequest;
 import com.group.hotel.dto.request.RoomUpdateRequest;
+import com.group.hotel.dto.response.RoomDetailResponse;
+import com.group.hotel.dto.response.RoomFurnitureResponse;
 import com.group.hotel.dto.response.RoomResponse;
+import com.group.hotel.entity.Furniture;
 import com.group.hotel.entity.Room;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
 
-    @Mapping(source = "roomType.id", target = "roomTypeId")
-    @Mapping(source = "roomType.typeName", target = "roomTypeName")
     RoomResponse toResponse(Room room);
+
+    RoomDetailResponse toDetailResponse(Room room);
+
+    RoomFurnitureResponse toFurnitureResponse(Furniture furniture);
 
     Room fromCreate(RoomCreateRequest roomCreateRequest);
 

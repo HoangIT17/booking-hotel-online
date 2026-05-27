@@ -11,12 +11,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class RoomResponse {
     private Long id;
+    private String roomType;
     private String roomNumber;
     private Integer floor;
     private String status;
-    private String description;
-    private Long roomTypeId;
-    private String roomTypeName;
     private boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

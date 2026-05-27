@@ -55,7 +55,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception
                         // Xử lý lỗi 401 (Chưa đăng nhập, Token sai/hết hạn)
@@ -67,10 +66,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
 
+                        .requestMatchers("/api/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/RoomImages/**").permitAll()
-                        .requestMatchers("/api/admin/furnitures/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/admin/room-types/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")
 
 
                         // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
@@ -86,18 +84,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOriginPattern("*");
-        config.addAllowedMethod("*");
-        config.addAllowedHeader("*");
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
-
     @Bean
     public CorsFilter corsFilter () {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -107,7 +93,7 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
 
         // 2. 🌟 Sử dụng Pattern để chấp nhận TẤT CẢ các cổng từ localhost
-        config.setAllowedOriginPatterns(List.of("http://localhost:*"));
+        config.setAllowedOriginPatterns(List.of("*"));
 
         // 3. Cho phép tất cả các Header (Authorization, Content-Type,...)
         config.setAllowedHeaders(List.of("*"));

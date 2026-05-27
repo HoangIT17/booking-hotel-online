@@ -20,6 +20,12 @@ public class FurnitureController {
         this.furnitureService = furnitureService;
     }
 
+
+    @GetMapping("/api/admin/furnitures/types")
+    public ResponseEntity<BaseResponse<List<String>>> getTypes() {
+        return ResponseEntity.ok(BaseResponse.success(furnitureService.getTypes()));
+    }
+
     @GetMapping("/api/admin/furnitures")
     public ResponseEntity<BaseResponse<List<FurnitureResponse>>> getAll(
             @ModelAttribute FurnitureSearchRequest furnitureSearchRequest){
@@ -42,10 +48,5 @@ public class FurnitureController {
     public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id){
         furnitureService.delete(id);
         return ResponseEntity.ok(BaseResponse.success(null));
-    }
-
-    @GetMapping("/api/admin/furnitures/types")
-    public ResponseEntity<BaseResponse<List<String>>> getTypes() {
-        return ResponseEntity.ok(BaseResponse.success(furnitureService.getTypes()));
     }
 }

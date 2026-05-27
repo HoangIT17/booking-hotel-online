@@ -13,16 +13,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RoomTypeDetailResponse {
+public class RoomDetailResponse {
     private Long id;
-    private String typeName;
-    private BigDecimal basePrice;
+    private String roomType;
+    private String roomNumber;
+    private Integer floor;
+    private BigDecimal price;
     private Double area;
     private Integer maxPeople;
+    private String imageUrl;
+    private String status;
     private String description;
-    private List<RoomImageResponse> images;
-    private List<FurnitureInRoomTypeResponse> furniture;
-    private List<IncidentHistoryResponse> incidentHistory;
+    private boolean isDeleted;
+    private List<RoomFurnitureResponse> furnitures;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
