@@ -8,13 +8,17 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-
-
 @Entity
 @Table(name = "furniture")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Furniture {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "furniture_name", length = 100)
@@ -23,6 +27,9 @@ public class Furniture {
     @Enumerated(EnumType.STRING)
     @Column(name = "furniture_type")
     private FurnitureType furnitureType;
+
+    @Column(length = 100)
+    private String icon;
 
     @Column(columnDefinition = "TEXT")
     private String description;

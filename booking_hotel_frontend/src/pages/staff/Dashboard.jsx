@@ -1,22 +1,9 @@
-import { useDispatch } from "react-redux";
-import { logoutThunk } from "../../redux/slices/authSlice";
-import useAuth from "../../hooks/useAuth";
+
 
 const DashboardStaff = () => {
-    const dispatch = useDispatch();
-    const { user } = useAuth(); // Lấy thông tin user ra test xem Redux có nhận không
-
     return (
-        <div style={{ padding: "50px", textAlign: "center" }}>
-            <h2>Trang Chủ Staff</h2>
-            <p>Xin chào: {user?.username}</p>
-            
-            <button 
-                onClick={() => dispatch(logoutThunk())}
-                style={{ marginTop: "20px", padding: "10px 20px", cursor: "pointer" }}
-            >
-                Đăng Xuất
-            </button>
+        <div>
+            <h1 className="text-2xl font-bold mb-4">Bảng Điều Khiển Nhân Viên</h1>
         </div>
     );
 };
