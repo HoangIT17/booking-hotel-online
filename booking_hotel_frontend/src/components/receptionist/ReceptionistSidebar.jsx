@@ -1,11 +1,11 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logoutThunk } from '../../redux/slices/authSlice';
-import styles from './Sidebar.module.css'; 
+import styles from '../admin/Sidebar.module.css';
 
 import logoImg from '../../assets/images/logohotel.png';
 
-const AdminSidebar = () => {
+const ReceptionistSidebar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -15,9 +15,7 @@ const AdminSidebar = () => {
   };
 
   const menuItems = [
-    { path: '/admin/dashboard', icon: 'fa-gauge-high', label: 'Trang chủ' },
-    { path: '/admin/users', icon: 'fa-users', label: 'Quản Lý Người Dùng' },
-    { path: '/admin/chatbot', icon: 'fa-robot', label: 'Quản Lý Chatbot' },
+    { path: '/receptionist/dashboard', icon: 'fa-gauge-high', label: 'Trang chủ' },
   ];
 
   return (
@@ -52,4 +50,4 @@ const AdminSidebar = () => {
   );
 };
 
-export default AdminSidebar;
+export default ReceptionistSidebar;

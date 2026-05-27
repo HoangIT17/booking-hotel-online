@@ -3,11 +3,11 @@ package com.group.hotel.entity;
 import com.group.hotel.enums.RoomStatus;
 import com.group.hotel.enums.RoomTypeName;
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
