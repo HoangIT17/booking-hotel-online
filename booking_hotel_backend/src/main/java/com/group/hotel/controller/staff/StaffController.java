@@ -60,4 +60,21 @@ public class StaffController {
                                 )
                 );
     }
+    @GetMapping("/cleaning-tasks")
+    public ResponseEntity<?> getCleaningTasks(
+
+            @RequestParam(required = false)
+            String shift,
+
+            @RequestParam(required = false)
+            Integer floor
+    ) {
+
+        return ResponseEntity.ok(
+                roomService.getCleaningTasks(
+                        shift,
+                        floor
+                )
+        );
+    }
 }

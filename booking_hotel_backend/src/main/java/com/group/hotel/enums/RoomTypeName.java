@@ -5,5 +5,6 @@ public enum RoomTypeName {
     SUPERIOR,
     DELUXE,
     VIP,
-    SUITE
+    SUITE,
+    FAMILY
 }

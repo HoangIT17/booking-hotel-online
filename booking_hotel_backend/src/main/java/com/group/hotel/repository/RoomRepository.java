@@ -30,4 +30,15 @@ public interface RoomRepository
     Optional<Room> findByRoomNumberAndIsDeletedFalse(String roomNumber);
     Page<Room> findByStatus(RoomStatus status, Pageable pageable);
 
+    List<Room> findByIsDeletedFalse();
+
+    List<Room> findByFloorAndIsDeletedFalse(Integer floor);
+
+    List<Room> findByStatusAndIsDeletedFalse(RoomStatus status);
+
+    List<Room> findByFloorAndStatusAndIsDeletedFalse(
+            Integer floor,
+            RoomStatus status
+    );
+
 }

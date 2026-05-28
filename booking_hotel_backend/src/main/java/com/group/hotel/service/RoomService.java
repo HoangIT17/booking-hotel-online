@@ -5,6 +5,7 @@ import com.group.hotel.dto.request.RoomCreateRequest;
 import com.group.hotel.dto.request.RoomSearchRequest;
 import com.group.hotel.dto.request.RoomUpdateRequest;
 import com.group.hotel.common.response.PageResponse;
+import com.group.hotel.dto.response.CleaningTaskResponse;
 import com.group.hotel.dto.response.MaintenanceResponse;
 import com.group.hotel.dto.response.RoomDetailResponse;
 import com.group.hotel.dto.response.RoomResponse;
@@ -27,6 +28,10 @@ public interface RoomService {
     RoomDetailResponse getRoomDetail(String roomNumber);
     MaintenanceResponse createMaintenanceRequest(
             CreateMaintenanceRequest request
+    );
+    List<CleaningTaskResponse> getCleaningTasks(
+            String shift,
+            Integer floor
     );
 
 }

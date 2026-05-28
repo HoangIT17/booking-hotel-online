@@ -30,7 +30,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -312,6 +311,43 @@ public class RoomServiceImpl implements RoomService {
                 .ticketId("MT-" + savedIncident.getId())
                 .status(savedIncident.getStatus().name())
                 .build();
+    }
+
+    @Override
+    public List<CleaningTaskResponse> getCleaningTasks(
+            String shift,
+            Integer floor
+    ) {
+
+        List<Room> rooms;
+
+        // Ví dụ:
+        // READY = đã dọn
+        // DIRTY = cần dọn
+        // CLEANING = đang dọn
+
+        if (floor != null) {
+            rooms = roomRepository
+                    .findByFloorAndIsDeletedFalse(floor);
+        } else {
+            rooms = roomRepository
+                    .findByIsDeletedFalse();
+        }
+
+        return rooms.stream()
+
+                // chỉ lấy phòng cần dọn
+                .filter(room ->
+                        room.getStatus().name().equals("DIRTY")
+                                || room.getStatus().name().equals("CLEANING")
+                )
+
+                .map(room -> CleaningTaskResponse.builder()
+                        .roomNumber(room.getRoomNumber())
+                        .floor(room.getFloor())
+                        .cleaningStatus(room.getStatus().name())
+                        .build())
+                .toList();
     }
 
 }
