@@ -1,0 +1,600 @@
+/* ===== FILTER BAR ===== */
+.filterBar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.625rem;
+    flex-wrap: wrap;
+}
+
+.filterInput {
+    flex: 1;
+    min-width: 120px;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+}
+
+.filterInputSm {
+    flex: 0 0 80px;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+}
+
+.filterSelect {
+    flex: 0 0 140px;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: #495057;
+    white-space: nowrap;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.filterBtn {
+    flex-shrink: 0;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    padding: 6px 12px !important;
+    white-space: nowrap;
+}
+
+/* ===== COUNTER ===== */
+.counter {
+    font-size: 12px;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.counter strong {
+    color: #0d6efd;
+}
+
+/* ===== TABLE ===== */
+.tableWrapper {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+}
+
+.table {
+    margin: 0;
+    font-size: 13px;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 8px 12px;
+    border-bottom: 2px solid #dee2e6;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding: 8px 12px;
+    vertical-align: middle;
+    color: #343a40;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9ff;
+}
+
+/* ===== DELETED ROW ===== */
+.deletedRow {
+    opacity: 0.6;
+    background-color: #fff5f5 !important;
+}
+
+.deletedRow:hover {
+    background-color: #ffeaea !important;
+}
+
+/* ===== ROOM NUMBER ===== */
+.roomNumberCell {
+    font-weight: 600;
+    color: #212529;
+}
+
+/* ===== BADGE ===== */
+.badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.actionGroup {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.btnDetail {
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 5px;
+    border: 1px solid #0d6efd;
+    color: #0d6efd;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btnDetail:hover {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.btnDelete {
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 5px;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btnDelete:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btnRestore {
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 5px;
+    border: 1px solid #198754;
+    color: #198754;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btnRestore:hover {
+    background-color: #198754;
+    color: white;
+}
+
+/* ===== EMPTY STATE ===== */
+.emptyState {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #adb5bd;
+}
+
+.emptyState p {
+    margin: 0.5rem 0 0;
+    font-size: 14px;
+}
+
+/* ===== LOADING ===== */
+.loadingWrapper {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+/* ===== PAGINATION ===== */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 0.75rem;
+}
+
+.pageInfo {
+    font-size: 13px;
+    color: #495057;
+    padding: 0 8px;
+}
+
+/* ===== MODAL ===== */
+.modalHeader {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 1rem 1.25rem;
+}
+
+.modalTitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+}
+
+.formLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 5px;
+}
+
+.formControl {
+    border-radius: 8px !important;
+    border: 1px solid #dee2e6;
+    font-size: 14px;
+    padding: 8px 12px;
+    transition: border-color 0.2s;
+}
+
+.formControl:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.helpText {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+.errorText {
+    font-size: 12px;
+    color: #dc3545;
+    margin-top: 4px;
+}
+
+/* ===== DELETE / RESTORE MODAL ===== */
+.deleteModalBody {
+    text-align: center;
+    padding: 1.5rem 1rem;
+}
+
+.deleteIcon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #fff5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: #dc3545;
+}
+
+.restoreIcon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #f0fff4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: #198754;
+}
+
+.deleteModalBody h6 {
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 0.5rem;
+}
+
+.deleteModalBody p {
+    font-size: 14px;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* ===== DETAIL MODAL — INFO TAB ===== */
+.infoGrid {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.infoCard {
+    flex: 0 0 calc(33.333% - 6px);
+    min-width: 90px;
+    background: white;
+    border-radius: 6px;
+    padding: 10px 12px;
+    border: 1px solid #e9ecef;
+}
+
+.infoLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 4px;
+}
+
+.infoValue {
+    font-size: 14px;
+    font-weight: 600;
+    color: #212529;
+}
+
+.sectionTitle {
+    font-size: 13px;
+    font-weight: 700;
+    color: #495057;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.furnitureCount {
+    font-size: 11px;
+    font-weight: 600;
+    background: #e8f0fe;
+    color: #0d6efd;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+.currentFurnitures {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.currentFurnitureTag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: #f0f4ff;
+    border: 1px solid #d0dcff;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #3d5a99;
+}
+
+.noFurnitureText {
+    font-size: 13px;
+    color: #adb5bd;
+    margin: 0;
+}
+
+/* ===== DETAIL MODAL — FURNITURE TAB ===== */
+.furnitureGroups {
+    max-height: 380px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.furnitureGroup {
+    margin-bottom: 16px;
+}
+
+.furnitureGroupTitle {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.furnitureGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.furnitureItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    background: white;
+    cursor: pointer;
+    font-size: 13px;
+    color: #495057;
+    transition: all 0.15s;
+    user-select: none;
+}
+
+.furnitureItem:hover {
+    border-color: #0d6efd;
+    background: #f0f4ff;
+}
+
+.furnitureItemSelected {
+    border-color: #0d6efd;
+    background: #e8f0fe;
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+.furnitureCheckbox {
+    cursor: pointer;
+}
+
+.furnitureIcon {
+    display: flex;
+    align-items: center;
+    color: inherit;
+}
+
+.furnitureName {
+    white-space: nowrap;
+}
+
+/* ===== DETAIL MODAL — IMAGE TAB ===== */
+.imageSection {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.imagePreviewBox {
+    flex: 0 0 240px;
+    height: 180px;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+.roomImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.imagePlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+    gap: 8px;
+}
+
+.imagePlaceholder p {
+    font-size: 13px;
+    margin: 0;
+}
+
+.imageUploadBox {
+    flex: 1;
+}
+
+.imageFileName {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 6px;
+}
+
+/* ===== DETAIL MODAL — TOP LAYOUT ===== */
+.detailTop {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.detailImageCol {
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detailImageWrapper {
+    display: block;
+    width: 220px;
+    height: 165px;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+    overflow: hidden;
+    background: #f8f9fa;
+    position: relative;
+    cursor: pointer;
+}
+
+.detailImageWrapper:hover .detailImageOverlay {
+    opacity: 1;
+}
+
+.detailImageOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border-radius: 10px;
+}
+
+.imageConfirmBar {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.imageConfirmActions {
+    display: flex;
+    gap: 6px;
+}
+
+/* ===== DETAIL MODAL — INFO COLUMN ===== */
+.detailInfoCol {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.infoGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.descriptionBox {
+    font-size: 13px;
+    color: #495057;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px 12px;
+    line-height: 1.5;
+    border: 1px solid #e9ecef;
+}
+
+/* ===== FURNITURE CHIPS IN TOP SECTION ===== */
+.furnitureChipsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 220px;
+}
+
+.furnitureChipsLabel {
+    font-size: 12px;
+    font-weight: 700;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}

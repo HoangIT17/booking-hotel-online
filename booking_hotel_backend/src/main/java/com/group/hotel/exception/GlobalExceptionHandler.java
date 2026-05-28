@@ -84,6 +84,31 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(FurnitureNotFoundException.class)
+    public ResponseEntity<BaseResponse<Void>> handleFurnitureNotFound(FurnitureNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(BaseResponse.error(404, ex.getMessage()));
+    }
+
+    @ExceptionHandler(FurnitureConflictException.class)
+    public ResponseEntity<BaseResponse<Void>> handleFurnitureConflict(FurnitureConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(BaseResponse.error(409, ex.getMessage()));
+    }
+
+    @ExceptionHandler(RoomConflictException.class)
+    public ResponseEntity<BaseResponse<Void>> handleRoomConflict(RoomConflictException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(BaseResponse.error(409, ex.getMessage()));
+    }
+
+    @ExceptionHandler(RoomNotFoundException.class)
+    public ResponseEntity<BaseResponse<Void>> handleRoomNotFound(RoomNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(BaseResponse.error(404, ex.getMessage()));
+
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
 
@@ -94,4 +119,5 @@ public class GlobalExceptionHandler {
         // Trả về mã 400 Bad Request kèm nội dung lỗi
         return ResponseEntity.badRequest().body(response);
     }
+
 }

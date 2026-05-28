@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Entity
 @Table(name = "rooms")
 @Getter
@@ -62,4 +63,7 @@ public class Room {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    private boolean isDeleted;
 }

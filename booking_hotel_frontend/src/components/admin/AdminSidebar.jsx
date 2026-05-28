@@ -17,6 +17,8 @@ const AdminSidebar = () => {
   const menuItems = [
     { path: '/admin/dashboard', icon: 'fa-gauge-high', label: 'Trang chủ' },
     { path: '/admin/users', icon: 'fa-users', label: 'Quản Lý Người Dùng' },
+    { path: '/admin/furnitures', icon: 'fa-couch', label: 'Quản Lý Nội Thất' },
+    { path: '/admin/rooms', icon: 'fa-door-open', label: 'Quản Lý Phòng' },
     { path: '/admin/chatbot', icon: 'fa-robot', label: 'Quản Lý Chatbot' },
   ];
 

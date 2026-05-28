@@ -1,6 +1,6 @@
 import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
-import { BrowserRouter } from "react-router-dom"; 
+import { BrowserRouter } from "react-router-dom";
 import store from './redux/store';
 import AppRoutes from "./routes/AppRoutes";
 
@@ -10,11 +10,11 @@ function App() {
       <BrowserRouter>
         <AppRoutes />
       </BrowserRouter>
-      
+
       <Toaster
         position="top-right"
         toastOptions={{
-          duration: 1500, 
+          duration: 1500,
           success: {
             style: { background: "#52c41a", color: "#fff" },
           },

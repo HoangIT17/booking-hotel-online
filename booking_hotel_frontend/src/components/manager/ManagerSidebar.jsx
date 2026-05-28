@@ -16,6 +16,8 @@ const ManagerSidebar = () => {
 
   const menuItems = [
     { path: '/manager/dashboard', icon: 'fa-gauge-high', label: 'Trang chủ' },
+    { path: '/manager/furnitures', icon: 'fa-couch', label: 'Quản Lý Nội Thất' },
+    { path: '/manager/rooms', icon: 'fa-door-open', label: 'Quản Lý Phòng' },
   ];
 
   return (

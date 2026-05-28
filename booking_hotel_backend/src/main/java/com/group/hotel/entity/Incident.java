@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 @Table(name = "incidents")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Incident {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

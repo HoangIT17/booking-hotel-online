@@ -1,0 +1,127 @@
+USE booking_hotel;
+
+-- =============================================
+-- TRUNCATE (chạy trước để reset dữ liệu)
+-- =============================================
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE room_furniture;
+TRUNCATE TABLE rooms;
+TRUNCATE TABLE furniture;
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- =============================================
+-- Seed: furniture
+-- =============================================
+INSERT INTO furniture (furniture_name, furniture_type, icon, description, created_at, updated_at) VALUES
+('Giường đôi',      'BED',        'BedDouble',     'Giường đôi 1m8, khung gỗ tự nhiên',          NOW(), NOW()),
+('Giường đơn',      'BED',        'Bed',           'Giường đơn 1m2, khung gỗ tự nhiên',          NOW(), NOW()),
+('Tủ quần áo',      'STORAGE',    'Shirt',         'Tủ 4 cánh, gỗ MDF phủ melamine',             NOW(), NOW()),
+('Bàn làm việc',    'TABLE',      'Laptop',        'Bàn gỗ kèm ghế văn phòng',                   NOW(), NOW()),
+('TV 55 inch',      'ELECTRONIC', 'Tv',            'Smart TV 55 inch 4K',                         NOW(), NOW()),
+('Điều hòa',        'ELECTRONIC', 'AirVent',       'Điều hòa inverter 2 chiều 12000 BTU',         NOW(), NOW()),
+('Tủ lạnh mini',    'ELECTRONIC', 'Refrigerator',  'Tủ lạnh mini 90L',                            NOW(), NOW()),
+('Máy sấy tóc',     'ELECTRONIC', 'Wind',          'Máy sấy tóc 2200W',                           NOW(), NOW()),
+('Sofa đôi',        'CHAIR',      'Sofa',          'Sofa 2 chỗ ngồi, bọc vải cao cấp',           NOW(), NOW()),
+('Rèm cửa',         'DECOR',      'PanelLeftOpen', 'Rèm vải dày 2 lớp chắn sáng',                NOW(), NOW()),
+('Tranh trang trí', 'DECOR',      'Image',         'Tranh canvas phong cảnh thiên nhiên',         NOW(), NOW()),
+('Đèn ngủ',         'LIGHTING',   'Lamp',          'Đèn ngủ để bàn ánh sáng vàng ấm',            NOW(), NOW());
+
+-- =============================================
+-- Seed: rooms
+-- furniture_id reference:
+--   1=Giường đôi, 2=Giường đơn, 3=Tủ quần áo, 4=Bàn làm việc
+--   5=TV, 6=Điều hòa, 7=Tủ lạnh, 8=Máy sấy tóc
+--   9=Sofa, 10=Rèm cửa, 11=Tranh, 12=Đèn ngủ
+-- =============================================
+
+-- Tầng 1: STANDARD (id 1-5)
+INSERT INTO rooms (room_type, room_number, floor, price, area, max_people, image_url, status, description, is_deleted, created_at, updated_at) VALUES
+('STANDARD', '101', 1, 500000,  20.0, 2, '/RoomImages/STANDARD.jpg', 'READY',    'Phòng hướng sân vườn', 0, NOW(), NOW()),
+('STANDARD', '102', 1, 500000,  20.0, 2, '/RoomImages/STANDARD.jpg', 'OCCUPIED', 'Phòng hướng sân vườn', 0, NOW(), NOW()),
+('STANDARD', '103', 1, 500000,  20.0, 2, '/RoomImages/STANDARD.jpg', 'READY',    'Phòng hướng sân vườn', 0, NOW(), NOW()),
+('STANDARD', '104', 1, 500000,  20.0, 2, '/RoomImages/STANDARD.jpg', 'CLEANING', 'Phòng hướng sân vườn', 0, NOW(), NOW()),
+('STANDARD', '105', 1, 500000,  20.0, 2, '/RoomImages/STANDARD.jpg', 'DIRTY',    'Phòng hướng sân vườn', 0, NOW(), NOW());
+
+-- Tầng 2: STANDARD + DELUXE (id 6-10)
+INSERT INTO rooms (room_type, room_number, floor, price, area, max_people, image_url, status, description, is_deleted, created_at, updated_at) VALUES
+('STANDARD', '201', 2, 500000,  20.0, 2, '/RoomImages/STANDARD.jpg', 'READY',    'Phòng hướng hồ bơi',        0, NOW(), NOW()),
+('STANDARD', '202', 2, 500000,  20.0, 2, '/RoomImages/STANDARD.jpg', 'OCCUPIED', 'Phòng hướng hồ bơi',        0, NOW(), NOW()),
+('DELUXE',   '203', 2, 900000,  30.0, 2, '/RoomImages/DELUXE.jpg',   'READY',    'Phòng Deluxe hướng hồ bơi', 0, NOW(), NOW()),
+('DELUXE',   '204', 2, 900000,  30.0, 2, '/RoomImages/DELUXE.jpg',   'READY',    'Phòng Deluxe hướng hồ bơi', 0, NOW(), NOW()),
+('DELUXE',   '205', 2, 900000,  30.0, 2, '/RoomImages/DELUXE.jpg',   'MAINTAIN', 'Đang bảo trì điều hòa',     0, NOW(), NOW());
+
+-- Tầng 3: DELUXE (id 11-14)
+INSERT INTO rooms (room_type, room_number, floor, price, area, max_people, image_url, status, description, is_deleted, created_at, updated_at) VALUES
+('DELUXE', '301', 3, 900000, 30.0, 2, '/RoomImages/DELUXE.jpg', 'READY',    'Phòng Deluxe hướng biển', 0, NOW(), NOW()),
+('DELUXE', '302', 3, 900000, 30.0, 2, '/RoomImages/DELUXE.jpg', 'OCCUPIED', 'Phòng Deluxe hướng biển', 0, NOW(), NOW()),
+('DELUXE', '303', 3, 900000, 30.0, 2, '/RoomImages/DELUXE.jpg', 'READY',    'Phòng Deluxe hướng biển', 0, NOW(), NOW()),
+('DELUXE', '304', 3, 900000, 30.0, 2, '/RoomImages/DELUXE.jpg', 'CLEANING', 'Phòng Deluxe hướng biển', 0, NOW(), NOW());
+
+-- Tầng 4: FAMILY (id 15-17)
+INSERT INTO rooms (room_type, room_number, floor, price, area, max_people, image_url, status, description, is_deleted, created_at, updated_at) VALUES
+('FAMILY', '401', 4, 1200000, 45.0, 4, '/RoomImages/FAMILY.jpg', 'READY',    'Phòng gia đình rộng rãi', 0, NOW(), NOW()),
+('FAMILY', '402', 4, 1200000, 45.0, 4, '/RoomImages/FAMILY.jpg', 'OCCUPIED', 'Phòng gia đình rộng rãi', 0, NOW(), NOW()),
+('FAMILY', '403', 4, 1200000, 45.0, 4, '/RoomImages/FAMILY.jpg', 'READY',    'Phòng gia đình rộng rãi', 0, NOW(), NOW());
+
+-- Tầng 5: VIP (id 18-20)
+INSERT INTO rooms (room_type, room_number, floor, price, area, max_people, image_url, status, description, is_deleted, created_at, updated_at) VALUES
+('VIP', '501', 5, 2000000, 55.0, 2, '/RoomImages/VIP.jpg', 'READY',    'Phòng VIP view toàn thành phố', 0, NOW(), NOW()),
+('VIP', '502', 5, 2000000, 55.0, 2, '/RoomImages/VIP.jpg', 'OCCUPIED', 'Phòng VIP view toàn thành phố', 0, NOW(), NOW()),
+('VIP', '503', 5, 2000000, 55.0, 2, '/RoomImages/VIP.jpg', 'READY',    'Phòng VIP view toàn thành phố', 0, NOW(), NOW());
+
+-- Tầng 6: SUITE (id 21-22)
+INSERT INTO rooms (room_type, room_number, floor, price, area, max_people, image_url, status, description, is_deleted, created_at, updated_at) VALUES
+('SUITE', '601', 6, 3500000, 80.0, 2, '/RoomImages/SUITE.jpg', 'READY',    'Suite Penthouse, view 360 độ', 0, NOW(), NOW()),
+('SUITE', '602', 6, 3500000, 80.0, 2, '/RoomImages/SUITE.jpg', 'OCCUPIED', 'Suite Penthouse, view 360 độ', 0, NOW(), NOW());
+
+-- =============================================
+-- Seed: room_furniture
+-- STANDARD: 1,3,4,5,6,8,10,12
+-- DELUXE:   1,3,4,5,6,7,8,10,11,12
+-- FAMILY:   1,2,3,5,6,7,8,10,12
+-- VIP:      1,3,4,5,6,7,8,9,10,11,12
+-- SUITE:    1,3,4,5,6,7,8,9,10,11,12
+-- =============================================
+
+-- Tầng 1: STANDARD (room 1-5)
+INSERT INTO room_furniture (room_id, furniture_id) VALUES
+(1,1),(1,3),(1,4),(1,5),(1,6),(1,8),(1,10),(1,12),
+(2,1),(2,3),(2,4),(2,5),(2,6),(2,8),(2,10),(2,12),
+(3,1),(3,3),(3,4),(3,5),(3,6),(3,8),(3,10),(3,12),
+(4,1),(4,3),(4,4),(4,5),(4,6),(4,8),(4,10),(4,12),
+(5,1),(5,3),(5,4),(5,5),(5,6),(5,8),(5,10),(5,12);
+
+-- Tầng 2: STANDARD (room 6-7)
+INSERT INTO room_furniture (room_id, furniture_id) VALUES
+(6,1),(6,3),(6,4),(6,5),(6,6),(6,8),(6,10),(6,12),
+(7,1),(7,3),(7,4),(7,5),(7,6),(7,8),(7,10),(7,12);
+
+-- Tầng 2: DELUXE (room 8-10)
+INSERT INTO room_furniture (room_id, furniture_id) VALUES
+(8,1),(8,3),(8,4),(8,5),(8,6),(8,7),(8,8),(8,10),(8,11),(8,12),
+(9,1),(9,3),(9,4),(9,5),(9,6),(9,7),(9,8),(9,10),(9,11),(9,12),
+(10,1),(10,3),(10,4),(10,5),(10,6),(10,7),(10,8),(10,10),(10,11),(10,12);
+
+-- Tầng 3: DELUXE (room 11-14)
+INSERT INTO room_furniture (room_id, furniture_id) VALUES
+(11,1),(11,3),(11,4),(11,5),(11,6),(11,7),(11,8),(11,10),(11,11),(11,12),
+(12,1),(12,3),(12,4),(12,5),(12,6),(12,7),(12,8),(12,10),(12,11),(12,12),
+(13,1),(13,3),(13,4),(13,5),(13,6),(13,7),(13,8),(13,10),(13,11),(13,12),
+(14,1),(14,3),(14,4),(14,5),(14,6),(14,7),(14,8),(14,10),(14,11),(14,12);
+
+-- Tầng 4: FAMILY (room 15-17)
+INSERT INTO room_furniture (room_id, furniture_id) VALUES
+(15,1),(15,2),(15,3),(15,5),(15,6),(15,7),(15,8),(15,10),(15,12),
+(16,1),(16,2),(16,3),(16,5),(16,6),(16,7),(16,8),(16,10),(16,12),
+(17,1),(17,2),(17,3),(17,5),(17,6),(17,7),(17,8),(17,10),(17,12);
+
+-- Tầng 5: VIP (room 18-20)
+INSERT INTO room_furniture (room_id, furniture_id) VALUES
+(18,1),(18,3),(18,4),(18,5),(18,6),(18,7),(18,8),(18,9),(18,10),(18,11),(18,12),
+(19,1),(19,3),(19,4),(19,5),(19,6),(19,7),(19,8),(19,9),(19,10),(19,11),(19,12),
+(20,1),(20,3),(20,4),(20,5),(20,6),(20,7),(20,8),(20,9),(20,10),(20,11),(20,12);
+
+-- Tầng 6: SUITE (room 21-22)
+INSERT INTO room_furniture (room_id, furniture_id) VALUES
+(21,1),(21,3),(21,4),(21,5),(21,6),(21,7),(21,8),(21,9),(21,10),(21,11),(21,12),
+(22,1),(22,3),(22,4),(22,5),(22,6),(22,7),(22,8),(22,9),(22,10),(22,11),(22,12);

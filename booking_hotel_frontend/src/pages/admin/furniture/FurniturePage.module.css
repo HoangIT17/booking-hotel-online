@@ -1,0 +1,278 @@
+/* ===== FILTER BAR ===== */
+.filterBar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.625rem;
+}
+
+.filterInput {
+    flex: 1;
+    min-width: 0;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+}
+
+.filterSelect {
+    flex: 0 0 155px;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+}
+
+.filterBtn {
+    flex-shrink: 0;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    padding: 6px 12px !important;
+    white-space: nowrap;
+}
+
+/* ===== TABLE ===== */
+.tableWrapper {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+}
+
+.table {
+    margin: 0;
+    font-size: 13px;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 8px 12px;
+    border-bottom: 2px solid #dee2e6;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding: 8px 12px;
+    vertical-align: middle;
+    color: #343a40;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9ff;
+}
+
+/* ===== ICON CELL ===== */
+.iconCell {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background-color: #f0f4ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0d6efd;
+}
+
+.iconPlaceholder {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+    font-size: 11px;
+}
+
+/* ===== TYPE BADGE ===== */
+.typeBadge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+/* ===== DESCRIPTION ===== */
+.descCell {
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #6c757d;
+    font-size: 13px;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.actionGroup {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.btnEdit {
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 5px;
+    border: 1px solid #0d6efd;
+    color: #0d6efd;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.btnEdit:hover {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.btnDelete {
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 5px;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.btnDelete:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* ===== EMPTY STATE ===== */
+.emptyState {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #adb5bd;
+}
+
+.emptyState p {
+    margin: 0.5rem 0 0;
+    font-size: 14px;
+}
+
+/* ===== LOADING ===== */
+.loadingWrapper {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+/* ===== MODAL ===== */
+.modalHeader {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 1rem 1.25rem;
+}
+
+.modalTitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+}
+
+.formLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 5px;
+}
+
+.formControl {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    font-size: 14px;
+    padding: 8px 12px;
+    transition: border-color 0.2s;
+}
+
+.formControl:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.iconPreview {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.iconPreviewBox {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background-color: #f0f4ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0d6efd;
+}
+
+.errorText {
+    font-size: 12px;
+    color: #dc3545;
+    margin-top: 4px;
+}
+
+/* ===== DELETE MODAL ===== */
+.deleteModalBody {
+    text-align: center;
+    padding: 1.5rem 1rem;
+}
+
+.deleteIcon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #fff5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: #dc3545;
+}
+
+.deleteModalBody h6 {
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 0.5rem;
+}
+
+.deleteModalBody p {
+    font-size: 14px;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* ===== COUNTER ===== */
+.counter {
+    font-size: 12px;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.counter strong {
+    color: #0d6efd;
+}
