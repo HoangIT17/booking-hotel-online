@@ -14,6 +14,8 @@ import StaffLayout from "../layouts/StaffLayout";
 
 //  Import các trang Dashboard tương ứng của từng phân hệ
 import DashboardAdmin from "../pages/admin/dashboard/Dashboard";
+import FurniturePage from "../pages/admin/furniture/FurniturePage";
+import RoomPage from "../pages/admin/rooms/RoomPage";
 import DashboardManager from "../pages/manager/dashboard/Dashboard";
 import ReceptionistDashboard from "../pages/receptionist/Dashboard";
 import StaffHousekeepingDashboard from "../pages/staff/Dashboard";
@@ -44,7 +46,9 @@ const AppRoutes = () => {
                     {/* Lớp 3: Nội dung (Sẽ chui vào cái <Outlet /> của AdminLayout) */}
                     {/* Lưu ý: path ở đây chỉ cần viết "dashboard" (không có dấu / ở đầu) vì nó nối tiếp từ /admin */}
                     <Route path="dashboard" element={<DashboardAdmin />} />
-                    
+                    <Route path="furnitures" element={<FurniturePage />} />
+                    <Route path="rooms" element={<RoomPage />} />
+
                     {/* Sau này làm thêm các trang khác thì cứ thả vào đây, tự động được bảo vệ và có sẵn Layout! */}
                     {/* <Route path="room-categories" element={<RoomCategoryList />} /> */}
                     {/* <Route path="users" element={<UserManagement />} /> */}
@@ -59,6 +63,8 @@ const AppRoutes = () => {
                 <Route path="/manager" element={<ManagerLayout />}>
                     <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<DashboardManager />} />
+                    <Route path="furnitures" element={<FurniturePage />} />
+                    <Route path="rooms" element={<RoomPage />} />
                     {/* Thêm chức năng quản lý tại đây */}
                 </Route>
             </Route>
