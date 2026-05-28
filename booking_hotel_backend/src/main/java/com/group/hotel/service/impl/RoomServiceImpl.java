@@ -3,10 +3,7 @@ package com.group.hotel.service.impl;
 import com.group.hotel.dto.request.RoomCreateRequest;
 import com.group.hotel.dto.request.RoomSearchRequest;
 import com.group.hotel.dto.request.RoomUpdateRequest;
-import com.group.hotel.dto.response.FurnitureResponse;
-import com.group.hotel.dto.response.IncidentHistoryResponse;
-import com.group.hotel.dto.response.RoomDetailResponse;
-import com.group.hotel.dto.response.RoomResponse;
+import com.group.hotel.dto.response.*;
 import com.group.hotel.entity.Room;
 import com.group.hotel.enums.IncidentStatus;
 import com.group.hotel.repository.IncidentRepository;
@@ -210,10 +207,10 @@ public class RoomServiceImpl implements RoomService {
                 .orElseThrow(() ->
                         new RuntimeException("Room not found"));
 
-        List<FurnitureResponse> furnitureResponses =
+        List<RoomFurnitureResponse> furnitureResponses =
                 room.getFurnitures()
                         .stream()
-                        .map(item -> FurnitureResponse.builder()
+                        .map(item -> RoomFurnitureResponse.builder()
                                 .id(item.getId())
                                 .furnitureName(item.getFurnitureName())
                                 .furnitureType(item.getFurnitureType().name())
@@ -235,10 +232,20 @@ public class RoomServiceImpl implements RoomService {
                         .toList();
 
         return RoomDetailResponse.builder()
+                .id(room.getId())
                 .roomNumber(room.getRoomNumber())
                 .roomType(room.getRoomType().name())
                 .floor(room.getFloor())
+                .price(room.getPrice())
+                .area(room.getArea())
+                .maxPeople(room.getMaxPeople())
+                .imageUrl(room.getImageUrl())
                 .status(room.getStatus().name())
+                .description(room.getDescription())
+                .furnitures(furnitureResponses)
+                .createdAt(room.getCreatedAt())
+                .updatedAt(room.getUpdatedAt())
+                .isDeleted(room.isDeleted())
 
                 .incidentHistory(incidentResponses)
                 .build();
