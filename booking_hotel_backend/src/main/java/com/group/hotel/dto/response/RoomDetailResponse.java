@@ -28,4 +28,5 @@ public class RoomDetailResponse {
     private List<RoomFurnitureResponse> furnitures;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<IncidentHistoryResponse> incidentHistory;
 }

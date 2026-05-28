@@ -3,9 +3,13 @@ package com.group.hotel.service.impl;
 import com.group.hotel.dto.request.RoomCreateRequest;
 import com.group.hotel.dto.request.RoomSearchRequest;
 import com.group.hotel.dto.request.RoomUpdateRequest;
+import com.group.hotel.dto.response.FurnitureResponse;
+import com.group.hotel.dto.response.IncidentHistoryResponse;
 import com.group.hotel.dto.response.RoomDetailResponse;
 import com.group.hotel.dto.response.RoomResponse;
 import com.group.hotel.entity.Room;
+import com.group.hotel.enums.IncidentStatus;
+import com.group.hotel.repository.IncidentRepository;
 import com.group.hotel.enums.RoomTypeName;
 import com.group.hotel.exception.RoomConflictException;
 import com.group.hotel.exception.RoomNotFoundException;
@@ -41,6 +45,7 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
     private final FurnitureRepository furnitureRepository;
+    private final IncidentRepository incidentRepository;
 
     @Value("${app.upload.dir}")
     private String uploadDir;
@@ -195,5 +200,60 @@ public class RoomServiceImpl implements RoomService {
         } catch (IOException e) {
             throw new RuntimeException("Không thể lưu ảnh: " + e.getMessage());
         }
+    }
+
+    @Override
+    public RoomDetailResponse getRoomDetail(String roomNumber) {
+
+        Room room = roomRepository
+                .findByRoomNumberAndIsDeletedFalse(roomNumber)
+                .orElseThrow(() ->
+                        new RuntimeException("Room not found"));
+
+        List<FurnitureResponse> furnitureResponses =
+                room.getFurnitures()
+                        .stream()
+                        .map(item -> FurnitureResponse.builder()
+                                .id(item.getId())
+                                .furnitureName(item.getFurnitureName())
+                                .furnitureType(item.getFurnitureType().name())
+                                .status(getFurnitureStatus(item.getId()))
+                                .build())
+                        .toList();
+
+        List<IncidentHistoryResponse> incidentResponses =
+                incidentRepository
+                        .findByRoomIdOrderByCreatedAtDesc(room.getId())
+                        .stream()
+                        .map(incident -> IncidentHistoryResponse.builder()
+                                .id(incident.getId())
+                                .description(incident.getDescription())
+                                .status(incident.getStatus().name())
+                                .reportedBy(incident.getStaff().getUsername())
+                                .createdAt(incident.getCreatedAt())
+                                .build())
+                        .toList();
+
+        return RoomDetailResponse.builder()
+                .roomNumber(room.getRoomNumber())
+                .roomType(room.getRoomType().name())
+                .floor(room.getFloor())
+                .status(room.getStatus().name())
+
+                .incidentHistory(incidentResponses)
+                .build();
+    }
+
+    private String getFurnitureStatus(Long furnitureId) {
+
+        if (furnitureId % 3 == 0) {
+            return "FIXING";
+        }
+
+        if (furnitureId % 2 == 0) {
+            return "PENDING";
+        }
+
+        return "FIXED";
     }
 }

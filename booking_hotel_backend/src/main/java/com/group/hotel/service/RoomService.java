@@ -22,4 +22,6 @@ public interface RoomService {
     RoomResponse restore(Long id);
     RoomDetailResponse updateFurnitures(Long id, List<Long> furnitureIds);
     String uploadImage(Long id, MultipartFile file);
+    RoomDetailResponse getRoomDetail(String roomNumber);
+
 }
