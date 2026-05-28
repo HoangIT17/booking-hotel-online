@@ -81,14 +81,12 @@
   text-decoration: none;
 }
 
-/* HIỆU ỨNG HOVER (Lấy cảm hứng từ .notificationBtn:hover) */
 .logoutBtn:hover {
-  background-color: #fff5f5 !important; /* Đỏ nhạt cực nhẹ */
+  background-color: #fff5f5 !important; 
   color: #bb2d3b; /* Đỏ đậm hơn chút khi di chuột */
   padding-left: 20px; /* Nhích nhẹ sang phải tạo cảm giác mượt mà */
 }
 
-/* Căn chỉnh Icon chuẩn size 18 (Giống LogOut size={18}) */
 .logoutBtn i {
   font-size: 18px; 
   width: 24px; /* Cố định độ rộng để chữ luôn thẳng hàng */

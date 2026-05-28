@@ -1,25 +1,29 @@
 import { Outlet } from 'react-router-dom';
-import ManagerSidebar from '../components/manager/ManagerSidebar';
 import Header from '../components/shared/Header';
+
+import ManagerSidebar from '../components/manager/ManagerSidebar';
 import ManagerFooter from '../components/manager/ManagerFooter';
+
 import styles from './AdminLayout.module.css'; 
 
 const ManagerLayout = () => {
   return (
     <div className={styles.wrapper}>
-      {/* Sidebar */}
+      {/* Sidebar của Manager */}
       <ManagerSidebar />
 
       <div className={styles.mainContent}>
-        {/* Header */}
+        {/* Header cổng Manager */}
         <Header portalName="Manager System" />
+        
         <main className={styles.scrollArea}>
           <div className={`container-fluid ${styles.contentCard}`}>
-            {/* Nơi hiển thị DashboardPage, UserListPage... */}
+            {/* Ruột các trang chức năng (Phòng, Dịch vụ, Doanh thu...) */}
             <Outlet />
           </div>
         </main>
 
+        {/* Footer riêng của Manager (Đã được tối ưu CSS) */}
         <ManagerFooter />
       </div>
     </div>
