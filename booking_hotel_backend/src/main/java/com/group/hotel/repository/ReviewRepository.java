@@ -21,6 +21,15 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             """)
     List<RoomAverageRatingProjection> findAverageRatingsByRoomIds(@Param("roomIds") Collection<Long> roomIds);
 
+    @Query("""
+            SELECT r
+            FROM Review r
+            JOIN BookingDetail bd ON bd.booking = r.booking
+            WHERE bd.room.id = :roomId
+            ORDER BY r.createdAt DESC
+            """)
+    List<Review> findByRoomId(@Param("roomId") Long roomId);
+
     interface RoomAverageRatingProjection {
         Long getRoomId();
 

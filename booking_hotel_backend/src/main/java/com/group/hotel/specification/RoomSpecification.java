@@ -28,8 +28,7 @@ public class RoomSpecification {
             spec = spec.and(hasIsDeleted(false));
 
             if (request.getRoomType() != null) {
-                spec = spec.and((roomRoot, roomQuery, criteriaBuilder) ->
-                        criteriaBuilder.equal(roomRoot.join("roomType", JoinType.INNER).get("typeName"), request.getRoomType()));
+                spec = spec.and(hasRoomType(String.valueOf(request.getRoomType())));
             }
             if (request.getMinPrice() != null) {
                 spec = spec.and(hasMinPrice(request.getMinPrice()));
@@ -84,17 +83,17 @@ public class RoomSpecification {
 
     private static Specification<Room> hasMinPrice(BigDecimal minPrice) {
         return (root, query, builder) ->
-                builder.greaterThanOrEqualTo(root.join("roomType", JoinType.INNER).get("basePrice"), minPrice);
+                builder.greaterThanOrEqualTo(root.get("price"), minPrice);
     }
 
     private static Specification<Room> hasMaxPrice(BigDecimal maxPrice) {
         return (root, query, builder) ->
-                builder.lessThanOrEqualTo(root.join("roomType", JoinType.INNER).get("basePrice"), maxPrice);
+                builder.lessThanOrEqualTo(root.get("price"), maxPrice);
     }
 
     private static Specification<Room> hasCapacityFor(Integer numGuests) {
         return (root, query, builder) ->
-                builder.greaterThanOrEqualTo(root.join("roomType", JoinType.INNER).get("maxPeople"), numGuests);
+                builder.greaterThanOrEqualTo(root.get("maxPeople"), numGuests);
     }
 
     private static Specification<Room> hasMinRating(BigDecimal minRating) {

@@ -30,4 +30,7 @@ public interface RoomRepository
     Optional<Room> findByRoomNumberAndIsDeletedFalse(String roomNumber);
     Page<Room> findByStatus(RoomStatus status, Pageable pageable);
 
+    @Query("SELECT r.imageUrl FROM Room r WHERE r.id = :roomId AND r.isDeleted = false")
+    Optional<String> findImageUrlByRoomId(Long roomId);
+
 }

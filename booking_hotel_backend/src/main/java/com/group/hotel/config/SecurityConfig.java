@@ -64,6 +64,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
 
                         .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("/api/v1/vouchers/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/RoomImages/**").permitAll()
                         .requestMatchers("/api/customer/rooms/search/**").permitAll()
