@@ -1,9 +1,11 @@
 package com.group.hotel.service;
 
+import com.group.hotel.dto.request.CreateMaintenanceRequest;
 import com.group.hotel.dto.request.RoomCreateRequest;
 import com.group.hotel.dto.request.RoomSearchRequest;
 import com.group.hotel.dto.request.RoomUpdateRequest;
 import com.group.hotel.common.response.PageResponse;
+import com.group.hotel.dto.response.MaintenanceResponse;
 import com.group.hotel.dto.response.RoomDetailResponse;
 import com.group.hotel.dto.response.RoomResponse;
 import org.springframework.data.domain.Pageable;
@@ -23,5 +25,8 @@ public interface RoomService {
     RoomDetailResponse updateFurnitures(Long id, List<Long> furnitureIds);
     String uploadImage(Long id, MultipartFile file);
     RoomDetailResponse getRoomDetail(String roomNumber);
+    MaintenanceResponse createMaintenanceRequest(
+            CreateMaintenanceRequest request
+    );
 
 }

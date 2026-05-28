@@ -38,4 +38,5 @@ public class Incident {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
 }

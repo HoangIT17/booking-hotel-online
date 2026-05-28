@@ -1,10 +1,13 @@
 package com.group.hotel.service.impl;
 
+import com.group.hotel.dto.request.CreateMaintenanceRequest;
 import com.group.hotel.dto.request.RoomCreateRequest;
 import com.group.hotel.dto.request.RoomSearchRequest;
 import com.group.hotel.dto.request.RoomUpdateRequest;
 import com.group.hotel.dto.response.*;
+import com.group.hotel.entity.Incident;
 import com.group.hotel.entity.Room;
+import com.group.hotel.entity.User;
 import com.group.hotel.enums.IncidentStatus;
 import com.group.hotel.repository.IncidentRepository;
 import com.group.hotel.enums.RoomTypeName;
@@ -14,6 +17,8 @@ import com.group.hotel.entity.Furniture;
 import com.group.hotel.mapper.RoomMapper;
 import com.group.hotel.repository.FurnitureRepository;
 import com.group.hotel.repository.RoomRepository;
+import com.group.hotel.repository.UserRepository;
+import com.group.hotel.security.UserPrincipal;
 import com.group.hotel.service.RoomService;
 import com.group.hotel.enums.RoomStatus;
 import com.group.hotel.specification.RoomSpecification;
@@ -22,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -43,6 +49,7 @@ public class RoomServiceImpl implements RoomService {
     private final RoomMapper roomMapper;
     private final FurnitureRepository furnitureRepository;
     private final IncidentRepository incidentRepository;
+    private final UserRepository userRepository;
 
     @Value("${app.upload.dir}")
     private String uploadDir;
@@ -250,7 +257,6 @@ public class RoomServiceImpl implements RoomService {
                 .incidentHistory(incidentResponses)
                 .build();
     }
-
     private String getFurnitureStatus(Long furnitureId) {
 
         if (furnitureId % 3 == 0) {
@@ -263,4 +269,49 @@ public class RoomServiceImpl implements RoomService {
 
         return "FIXED";
     }
+    @Override
+    public MaintenanceResponse createMaintenanceRequest(
+            CreateMaintenanceRequest request
+    ) {
+
+        Room room = roomRepository
+                .findByRoomNumberAndIsDeletedFalse(
+                        request.getRoomNumber()
+                )
+                .orElseThrow(() ->
+                        new RuntimeException("Room not found"));
+
+        Furniture furniture = furnitureRepository
+                .findById(request.getFurnitureItemId())
+                .orElseThrow(() ->
+                        new RuntimeException("Furniture not found"));
+
+        UserPrincipal userPrincipal =
+                (UserPrincipal) SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+
+        User staff = userRepository
+                .findById(userPrincipal.getId())
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        Incident incident = Incident.builder()
+                .room(room)
+                .staff(staff)
+                //.furniture(furniture)
+                .description(request.getIncidentDescription())
+                .status(IncidentStatus.PENDING)
+                .build();
+
+        Incident savedIncident =
+                incidentRepository.save(incident);
+
+        return MaintenanceResponse.builder()
+                .ticketId("MT-" + savedIncident.getId())
+                .status(savedIncident.getStatus().name())
+                .build();
+    }
+
 }
