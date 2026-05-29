@@ -12,7 +12,7 @@ const authApi = {
     },
 
     changePassword: (changePasswordData) => {
-        return axiosInstance.post("/auth/change-password", changePasswordData);
+        return axiosInstance.put("/auth/change-password", changePasswordData);
     },
 
     refreshToken: (data) => {

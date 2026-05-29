@@ -4,7 +4,7 @@ import RegisterPage from "../pages/auth/RegisterPage";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 
-// Các trang Dashboard theo Role dùng để test
+
 
 //  Import tất cả các Khung giao diện (Layouts)
 import AdminLayout from "../layouts/AdminLayout";
@@ -21,6 +21,16 @@ import ReceptionistDashboard from "../pages/receptionist/Dashboard";
 import StaffHousekeepingDashboard from "../pages/staff/Dashboard";
 import HomePage from "../pages/customer/HomePage";
 
+// User Management 
+import UserManagement from "../pages/admin/usermanagement/UserManagement";
+
+// Change Password
+import ChangePasswordPage from "../pages/auth/ChangepasswordPage";
+
+//Profile
+import ProfilePage from "../pages/profile/ProfilePage";
+import ProfileEditPage from "../pages/profile/ProfileEditPage";
+
 const AppRoutes = () => {
     return (
         <Routes>
@@ -31,7 +41,6 @@ const AppRoutes = () => {
             {/* Bọc trong PublicRoute để chặn quay lại khi đã đăng nhập */}
             <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
-            
             {/* Trang chủ xem phòng của khách hàng sau khi login */}
             <Route element={<ProtectedRoute allowedRoles={["CUSTOMER"]} />}>
                 <Route path="/home" element={<HomePage />} />
@@ -46,8 +55,12 @@ const AppRoutes = () => {
                     {/* Lớp 3: Nội dung (Sẽ chui vào cái <Outlet /> của AdminLayout) */}
                     {/* Lưu ý: path ở đây chỉ cần viết "dashboard" (không có dấu / ở đầu) vì nó nối tiếp từ /admin */}
                     <Route path="dashboard" element={<DashboardAdmin />} />
+                    <Route path="users" element={<UserManagement />} />
                     <Route path="furnitures" element={<FurniturePage />} />
                     <Route path="rooms" element={<RoomPage />} />
+                    <Route path="change-password" element={<ChangePasswordPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
+                    <Route path="profile/edit" element={<ProfileEditPage />} />     
 
                     {/* Sau này làm thêm các trang khác thì cứ thả vào đây, tự động được bảo vệ và có sẵn Layout! */}
                     {/* <Route path="room-categories" element={<RoomCategoryList />} /> */}
@@ -61,10 +74,14 @@ const AppRoutes = () => {
             <Route element={<ProtectedRoute allowedRoles={["MANAGER"]} />}>
                 {/* Đã sửa từ AdminLayout sang ManagerLayout ✅ */}
                 <Route path="/manager" element={<ManagerLayout />}>
+                    <Route path="change-password" element={<ChangePasswordPage />} />
+
                     <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<DashboardManager />} />
                     <Route path="furnitures" element={<FurniturePage />} />
                     <Route path="rooms" element={<RoomPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
+                    <Route path="profile/edit" element={<ProfileEditPage />} /> 
                     {/* Thêm chức năng quản lý tại đây */}
                 </Route>
             </Route>
@@ -73,6 +90,9 @@ const AppRoutes = () => {
             <Route element={<ProtectedRoute allowedRoles={["RECEPTIONIST"]} />}>
                 {/* Đã bọc cấu trúc Layout lồng nhau chuẩn chỉ ✅ */}
                 <Route path="/receptionist" element={<ReceptionistLayout />}>
+                    <Route path="change-password" element={<ChangePasswordPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
+                    <Route path="profile/edit" element={<ProfileEditPage />} /> 
                     <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<ReceptionistDashboard />} />
                     {/* Thêm chức năng lễ tân: bookings, checkin-checkout... tại đây */}
@@ -83,6 +103,9 @@ const AppRoutes = () => {
             <Route element={<ProtectedRoute allowedRoles={["STAFF"]} />}>
                 {/* Đã bọc cấu trúc Layout lồng nhau chuẩn chỉ ✅ */}
                 <Route path="/staff" element={<StaffLayout />}>
+                    <Route path="change-password" element={<ChangePasswordPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
+                    <Route path="profile/edit" element={<ProfileEditPage />} /> 
                     <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<StaffHousekeepingDashboard />} />
                     {/* Thêm chức năng nhân viên: tasks, room-status... tại đây */}
