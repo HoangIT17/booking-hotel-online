@@ -125,3 +125,44 @@ INSERT INTO room_furniture (room_id, furniture_id) VALUES
 INSERT INTO room_furniture (room_id, furniture_id) VALUES
 (21,1),(21,3),(21,4),(21,5),(21,6),(21,7),(21,8),(21,9),(21,10),(21,11),(21,12),
 (22,1),(22,3),(22,4),(22,5),(22,6),(22,7),(22,8),(22,9),(22,10),(22,11),(22,12);
+
+-- =============================================
+-- Seed bổ sung: 10 dữ liệu mới liên quan nhau
+-- furniture id 13-22, rooms id 23-32
+-- =============================================
+
+INSERT INTO furniture (furniture_name, furniture_type, icon, description, created_at, updated_at) VALUES
+('Bồn tắm nằm',        'BATHROOM',   'Bath',          'Bồn tắm acrylic cao cấp cho phòng hạng sang',          NOW(), NOW()),
+('Két sắt mini',       'STORAGE',    'Vault',         'Két sắt điện tử cỡ nhỏ đặt trong tủ quần áo',          NOW(), NOW()),
+('Máy pha cà phê',     'KITCHEN',    'Coffee',        'Máy pha cà phê viên nén kèm bộ ly sứ',                 NOW(), NOW()),
+('Ghế thư giãn',       'CHAIR',      'Armchair',      'Ghế đọc sách bọc nỉ đặt cạnh cửa sổ',                  NOW(), NOW()),
+('Bàn trà',            'TABLE',      'Table2',        'Bàn trà mặt đá nhỏ dùng cho khu tiếp khách',           NOW(), NOW()),
+('Loa bluetooth',      'ELECTRONIC', 'Speaker',       'Loa bluetooth để bàn cho phòng VIP và Suite',          NOW(), NOW()),
+('Đèn cây',            'LIGHTING',   'LampFloor',     'Đèn cây ánh sáng ấm cho góc đọc sách',                 NOW(), NOW()),
+('Thảm trải sàn',      'DECOR',      'SquareStack',   'Thảm lông ngắn chống trượt cạnh giường ngủ',           NOW(), NOW()),
+('Gương toàn thân',    'DECOR',      'ScanFace',      'Gương toàn thân khung kim loại màu đen',               NOW(), NOW()),
+('Bếp điện mini',      'KITCHEN',    'CookingPot',    'Bếp điện mini phục vụ phòng lưu trú dài ngày',         NOW(), NOW());
+
+INSERT INTO rooms (room_type, room_number, floor, price, area, max_people, image_url, status, description, is_deleted, created_at, updated_at) VALUES
+('SUPERIOR', '701', 7, 750000,  26.0, 2, '/RoomImages/STANDARD.jpg', 'READY',    'Phòng Superior yên tĩnh gần thang máy',              0, NOW(), NOW()),
+('SUPERIOR', '702', 7, 750000,  26.0, 2, '/RoomImages/STANDARD.jpg', 'CLEANING', 'Phòng Superior có két sắt mini cho khách công tác', 0, NOW(), NOW()),
+('DELUXE',   '703', 7, 950000,  32.0, 2, '/RoomImages/DELUXE.jpg',   'READY',    'Phòng Deluxe có máy pha cà phê và view hồ bơi',      0, NOW(), NOW()),
+('DELUXE',   '704', 7, 950000,  32.0, 2, '/RoomImages/DELUXE.jpg',   'OCCUPIED', 'Phòng Deluxe có ghế thư giãn cạnh cửa sổ',          0, NOW(), NOW()),
+('FAMILY',   '705', 7, 1300000, 48.0, 4, '/RoomImages/FAMILY.jpg',   'READY',    'Phòng Family có bàn trà cho khu sinh hoạt chung',    0, NOW(), NOW()),
+('VIP',      '801', 8, 2200000, 58.0, 2, '/RoomImages/VIP.jpg',      'READY',    'Phòng VIP có loa bluetooth và khu tiếp khách riêng', 0, NOW(), NOW()),
+('VIP',      '802', 8, 2200000, 58.0, 2, '/RoomImages/VIP.jpg',      'MAINTAIN', 'Phòng VIP đang kiểm tra hệ thống đèn cây',           0, NOW(), NOW()),
+('SUITE',    '803', 8, 3600000, 82.0, 2, '/RoomImages/SUITE.jpg',    'READY',    'Suite có thảm trải sàn và phòng khách rộng',         0, NOW(), NOW()),
+('SUITE',    '804', 8, 3600000, 82.0, 2, '/RoomImages/SUITE.jpg',    'READY',    'Suite có gương toàn thân trong khu thay đồ',         0, NOW(), NOW()),
+('FAMILY',   '805', 8, 1450000, 52.0, 4, '/RoomImages/FAMILY.jpg',   'DIRTY',    'Phòng Family có bếp điện mini cho lưu trú dài ngày', 0, NOW(), NOW());
+
+INSERT INTO room_furniture (room_id, furniture_id) VALUES
+(23,13),
+(24,14),
+(25,15),
+(26,16),
+(27,17),
+(28,18),
+(29,19),
+(30,20),
+(31,21),
+(32,22);

@@ -65,9 +65,13 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/vouchers/**").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("api/v1/customer/**").permitAll()
+                        .requestMatchers("api/v1/manager/reservation-update").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/RoomImages/**").permitAll()
                         .requestMatchers("/api/customer/rooms/search/**").permitAll()
+                        .requestMatchers("/api/customer/bookings/**").permitAll()
+                        .requestMatchers("/api/customer/bookings-search/**").permitAll()
                         .requestMatchers("/api/admin/furnitures/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/admin/room-types/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")
