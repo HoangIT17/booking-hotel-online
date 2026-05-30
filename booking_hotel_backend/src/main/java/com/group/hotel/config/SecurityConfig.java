@@ -68,6 +68,7 @@ public class SecurityConfig {
                         .requestMatchers("api/v1/customer/**").permitAll()
                         .requestMatchers("api/v1/manager/reservation-update").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/RoomImages/**").permitAll()
                         .requestMatchers("/api/customer/rooms/search/**").permitAll()
                         .requestMatchers("/api/customer/bookings/**").permitAll()
