@@ -16,8 +16,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingCreateRequest {
-    private Long customerId;
-
     @NotNull(message = "roomId is required!")
     private Long roomId;
 

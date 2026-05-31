@@ -11,6 +11,5 @@ public class VnPayCreatePaymentRequest {
     private Long bookingId;
 
     private String orderInfo;
-    private String bankCode;
     private String locale;
 }

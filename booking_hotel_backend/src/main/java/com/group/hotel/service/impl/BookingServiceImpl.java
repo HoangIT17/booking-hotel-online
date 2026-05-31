@@ -119,7 +119,7 @@ public class BookingServiceImpl implements BookingService {
 
         int numNights = calculateNumNights(request.getCheckIn(), request.getCheckOut());
         BigDecimal roomTotal = calculateRoomTotal(room, numNights);
-        User customer = resolveCustomer(request.getCustomerId());
+        User customer = getCurrentCustomer();
         Voucher voucher = resolveVoucher(request.getVoucherCode(), roomTotal, request.getCheckIn().atStartOfDay());
         BigDecimal totalPrice = applyVoucherDiscount(roomTotal, voucher);
 
@@ -275,13 +275,6 @@ public class BookingServiceImpl implements BookingService {
 
     private BigDecimal applyVoucherDiscount(BigDecimal roomTotal, Voucher voucher) {
         return roomTotal.subtract(calculateDiscount(voucher, roomTotal)).max(BigDecimal.ZERO);
-    }
-
-    private User resolveCustomer(Long customerId) {
-        if (customerId == null) {
-            return null;
-        }
-        return userRepository.findById(customerId).orElse(null);
     }
 
     private void prepareBookingForCreate(

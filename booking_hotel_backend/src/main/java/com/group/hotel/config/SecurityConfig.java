@@ -63,6 +63,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/payments/vnpay/return").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/reservation-create").authenticated()
 
                         .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/vouchers/**").hasAnyAuthority("ADMIN","MANAGER")

@@ -81,9 +81,6 @@ public class VnPayServiceImpl implements VnPayService {
         vnpParams.put("vnp_IpAddr", getIpAddress(httpRequest));
         vnpParams.put("vnp_CreateDate", now.format(VNPAY_DATE_FORMATTER));
         vnpParams.put("vnp_ExpireDate", now.plusMinutes(properties.getExpireMinutes()).format(VNPAY_DATE_FORMATTER));
-        if (request.getBankCode() != null && !request.getBankCode().isBlank()) {
-            vnpParams.put("vnp_BankCode", request.getBankCode().trim());
-        }
 
         String queryUrl = buildQuery(vnpParams);
         String secureHash = hmacSHA512(properties.getHashSecret(), buildHashData(vnpParams));
