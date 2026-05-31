@@ -9,11 +9,15 @@ import com.group.hotel.enums.BookingStatus;
 import com.group.hotel.enums.PaymentMethod;
 import com.group.hotel.exception.BookingNotFoundException;
 import com.group.hotel.exception.PaymentConflictException;
+import com.group.hotel.mapper.PaymentMapper;
 import com.group.hotel.repository.BookingRepository;
+import com.group.hotel.security.UserPrincipal;
 import com.group.hotel.service.VnPayService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
@@ -43,6 +47,7 @@ public class VnPayServiceImpl implements VnPayService {
 
     private final VnPayProperties properties;
     private final BookingRepository bookingRepository;
+    private final PaymentMapper paymentMapper;
 
     @Override
     public VnPayCreatePaymentResponse createPaymentUrl(VnPayCreatePaymentRequest request, HttpServletRequest httpRequest) {
@@ -50,6 +55,7 @@ public class VnPayServiceImpl implements VnPayService {
 
         Booking booking = bookingRepository.findById(request.getBookingId())
                 .orElseThrow(BookingNotFoundException::new);
+        validateCurrentUserOwnsBooking(booking);
         if (booking.getTotalPrice() == null || booking.getTotalPrice().compareTo(BigDecimal.ZERO) <= 0) {
             throw new PaymentConflictException("Booking total price is invalid");
         }
@@ -83,12 +89,7 @@ public class VnPayServiceImpl implements VnPayService {
         String secureHash = hmacSHA512(properties.getHashSecret(), buildHashData(vnpParams));
         String paymentUrl = properties.getPayUrl() + "?" + queryUrl + "&vnp_SecureHash=" + secureHash;
 
-        return VnPayCreatePaymentResponse.builder()
-                .bookingId(booking.getId())
-                .transactionRef(transactionRef)
-                .amount(booking.getTotalPrice())
-                .paymentUrl(paymentUrl)
-                .build();
+        return paymentMapper.toVnPayCreatePaymentResponse(booking, transactionRef, paymentUrl);
     }
 
     @Override
@@ -107,22 +108,23 @@ public class VnPayServiceImpl implements VnPayService {
                 && SUCCESS_CODE.equals(params.get("vnp_ResponseCode"))
                 && SUCCESS_CODE.equals(params.get("vnp_TransactionStatus"));
 
-        if (validSignature && bookingId != null && paymentSuccess) {
-            markBookingPaid(bookingId);
+        if (validSignature && bookingId != null) {
+            if (paymentSuccess) {
+                markBookingPaid(bookingId);
+            } else {
+                markBookingCancelled(bookingId);
+            }
         }
 
-        return VnPayReturnResponse.builder()
-                .validSignature(validSignature)
-                .success(paymentSuccess)
-                .bookingId(bookingId)
-                .responseCode(params.get("vnp_ResponseCode"))
-                .transactionStatus(params.get("vnp_TransactionStatus"))
-                .transactionNo(params.get("vnp_TransactionNo"))
-                .bankCode(params.get("vnp_BankCode"))
-                .amount(parseAmount(params.get("vnp_Amount")))
-                .payDate(parsePayDate(params.get("vnp_PayDate")))
-                .message(resolveReturnMessage(validSignature, paymentSuccess))
-                .build();
+        return paymentMapper.toVnPayReturnResponse(
+                validSignature,
+                paymentSuccess,
+                bookingId,
+                params,
+                parseAmount(params.get("vnp_Amount")),
+                parsePayDate(params.get("vnp_PayDate")),
+                resolveReturnMessage(validSignature, paymentSuccess)
+        );
     }
 
     private void markBookingPaid(Long bookingId) {
@@ -134,6 +136,36 @@ public class VnPayServiceImpl implements VnPayService {
             booking.setStatus(BookingStatus.CONFIRMED);
         }
         bookingRepository.save(booking);
+    }
+
+    private void markBookingCancelled(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(BookingNotFoundException::new);
+        booking.setStatus(BookingStatus.CANCELLED);
+        bookingRepository.save(booking);
+    }
+
+    private void validateCurrentUserOwnsBooking(Booking booking) {
+        Long currentUserId = getCurrentUserId();
+        if (booking.getCustomer() == null
+                || booking.getCustomer().getId() == null
+                || !booking.getCustomer().getId().equals(currentUserId)) {
+            throw new AccessDeniedException("You can only pay for your own booking");
+        }
+    }
+
+    private Long getCurrentUserId() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AccessDeniedException("Authentication is required");
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserPrincipal userPrincipal) {
+            return userPrincipal.getId();
+        }
+
+        throw new AccessDeniedException("Authentication is required");
     }
 
     private String buildTransactionRef(Long bookingId) {

@@ -142,6 +142,7 @@ public class BookingServiceImpl implements BookingService {
         if (request.getBookingStatus() != null && request.getBookingStatus() != BookingStatus.CANCELLED) {
             throw new RoomConflictException("Customer can only cancel booking");
         }
+        validateCurrentCustomerOwnsBooking(request.getBookingId());
 
         BookingUpdateResponse response = updateBookingManager(request);
         response.setMessage(request.getBookingStatus() == BookingStatus.CANCELLED
@@ -322,6 +323,21 @@ public class BookingServiceImpl implements BookingService {
         }
         return userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RoomConflictException("Customer is required"));
+    }
+
+    private void validateCurrentCustomerOwnsBooking(Long bookingId) {
+        if (bookingId == null) {
+            throw new BookingNotFoundException();
+        }
+
+        User customer = getCurrentCustomer();
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(BookingNotFoundException::new);
+        if (booking.getCustomer() == null
+                || booking.getCustomer().getId() == null
+                || !booking.getCustomer().getId().equals(customer.getId())) {
+            throw new RoomConflictException("Customer can only update their own booking");
+        }
     }
 
     private Map<Long, Double> getAverageRatingByRoomId(List<Room> rooms) {
