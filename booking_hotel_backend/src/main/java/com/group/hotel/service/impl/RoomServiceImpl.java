@@ -337,10 +337,10 @@ public class RoomServiceImpl implements RoomService {
         return rooms.stream()
 
                 // chỉ lấy phòng cần dọn
-                .filter(room ->
-                        room.getStatus().name().equals("DIRTY")
-                                || room.getStatus().name().equals("CLEANING")
-                )
+//                .filter(room ->
+//                        room.getStatus().name().equals("DIRTY")
+//                                || room.getStatus().name().equals("CLEANING")
+//                )
 
                 .map(room -> CleaningTaskResponse.builder()
                         .roomNumber(room.getRoomNumber())

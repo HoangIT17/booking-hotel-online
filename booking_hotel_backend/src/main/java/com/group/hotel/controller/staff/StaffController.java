@@ -62,19 +62,23 @@ public class StaffController {
     }
     @GetMapping("/cleaning-tasks")
     public ResponseEntity<?> getCleaningTasks(
-
-            @RequestParam(required = false)
-            String shift,
-
-            @RequestParam(required = false)
-            Integer floor
+            @RequestParam(required = false) String shift,
+            @RequestParam(required = false) Integer floor
     ) {
+        try {
+            // Log ra console xem React có truyền gì lên không
+            System.out.println("React gọi API với Shift: " + shift + ", Floor: " + floor);
 
-        return ResponseEntity.ok(
-                roomService.getCleaningTasks(
-                        shift,
-                        floor
-                )
-        );
+            return ResponseEntity.ok(
+                    roomService.getCleaningTasks(shift, floor)
+            );
+        } catch (Exception e) {
+            // Dòng này cực kỳ quan trọng, nó sẽ in lỗi màu đỏ chi tiết tại Console IntelliJ/Eclipse để bạn sửa code Service
+            e.printStackTrace();
+
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Lỗi xử lý tại RoomService: " + e.getMessage());
+        }
     }
 }
