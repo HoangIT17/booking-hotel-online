@@ -63,11 +63,14 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/v1/auth/**").permitAll()
 
-                        .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
-                        .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("/api/v1/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("/api/v1/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/RoomImages/**").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/reviews/**").hasAnyAuthority("RECEPTIONIST","MANAGER","ADMIN")
+                        .requestMatchers("/api/v1/customer/reviews/**").hasAuthority("CUSTOMER")
 
                         // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")

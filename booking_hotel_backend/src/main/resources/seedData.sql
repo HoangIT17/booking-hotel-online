@@ -1,12 +1,30 @@
 USE booking_hotel;
 
 -- =============================================
--- TRUNCATE (chạy trước để reset dữ liệu)
+-- TRUNCATE toàn bộ dữ liệu (giữ nguyên DB)
 -- =============================================
 SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE reviews;
+TRUNCATE TABLE housekeeping_logs;
+TRUNCATE TABLE incidents;
+TRUNCATE TABLE booking_details;
+TRUNCATE TABLE payments;
+TRUNCATE TABLE bookings;
+TRUNCATE TABLE vouchers;
 TRUNCATE TABLE room_furniture;
+-- Bỏ comment nếu bảng đã tồn tại trong DB
+-- TRUNCATE TABLE furniture_images;
+-- TRUNCATE TABLE room_images;
 TRUNCATE TABLE rooms;
 TRUNCATE TABLE furniture;
+TRUNCATE TABLE ai_knowledge_base;
+TRUNCATE TABLE permissions;
+TRUNCATE TABLE features;
+TRUNCATE TABLE profiles;
+TRUNCATE TABLE users;
+TRUNCATE TABLE roles;
+
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- =============================================
@@ -125,3 +143,39 @@ INSERT INTO room_furniture (room_id, furniture_id) VALUES
 INSERT INTO room_furniture (room_id, furniture_id) VALUES
 (21,1),(21,3),(21,4),(21,5),(21,6),(21,7),(21,8),(21,9),(21,10),(21,11),(21,12),
 (22,1),(22,3),(22,4),(22,5),(22,6),(22,7),(22,8),(22,9),(22,10),(22,11),(22,12);
+
+-- =============================================
+-- Seed: bookings + reviews
+-- =============================================
+SET @customer_id    = (SELECT id FROM users WHERE username = 'customer');
+SET @receptionist_id = (SELECT id FROM users WHERE username = 'receptionist');
+
+INSERT INTO bookings (customer_id, voucher_id, check_in_date, check_out_date, num_nights, num_guests, extra_charge, total_price, status, created_at, updated_at) VALUES
+(@customer_id, NULL, '2025-03-01', '2025-03-03', 2, 2, 0,       1000000, 'CHECKED_OUT', '2025-03-01 14:00:00', '2025-03-03 12:00:00'),
+(@customer_id, NULL, '2025-03-15', '2025-03-18', 3, 2, 200000,  2900000, 'CHECKED_OUT', '2025-03-15 14:00:00', '2025-03-18 12:00:00'),
+(@customer_id, NULL, '2025-04-05', '2025-04-06', 1, 1, 0,       2000000, 'CHECKED_OUT', '2025-04-05 14:00:00', '2025-04-06 12:00:00'),
+(@customer_id, NULL, '2025-04-20', '2025-04-25', 5, 4, 500000,  6500000, 'CHECKED_OUT', '2025-04-20 14:00:00', '2025-04-25 12:00:00');
+
+SET @booking1_id = (SELECT id FROM bookings WHERE customer_id = @customer_id AND check_in_date = '2025-03-01');
+SET @booking2_id = (SELECT id FROM bookings WHERE customer_id = @customer_id AND check_in_date = '2025-03-15');
+SET @booking3_id = (SELECT id FROM bookings WHERE customer_id = @customer_id AND check_in_date = '2025-04-05');
+
+-- Review 1: 4 sao, đã có phản hồi
+INSERT INTO reviews (customer_id, booking_id, rating, comment, staff_reply, replied_by, replied_at, created_at, updated_at) VALUES
+(@customer_id, @booking1_id, 4,
+ 'Phòng sạch sẽ, nhân viên thân thiện. Vị trí khách sạn rất thuận tiện. Sẽ quay lại lần sau!',
+ 'Cảm ơn quý khách đã lưu trú và để lại đánh giá tích cực. Chúng tôi rất vui khi được phục vụ và mong sớm được đón quý khách trở lại!',
+ @receptionist_id, '2025-03-04 09:00:00', '2025-03-04 08:00:00', '2025-03-04 09:00:00');
+
+-- Review 2: 3.0 sao, chưa có phản hồi
+INSERT INTO reviews (customer_id, booking_id, rating, comment, staff_reply, replied_by, replied_at, created_at, updated_at) VALUES
+(@customer_id, @booking2_id, 3,
+ 'Phòng ổn nhưng điều hòa hơi ồn, khó ngủ vào ban đêm. Bữa sáng khá ngon nhưng ít lựa chọn.',
+ NULL, NULL, NULL, '2025-03-19 10:00:00', '2025-03-19 10:00:00');
+
+-- Review 3: 5.0 sao, đã có phản hồi
+INSERT INTO reviews (customer_id, booking_id, rating, comment, staff_reply, replied_by, replied_at, created_at, updated_at) VALUES
+(@customer_id, @booking3_id, 5.0,
+ 'Tuyệt vời! Phòng VIP xứng đáng từng đồng. View đẹp, dịch vụ 5 sao, nhân viên chuyên nghiệp. Cực kỳ hài lòng!',
+ 'Quý khách đã dành những lời khen tặng rất trân trọng. Đây là động lực lớn để đội ngũ chúng tôi tiếp tục cố gắng. Hẹn gặp lại quý khách!',
+ @receptionist_id, '2025-04-07 08:30:00', '2025-04-07 08:00:00', '2025-04-07 08:30:00');

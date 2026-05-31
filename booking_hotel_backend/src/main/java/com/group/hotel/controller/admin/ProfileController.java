@@ -1,4 +1,4 @@
-package com.group.hotel.controller.profile;
+package com.group.hotel.controller.admin;
 
 import com.group.hotel.dto.request.ProfileUpdateRequest;
 import com.group.hotel.dto.response.ProfileResponse;

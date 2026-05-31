@@ -1,0 +1,244 @@
+.pageWrapper {
+    padding: 24px;
+}
+
+.pageTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 20px;
+}
+
+/* ── Filter bar ── */
+.filterBar {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.filterInput {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.filterInput:focus {
+    border-color: #6c63ff;
+}
+
+.filterSeparator {
+    color: #adb5bd;
+    font-size: 0.85rem;
+}
+
+/* ── Tab pills ── */
+.tabGroup {
+    display: flex;
+    gap: 6px;
+    background: #f1f3f5;
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.tabBtn {
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tabBtnActive {
+    background: #fff;
+    color: #6c63ff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    font-weight: 600;
+}
+
+/* ── Table card ── */
+.tableCard {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.table {
+    margin-bottom: 0;
+    font-size: 0.875rem;
+}
+
+.table thead th {
+    background: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    border-bottom: 2px solid #e9ecef;
+    padding: 12px 16px;
+    white-space: nowrap;
+}
+
+.table tbody td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background: #f8f9ff;
+}
+
+/* ── Stars ── */
+.stars {
+    color: #f59e0b;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+}
+
+/* ── Comment truncate ── */
+.commentCell {
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #495057;
+}
+
+/* ── Status badge ── */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+/* ── Action button ── */
+.btnReply {
+    border: none;
+    background: #6c63ff;
+    color: #fff;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+.btnReply:hover { background: #5a52d5; }
+
+/* ── Pagination ── */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 16px;
+    border-top: 1px solid #f1f3f5;
+}
+
+.pageBtn {
+    border: 1px solid #dee2e6;
+    background: #fff;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #495057;
+}
+.pageBtn:hover { background: #f8f9ff; border-color: #6c63ff; color: #6c63ff; }
+.pageBtnActive { background: #6c63ff; color: #fff; border-color: #6c63ff; }
+.pageBtnActive:hover { background: #5a52d5; }
+.pageBtnDisabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Modal ── */
+.reviewCard {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.reviewMeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.customerName {
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.reviewDate {
+    font-size: 0.8rem;
+    color: #adb5bd;
+}
+
+.reviewComment {
+    color: #495057;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.replySection label {
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.replyTextarea {
+    width: 100%;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    min-height: 100px;
+}
+.replyTextarea:focus { border-color: #6c63ff; }
+
+.errorText {
+    color: #dc3545;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 48px;
+    color: #adb5bd;
+}
+
+.emptyState i {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.totalText {
+    font-size: 0.85rem;
+    color: #6c757d;
+    padding: 0 16px;
+}

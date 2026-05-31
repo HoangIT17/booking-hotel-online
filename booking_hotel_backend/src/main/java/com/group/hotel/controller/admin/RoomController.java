@@ -1,4 +1,4 @@
-package com.group.hotel.controller.manager;
+package com.group.hotel.controller.admin;
 
 import com.group.hotel.common.response.BaseResponse;
 import com.group.hotel.dto.request.RoomCreateRequest;
@@ -27,60 +27,60 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-    @GetMapping("/api/v1/manager/rooms/statuses")
+    @GetMapping("/api/v1/rooms/statuses")
     public ResponseEntity<BaseResponse<List<String>>> getStatuses() {
         return ResponseEntity.ok(BaseResponse.success(roomService.getStatuses()));
     }
 
-    @GetMapping("/api/v1/manager/rooms/room-type")
-    public ResponseEntity<BaseResponse<List<String>>> getRoomTypes(){
+    @GetMapping("/api/v1/rooms/room-type")
+    public ResponseEntity<BaseResponse<List<String>>> getRoomTypes() {
         return ResponseEntity.ok(BaseResponse.success(roomService.getRoomTypes()));
     }
 
-    @GetMapping("/api/v1/manager/rooms")
+    @GetMapping("/api/v1/rooms")
     public ResponseEntity<BaseResponse<PageResponse<RoomResponse>>> getAll(
             @ModelAttribute RoomSearchRequest roomSearchRequest,
             @PageableDefault(sort = "roomNumber", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(BaseResponse.success(roomService.getAll(roomSearchRequest, pageable)));
     }
 
-    @GetMapping("/api/v1/manager/rooms/{id}")
+    @GetMapping("/api/v1/rooms/{id}")
     public ResponseEntity<BaseResponse<RoomDetailResponse>> getDetail(@PathVariable Long id) {
         return ResponseEntity.ok(BaseResponse.success(roomService.getDetail(id)));
     }
 
-    @PostMapping("/api/v1/manager/rooms")
+    @PostMapping("/api/v1/rooms")
     public ResponseEntity<BaseResponse<RoomResponse>> create(
             @Valid @RequestBody RoomCreateRequest roomCreateRequest) {
         return ResponseEntity.ok(BaseResponse.success(roomService.create(roomCreateRequest)));
     }
 
-    @PutMapping("/api/v1/manager/rooms/{id}")
+    @PutMapping("/api/v1/rooms/{id}")
     public ResponseEntity<BaseResponse<RoomResponse>> update(
             @PathVariable Long id,
             @Valid @RequestBody RoomUpdateRequest roomUpdateRequest) {
         return ResponseEntity.ok(BaseResponse.success(roomService.update(id, roomUpdateRequest)));
     }
 
-    @DeleteMapping("/api/v1/manager/rooms/{id}")
+    @DeleteMapping("/api/v1/rooms/{id}")
     public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id) {
         roomService.delete(id);
         return ResponseEntity.ok(BaseResponse.success(null));
     }
 
-    @PutMapping("/api/v1/manager/rooms/{id}/restore")
+    @PutMapping("/api/v1/rooms/{id}/restore")
     public ResponseEntity<BaseResponse<RoomResponse>> restore(@PathVariable Long id) {
         return ResponseEntity.ok(BaseResponse.success(roomService.restore(id)));
     }
 
-    @PutMapping("/api/v1/manager/rooms/{id}/furnitures")
+    @PutMapping("/api/v1/rooms/{id}/furnitures")
     public ResponseEntity<BaseResponse<RoomDetailResponse>> updateFurnitures(
             @PathVariable Long id,
             @RequestBody List<Long> furnitureIds) {
         return ResponseEntity.ok(BaseResponse.success(roomService.updateFurnitures(id, furnitureIds)));
     }
 
-    @PostMapping(value = "/api/v1/manager/rooms/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/api/v1/rooms/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse<String>> uploadImage(
             @PathVariable Long id,
             @RequestParam("file") MultipartFile file) {

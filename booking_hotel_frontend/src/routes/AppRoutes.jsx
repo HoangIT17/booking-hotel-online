@@ -18,6 +18,7 @@ import FurniturePage from "../pages/admin/furniture/FurniturePage";
 import RoomPage from "../pages/admin/rooms/RoomPage";
 import DashboardManager from "../pages/manager/dashboard/Dashboard";
 import ReceptionistDashboard from "../pages/receptionist/Dashboard";
+import ReviewPage from "../pages/admin/reviews/ReviewPage";
 import StaffHousekeepingDashboard from "../pages/staff/Dashboard";
 import HomePage from "../pages/customer/HomePage";
 
@@ -58,9 +59,10 @@ const AppRoutes = () => {
                     <Route path="users" element={<UserManagement />} />
                     <Route path="furnitures" element={<FurniturePage />} />
                     <Route path="rooms" element={<RoomPage />} />
+                    <Route path="reviews" element={<ReviewPage />} />
                     <Route path="change-password" element={<ChangePasswordPage />} />
                     <Route path="profile" element={<ProfilePage />} />
-                    <Route path="profile/edit" element={<ProfileEditPage />} />     
+                    <Route path="profile/edit" element={<ProfileEditPage />} />
 
                     {/* Sau này làm thêm các trang khác thì cứ thả vào đây, tự động được bảo vệ và có sẵn Layout! */}
                     {/* <Route path="room-categories" element={<RoomCategoryList />} /> */}
@@ -80,8 +82,9 @@ const AppRoutes = () => {
                     <Route path="dashboard" element={<DashboardManager />} />
                     <Route path="furnitures" element={<FurniturePage />} />
                     <Route path="rooms" element={<RoomPage />} />
+                    <Route path="reviews" element={<ReviewPage />} />
                     <Route path="profile" element={<ProfilePage />} />
-                    <Route path="profile/edit" element={<ProfileEditPage />} /> 
+                    <Route path="profile/edit" element={<ProfileEditPage />} />
                     {/* Thêm chức năng quản lý tại đây */}
                 </Route>
             </Route>
