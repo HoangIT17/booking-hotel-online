@@ -46,7 +46,41 @@ public class ProfileServiceImpl implements ProfileService {
                     return createNewProfile(user);
                 });
 
-        return profileMapper.toProfileResponse(profile);
+        // 1. Nhờ Mapper làm những phần text cơ bản
+        ProfileResponse response = profileMapper.toProfileResponse(profile);
+
+        // 2. 🌟 TỰ TAY BƠM DỮ LIỆU ĐẶC THÙ BẰNG JAVA THUẦN (1000% ĂN CODE)
+        if (profile.getUser() != null && profile.getUser().getRole() != null) {
+            String roleName = profile.getUser().getRole().getRoleName().toUpperCase();
+
+            boolean isEmployee = roleName.contains("STAFF")
+                    || roleName.contains("MANAGER")
+                    || roleName.contains("RECEPTIONIST")
+                    || roleName.contains("ADMIN");
+
+            if (isEmployee) {
+                // Đẩy số năm kinh nghiệm (nếu null thì cho bằng 0)
+                response.setExperienceYears(profile.getExperienceYears() != null ? profile.getExperienceYears() : 0);
+
+                // Đẩy kỹ năng (nếu null thì báo chưa thiết lập)
+                response.setSkills((profile.getSkills() != null && !profile.getSkills().trim().isEmpty())
+                        ? profile.getSkills() : "Chưa thiết lập kỹ năng");
+
+                // Ưu tiên ngày trong bảng Profile, nếu trống bốc thẳng ngày tạo User
+                if (profile.getHireDate() != null) {
+                    response.setHireDate(profile.getHireDate());
+                } else if (profile.getUser().getCreatedAt() != null) {
+                    response.setHireDate(profile.getUser().getCreatedAt().toLocalDate());
+                }
+            } else {
+                // Nếu là CUSTOMER thì ép về null để @JsonInclude nó xóa khỏi cục JSON
+                response.setExperienceYears(null);
+                response.setSkills(null);
+                response.setHireDate(null);
+            }
+        }
+
+        return response;
     }
 
     @Override
@@ -62,16 +96,18 @@ public class ProfileServiceImpl implements ProfileService {
                     return createNewProfile(user);
                 });
 
-        // 2. Map dữ liệu Text
+        // 2. Map dữ liệu Text cơ bản (fullName, phone, gender, birthday, address)
         profileMapper.updateProfileFromRequest(request, profile);
 
-        // 3. Phân quyền Update trường đặc thù
-        String roleName = profile.getUser().getRole().getRoleName();
-        List<String> employeeRoles = List.of("STAFF", "MANAGER", "RECEPTIONIST");
+        // 3. Phân quyền Update trường đặc thù (🌟 ĐÃ ĐỒNG BỘ CẢ ADMIN VÀ ÉP CHỮ HOA)
+        if (profile.getUser() != null && profile.getUser().getRole() != null) {
+            String roleName = profile.getUser().getRole().getRoleName().toUpperCase();
+            List<String> employeeRoles = List.of("STAFF", "MANAGER", "RECEPTIONIST", "ADMIN");
 
-        if (employeeRoles.contains(roleName)) {
-            profile.setExperienceYears(request.getExperienceYears());
-            profile.setSkills(request.getSkills());
+            if (employeeRoles.contains(roleName)) {
+                profile.setExperienceYears(request.getExperienceYears());
+                profile.setSkills(request.getSkills());
+            }
         }
 
         // 4. Xử lý Upload Avatar (Lưu vào ổ cứng)
@@ -98,7 +134,7 @@ public class ProfileServiceImpl implements ProfileService {
             }
         }
 
-        // 5. Lưu xuống DB và trả kết quả
+        // 5. Lưu xuống DB và trả kết quả đi qua bộ lọc của Mapper phiên bản mới
         Profile updatedProfile = profileRepository.save(profile);
         return profileMapper.toProfileResponse(updatedProfile);
     }
