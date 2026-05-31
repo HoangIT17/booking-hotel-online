@@ -1,4 +1,4 @@
-package com.group.hotel.controller.admin;
+package com.group.hotel.controller;
 
 import com.group.hotel.common.response.BaseResponse;
 import com.group.hotel.dto.request.RoomCreateRequest;

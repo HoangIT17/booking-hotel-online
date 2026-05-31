@@ -1,4 +1,4 @@
-package com.group.hotel.controller.admin;
+package com.group.hotel.controller;
 
 import com.group.hotel.common.response.BaseResponse;
 import com.group.hotel.common.response.PageResponse;
@@ -23,8 +23,6 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    // ── Staff ───────────────────────────────────────
-
     @GetMapping("/api/v1/reviews")
     public ResponseEntity<BaseResponse<PageResponse<ReviewResponse>>> getAll(
             @ModelAttribute ReviewSearchRequest searchRequest,
@@ -38,8 +36,6 @@ public class ReviewController {
             @Valid @RequestBody ReviewReplyRequest request) {
         return ResponseEntity.ok(BaseResponse.success(reviewService.replyReview(reviewId, request)));
     }
-
-    // ── Customer ──────────────────────────────────────────────
 
     @PostMapping("/api/v1/customer/reviews/{bookingId}")
     public ResponseEntity<BaseResponse<ReviewResponse>> createReview(

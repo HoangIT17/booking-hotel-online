@@ -1,4 +1,4 @@
-package com.group.hotel.controller.admin;
+package com.group.hotel.controller;
 
 import com.group.hotel.common.response.BaseResponse;
 import com.group.hotel.dto.request.FurnitureCreateRequest;
@@ -19,7 +19,6 @@ public class FurnitureController {
     public FurnitureController(FurnitureService furnitureService){
         this.furnitureService = furnitureService;
     }
-
 
     @GetMapping("/api/v1/furnitures/types")
     public ResponseEntity<BaseResponse<List<String>>> getTypes() {

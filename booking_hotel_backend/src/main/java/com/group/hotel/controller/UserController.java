@@ -1,4 +1,4 @@
-package com.group.hotel.controller.admin;
+package com.group.hotel.controller;
 
 import com.group.hotel.common.response.BaseResponse;
 import com.group.hotel.dto.request.UserCreateRequest;
@@ -16,25 +16,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
-@PreAuthorize("hasAuthority('ADMIN')") // 🛡️ BẢO VỆ TOÀN BỘ CLASS CHO ADMIN
+@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
 
     private final UserService userService;
 
-    /**
-     * API: Tạo tài khoản nội bộ
-     * URI: POST /api/v1/users
-     */
     @PostMapping
     public ResponseEntity<BaseResponse<UserCreateResponse>> createAccount(@Valid @RequestBody UserCreateRequest request) {
         UserCreateResponse responseData = userService.createUser(request);
         return ResponseEntity.ok(BaseResponse.success(responseData, "Khởi tạo tài khoản thành công!"));
     }
 
-    /**
-     * API: Lấy danh sách người dùng
-     * URI: GET /api/v1/users
-     */
     @GetMapping
     public ResponseEntity<BaseResponse<Page<UserResponse>>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
@@ -49,28 +41,16 @@ public class UserController {
         return ResponseEntity.ok(BaseResponse.success(users, "Lấy danh sách người dùng thành công"));
     }
 
-    /**
-     * API: Xem chi tiết người dùng
-     * URI: GET /api/v1/users/{id}
-     */
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<UserResponse>> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(BaseResponse.success(userService.getUserById(id), "Lấy thông tin người dùng thành công"));
     }
 
-    /**
-     * API: Cập nhật người dùng
-     * URI: PUT /api/v1/users/{id}
-     */
     @PutMapping("/{id}")
     public ResponseEntity<BaseResponse<UserResponse>> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest request) {
         return ResponseEntity.ok(BaseResponse.success(userService.updateUser(id, request), "Cập nhật người dùng thành công"));
     }
 
-    /**
-     * API: Xóa người dùng
-     * URI: DELETE /api/v1/users/{id}
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponse<Void>> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

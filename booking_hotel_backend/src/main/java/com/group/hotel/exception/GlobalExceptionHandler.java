@@ -120,6 +120,30 @@ public class GlobalExceptionHandler {
                 .body(BaseResponse.error(409, ex.getMessage()));
     }
 
+    @ExceptionHandler(VoucherNotFoundException.class)
+    public ResponseEntity<BaseResponse<Void>> handleVoucherNotFound(VoucherNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(BaseResponse.error(404, ex.getMessage()));
+    }
+
+    @ExceptionHandler(VoucherConflictException.class)
+    public ResponseEntity<BaseResponse<Void>> handleVoucherConflict(VoucherConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(BaseResponse.error(409, ex.getMessage()));
+    }
+
+    @ExceptionHandler(BookingNotFoundException.class)
+    public ResponseEntity<BaseResponse<Void>> handleBookingNotFound(BookingNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(BaseResponse.error(404, ex.getMessage()));
+    }
+
+    @ExceptionHandler(PaymentConflictException.class)
+    public ResponseEntity<BaseResponse<Void>> handlePaymentConflict(PaymentConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(BaseResponse.error(409, ex.getMessage()));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
 

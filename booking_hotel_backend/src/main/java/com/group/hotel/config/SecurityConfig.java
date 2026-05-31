@@ -62,6 +62,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/payments/vnpay/return").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/reservation-create").authenticated()
 
                         .requestMatchers("/api/v1/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
@@ -71,11 +73,20 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/v1/reviews/**").hasAnyAuthority("RECEPTIONIST","MANAGER","ADMIN")
                         .requestMatchers("/api/v1/customer/reviews/**").hasAuthority("CUSTOMER")
+                        .requestMatchers("/api/v1/customer/reservation-search").authenticated()
+                        .requestMatchers("/api/v1/customer/**").permitAll()
 
-                        // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
-
-
+                        .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("/api/v1/vouchers/**").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("/api/v1/manager/reservation-update").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("/api/customer/rooms/search/**").permitAll()
+                        .requestMatchers("/api/customer/bookings/**").permitAll()
+                        .requestMatchers("/api/customer/bookings-search/**").permitAll()
+                        .requestMatchers("/api/admin/furnitures/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/admin/room-types/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")
                         .anyRequest().authenticated()
                 );
 

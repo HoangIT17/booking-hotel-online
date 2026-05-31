@@ -1,4 +1,4 @@
-package com.group.hotel.controller.admin;
+package com.group.hotel.controller;
 
 import com.group.hotel.dto.request.ProfileUpdateRequest;
 import com.group.hotel.dto.response.ProfileResponse;
@@ -16,22 +16,11 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
-    /**
-     * API: Lấy thông tin hồ sơ của chính mình (dựa vào Token đăng nhập)
-     * Method: GET
-     * URL: http://localhost:8080/api/v1/profiles/me
-     */
     @GetMapping("/me")
     public ResponseEntity<ProfileResponse> getMyProfile() {
         return ResponseEntity.ok(profileService.getMyProfile());
     }
 
-    /**
-     * API: Cập nhật hồ sơ (Hỗ trợ upload ảnh đại diện)
-     * Method: PUT
-     * URL: http://localhost:8080/api/v1/profiles/me
-     * Consumes: multipart/form-data
-     */
     @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProfileResponse> updateMyProfile(
             @ModelAttribute ProfileUpdateRequest request,

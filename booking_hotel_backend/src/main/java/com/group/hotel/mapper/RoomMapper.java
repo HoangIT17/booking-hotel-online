@@ -7,10 +7,7 @@ import com.group.hotel.dto.response.RoomFurnitureResponse;
 import com.group.hotel.dto.response.RoomResponse;
 import com.group.hotel.entity.Furniture;
 import com.group.hotel.entity.Room;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
@@ -25,4 +22,5 @@ public interface RoomMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void fromUpdate(RoomUpdateRequest request, @MappingTarget Room room);
+
 }
