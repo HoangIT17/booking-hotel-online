@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -24,8 +23,8 @@ public class BookingSearchCustomerResponse {
     private String fullName;
     private String email;
     private String phone;
-    private LocalDate checkInDate;
-    private LocalDate checkOutDate;
+    private LocalDateTime checkInDate;
+    private LocalDateTime checkOutDate;
     private Integer numNights;
     private Integer numGuests;
     private BigDecimal totalPrice;

@@ -35,7 +35,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -48,6 +47,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
     private static final String INVALID_DATE_RANGE_MESSAGE = "checkIn must be before checkOut";
+    private static final String MIN_BOOKING_DURATION_MESSAGE = "Booking duration must be at least 1 day";
 
     private static final List<BookingStatus> BLOCKING_BOOKING_STATUSES = List.of(
             BookingStatus.PENDING,
@@ -120,14 +120,12 @@ public class BookingServiceImpl implements BookingService {
         int numNights = calculateNumNights(request.getCheckIn(), request.getCheckOut());
         BigDecimal roomTotal = calculateRoomTotal(room, numNights);
         User customer = getCurrentCustomer();
-        Voucher voucher = resolveVoucher(request.getVoucherCode(), roomTotal, request.getCheckIn().atStartOfDay());
+        Voucher voucher = resolveVoucher(request.getVoucherCode(), roomTotal, request.getCheckIn());
         BigDecimal totalPrice = applyVoucherDiscount(roomTotal, voucher);
 
         Booking booking = bookingMapper.createBookingRequest(request);
         prepareBookingForCreate(booking, customer, voucher, numNights, totalPrice);
 
-        room.setStatus(RoomStatus.RESERVED);
-        roomRepository.save(room);
         Booking savedBooking = bookingRepository.save(booking);
         createBookingDetail(savedBooking, room);
         increaseVoucherUsedCount(voucher);
@@ -192,14 +190,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private void validateBookingSearchSystemRequest(BookingSearchSystemRequest request) {
-        if (request != null && !request.isValidDateRange()) {
-            throw new RoomConflictException(INVALID_DATE_RANGE_MESSAGE);
+        if (request != null) {
+            validateBookingDateRange(request.getCheckIn(), request.getCheckOut(), false);
         }
     }
 
     private void validateBookingSearchUserRequest(BookingSearchUserRequest request) {
-        if (request != null && !request.isValidDateRange()) {
-            throw new RoomConflictException(INVALID_DATE_RANGE_MESSAGE);
+        if (request != null) {
+            validateBookingDateRange(request.getCheckIn(), request.getCheckOut(), false);
         }
     }
 
@@ -216,20 +214,26 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private void syncRoomStatusWithBookingStatus(Room room, BookingStatus bookingStatus) {
-        if (bookingStatus == BookingStatus.PENDING || bookingStatus == BookingStatus.CONFIRMED) {
-            room.setStatus(RoomStatus.RESERVED);
-        } else if (bookingStatus == BookingStatus.CHECKED_IN) {
+        if (bookingStatus == BookingStatus.CHECKED_IN) {
             room.setStatus(RoomStatus.OCCUPIED);
         } else if (bookingStatus == BookingStatus.CHECKED_OUT
                 || bookingStatus == BookingStatus.CANCELLED
-                || bookingStatus == BookingStatus.REFUNDED) {
+                || bookingStatus == BookingStatus.REFUNDED
+                || bookingStatus == BookingStatus.PENDING
+                || bookingStatus == BookingStatus.CONFIRMED) {
             room.setStatus(RoomStatus.READY);
         }
     }
 
-    private void validateDateRange(LocalDate checkIn, LocalDate checkOut) {
+    private void validateBookingDateRange(LocalDateTime checkIn, LocalDateTime checkOut, boolean required) {
+        if (!required && (checkIn == null || checkOut == null)) {
+            return;
+        }
         if (checkIn == null || checkOut == null || !checkIn.isBefore(checkOut)) {
             throw new RoomConflictException(INVALID_DATE_RANGE_MESSAGE);
+        }
+        if (ChronoUnit.DAYS.between(checkIn, checkOut) < 1) {
+            throw new RoomConflictException(MIN_BOOKING_DURATION_MESSAGE);
         }
     }
 
@@ -237,7 +241,7 @@ public class BookingServiceImpl implements BookingService {
         return request.getCheckIn() != null || request.getCheckOut() != null;
     }
 
-    private boolean hasOverlappingBooking(Room room, LocalDate checkIn, LocalDate checkOut, Long excludedBookingId) {
+    private boolean hasOverlappingBooking(Room room, LocalDateTime checkIn, LocalDateTime checkOut, Long excludedBookingId) {
         Specification<Booking> overlapSpec = BookingSpecification.hasOverlappingRoomBooking(
                 room.getId(),
                 checkIn,
@@ -247,7 +251,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.count(overlapSpec) > 0;
     }
 
-    private void validateRoomCanBeBooked(Room room, Integer numGuests, LocalDate checkIn, LocalDate checkOut) {
+    private void validateRoomCanBeBooked(Room room, Integer numGuests, LocalDateTime checkIn, LocalDateTime checkOut) {
         if (room.getStatus() != RoomStatus.READY) {
             throw new RoomConflictException("Room is not available");
         }
@@ -265,8 +269,8 @@ public class BookingServiceImpl implements BookingService {
         booking.setTotalPrice(calculateRoomTotal(room, numNights));
     }
 
-    private int calculateNumNights(LocalDate checkIn, LocalDate checkOut) {
-        return Math.toIntExact(ChronoUnit.DAYS.between(checkIn, checkOut));
+    private int calculateNumNights(LocalDateTime checkIn, LocalDateTime checkOut) {
+        return Math.toIntExact(ChronoUnit.DAYS.between(checkIn.toLocalDate(), checkOut.toLocalDate()));
     }
 
     private BigDecimal calculateRoomTotal(Room room, int numNights) {
@@ -377,10 +381,7 @@ public class BookingServiceImpl implements BookingService {
         if (request.getRoomId() == null) {
             throw new RoomConflictException("roomId is required");
         }
-        if (request.getCheckIn() == null || request.getCheckOut() == null) {
-            throw new RoomConflictException("checkIn and checkOut are required");
-        }
-        validateDateRange(request.getCheckIn(), request.getCheckOut());
+        validateBookingDateRange(request.getCheckIn(), request.getCheckOut(), true);
         if (request.getNumGuests() == null) {
             throw new RoomConflictException("numGuests is required");
         }
@@ -421,9 +422,9 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private DateRange resolveDateRange(BookingUpdateRequest request, Booking booking) {
-        LocalDate checkIn = request.getCheckIn() == null ? booking.getCheckInDate() : request.getCheckIn();
-        LocalDate checkOut = request.getCheckOut() == null ? booking.getCheckOutDate() : request.getCheckOut();
-        validateDateRange(checkIn, checkOut);
+        LocalDateTime checkIn = request.getCheckIn() == null ? booking.getCheckInDate() : request.getCheckIn();
+        LocalDateTime checkOut = request.getCheckOut() == null ? booking.getCheckOutDate() : request.getCheckOut();
+        validateBookingDateRange(checkIn, checkOut, true);
         return new DateRange(checkIn, checkOut);
     }
 
@@ -445,6 +446,6 @@ public class BookingServiceImpl implements BookingService {
     private record BookingContext(Booking booking, Room room) {
     }
 
-    private record DateRange(LocalDate checkIn, LocalDate checkOut) {
+    private record DateRange(LocalDateTime checkIn, LocalDateTime checkOut) {
     }
 }
