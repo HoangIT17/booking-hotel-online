@@ -1,10 +1,11 @@
 package com.group.hotel.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
@@ -15,4 +16,7 @@ public class RoomUpdateRequest {
     @NotBlank
     private String status;
     private String description;
+    private BigDecimal price;
+    private Double area;
+    private Integer maxPeople;
 }

@@ -1,7 +1,7 @@
 import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter } from "react-router-dom";
-import store from './redux/store';
+import store from "./redux/store";
 import AppRoutes from "./routes/AppRoutes";
 
 function App() {
