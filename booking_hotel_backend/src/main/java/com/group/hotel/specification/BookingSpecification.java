@@ -1,6 +1,7 @@
 package com.group.hotel.specification;
 
-import com.group.hotel.dto.request.BookingSearchRequest;
+import com.group.hotel.dto.request.BookingSearchSystemRequest;
+import com.group.hotel.dto.request.BookingSearchUserRequest;
 import com.group.hotel.entity.Booking;
 import com.group.hotel.entity.BookingDetail;
 import com.group.hotel.enums.BookingStatus;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 
 public class BookingSpecification {
-    public static Specification<Booking> searchBookingRequest(BookingSearchRequest request) {
+    public static Specification<Booking> searchBookingRequest(BookingSearchSystemRequest request) {
         return (root, query, builder) -> {
             Specification<Booking> spec = (bookingRoot, bookingQuery, criteriaBuilder) ->
                     criteriaBuilder.conjunction();
@@ -34,13 +35,6 @@ public class BookingSpecification {
             }
             if (request.hasDateRange()) {
                 spec = spec.and(overlapsDateRange(request.getCheckIn(), request.getCheckOut()));
-            } else {
-                if (request.getCheckIn() != null) {
-                    spec = spec.and(hasCheckInFrom(request.getCheckIn()));
-                }
-                if (request.getCheckOut() != null) {
-                    spec = spec.and(hasCheckOutTo(request.getCheckOut()));
-                }
             }
             if (request.getRoomStatus() != null) {
                 spec = spec.and(hasRoomStatus(request.getRoomStatus()));
@@ -56,9 +50,49 @@ public class BookingSpecification {
         };
     }
 
+    public static Specification<Booking> searchCustomerBookingRequest(BookingSearchUserRequest request, Long customerId) {
+        return (root, query, builder) -> {
+            Specification<Booking> spec = hasCustomerId(customerId);
+
+            if (request == null) {
+                return spec.toPredicate(root, query, builder);
+            }
+
+            if (request.getBookingId() != null) {
+                spec = spec.and(hasBookingId(request.getBookingId()));
+            }
+            if (request.getRoomNumber() != null && !request.getRoomNumber().isBlank()) {
+                spec = spec.and(hasRoomNumber(request.getRoomNumber()));
+            }
+            if (request.hasDateRange()) {
+                spec = spec.and(overlapsDateRange(request.getCheckIn(), request.getCheckOut()));
+            } else {
+                if (request.getCheckIn() != null) {
+                    spec = spec.and(hasCheckInFrom(request.getCheckIn()));
+                }
+                if (request.getCheckOut() != null) {
+                    spec = spec.and(hasCheckOutTo(request.getCheckOut()));
+                }
+            }
+            if (request.getBookingStatus() != null) {
+                spec = spec.and(hasBookingStatus(request.getBookingStatus()));
+            }
+            if (request.getPaymentMethod() != null) {
+                spec = spec.and(hasPaymentMethod(request.getPaymentMethod()));
+            }
+
+            return spec.toPredicate(root, query, builder);
+        };
+    }
+
     public static Specification<Booking> hasBookingId(Long id) {
         return (root, query, builder) ->
                 builder.equal(root.get("id"), id);
+    }
+
+    public static Specification<Booking> hasCustomerId(Long customerId) {
+        return (root, query, builder) ->
+                builder.equal(root.get("customer").get("id"), customerId);
     }
 
     public static Specification<Booking> hasCustomerName(String customerName) {
@@ -99,11 +133,12 @@ public class BookingSpecification {
 
     public static Specification<Booking> hasPaymentMethod(PaymentMethod paymentMethod) {
         return (root, query, builder) ->
-                builder.equal(root.join("payment", JoinType.LEFT).get("paymentMethod"), paymentMethod);
+                builder.equal(root.get("paymentMethod"), paymentMethod);
     }
 
     public static Specification<Booking> hasRoomNumber(String roomNumber) {
         return (root, query, builder) -> {
+            assert query != null;
             Subquery<Long> subquery = query.subquery(Long.class);
             var bookingDetail = subquery.from(BookingDetail.class);
             var room = bookingDetail.join("room", JoinType.INNER);
@@ -121,6 +156,7 @@ public class BookingSpecification {
 
     public static Specification<Booking> hasRoomStatus(RoomStatus roomStatus) {
         return (root, query, builder) -> {
+            assert query != null;
             Subquery<Long> subquery = query.subquery(Long.class);
             var bookingDetail = subquery.from(BookingDetail.class);
             var room = bookingDetail.join("room", JoinType.INNER);

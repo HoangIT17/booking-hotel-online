@@ -3,7 +3,8 @@ package com.group.hotel.controller.booking;
 import com.group.hotel.common.response.BaseResponse;
 import com.group.hotel.common.response.PageResponse;
 import com.group.hotel.dto.request.BookingCreateRequest;
-import com.group.hotel.dto.request.BookingSearchRequest;
+import com.group.hotel.dto.request.BookingSearchSystemRequest;
+import com.group.hotel.dto.request.BookingSearchUserRequest;
 import com.group.hotel.dto.request.BookingUpdateRequest;
 import com.group.hotel.dto.request.SearchRoomAvailableRequest;
 import com.group.hotel.dto.response.*;
@@ -35,12 +36,20 @@ public class BookingController {
         return ResponseEntity.ok(BaseResponse.success(bookingService.getCustomerRoomDetail(roomId)));
     }
 
-    @GetMapping("api/v1/manager/reservation-search")
-    public ResponseEntity<BaseResponse<PageResponse<BookingSearchManagerResponse>>> getManagerBookingSearch(
-            @ModelAttribute @Valid BookingSearchRequest bookingSearchRequest,
+    @GetMapping("/api/v1/manager/reservation-search")
+    public ResponseEntity<BaseResponse<PageResponse<BookingSearchSystemResponse>>> getManagerBookingSearch(
+            @ModelAttribute @Valid BookingSearchSystemRequest bookingSearchRequest,
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ){
-        return ResponseEntity.ok(BaseResponse.success(bookingService.searchBookings(bookingSearchRequest, pageable)));
+        return ResponseEntity.ok(BaseResponse.success(bookingService.searchBookingsSystem(bookingSearchRequest, pageable)));
+    }
+
+    @GetMapping("/api/v1/customer/reservation-search")
+    public ResponseEntity<BaseResponse<PageResponse<BookingSearchCustomerResponse>>> getCustomerBookingSearch(
+            @ModelAttribute @Valid BookingSearchUserRequest bookingSearchRequest,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    ){
+        return ResponseEntity.ok(BaseResponse.success(bookingService.searchCustomerBookings(bookingSearchRequest, pageable)));
     }
 
     @PostMapping("/api/v1/reservation-create")

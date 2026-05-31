@@ -127,6 +127,12 @@ public class GlobalExceptionHandler {
                 .body(BaseResponse.error(404, ex.getMessage()));
     }
 
+    @ExceptionHandler(PaymentConflictException.class)
+    public ResponseEntity<BaseResponse<Void>> handlePaymentConflict(PaymentConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(BaseResponse.error(409, ex.getMessage()));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
 

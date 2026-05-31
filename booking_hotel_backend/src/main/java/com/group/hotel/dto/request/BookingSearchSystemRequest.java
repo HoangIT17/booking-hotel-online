@@ -6,18 +6,24 @@ import com.group.hotel.enums.RoomStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingSearchRequest {
+public class BookingSearchSystemRequest {
     private Long bookingId;
     private String customerName;
     private String roomNumber;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate checkIn;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate checkOut;
+
     private RoomStatus roomStatus;
     private BookingStatus bookingStatus;
     private PaymentMethod paymentMethod;

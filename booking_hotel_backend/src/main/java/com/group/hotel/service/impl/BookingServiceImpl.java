@@ -2,17 +2,12 @@ package com.group.hotel.service.impl;
 
 import com.group.hotel.common.response.PageResponse;
 import com.group.hotel.dto.request.BookingCreateRequest;
-import com.group.hotel.dto.request.BookingSearchRequest;
+import com.group.hotel.dto.request.BookingSearchSystemRequest;
+import com.group.hotel.dto.request.BookingSearchUserRequest;
 import com.group.hotel.dto.request.BookingUpdateRequest;
 import com.group.hotel.dto.request.SearchRoomAvailableRequest;
 import com.group.hotel.dto.response.*;
-import com.group.hotel.entity.Booking;
-import com.group.hotel.entity.BookingDetail;
-import com.group.hotel.entity.Payment;
-import com.group.hotel.entity.Profile;
-import com.group.hotel.entity.Room;
-import com.group.hotel.entity.User;
-import com.group.hotel.entity.Voucher;
+import com.group.hotel.entity.*;
 import com.group.hotel.enums.BookingStatus;
 import com.group.hotel.enums.RoomStatus;
 import com.group.hotel.exception.BookingNotFoundException;
@@ -23,7 +18,6 @@ import com.group.hotel.exception.VoucherNotFoundException;
 import com.group.hotel.mapper.BookingMapper;
 import com.group.hotel.repository.BookingDetailRepository;
 import com.group.hotel.repository.BookingRepository;
-import com.group.hotel.repository.PaymentRepository;
 import com.group.hotel.repository.ReviewRepository;
 import com.group.hotel.repository.RoomRepository;
 import com.group.hotel.repository.UserRepository;
@@ -36,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -45,12 +40,15 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
+    private static final String INVALID_DATE_RANGE_MESSAGE = "checkIn must be before checkOut";
+
     private static final List<BookingStatus> BLOCKING_BOOKING_STATUSES = List.of(
             BookingStatus.PENDING,
             BookingStatus.CONFIRMED,
@@ -62,7 +60,6 @@ public class BookingServiceImpl implements BookingService {
     private final VoucherRepository voucherRepository;
     private final BookingRepository bookingRepository;
     private final BookingDetailRepository bookingDetailRepository;
-    private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
     private final BookingMapper bookingMapper;
 
@@ -79,84 +76,60 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public CustomerRoomDetailResponse getCustomerRoomDetail(Long roomId) {
-        Room room = roomRepository.findByIdWithFurnitures(roomId)
-                .filter(foundRoom -> !foundRoom.isDeleted())
-                .orElseThrow(RoomNotFoundException::new);
+        Room room = getActiveRoomWithFurniture(roomId);
+        List<CustomerRoomDetailResponse.FurnitureItem> furniture =
+                bookingMapper.toFurnitureItemList(room.getFurnitures());
+        List<CustomerRoomDetailResponse.ReviewItem> reviews =
+                bookingMapper.toReviewItemList(reviewRepository.findByRoomId(roomId));
 
-        List<CustomerRoomDetailResponse.FurnitureItem> furniture = room.getFurnitures() == null
-                ? List.of()
-                : room.getFurnitures().stream()
-                .map(item -> CustomerRoomDetailResponse.FurnitureItem.builder()
-                        .name(item.getFurnitureName())
-                        .quantity(1)
-                        .build())
-                .toList();
-
-        List<CustomerRoomDetailResponse.ReviewItem> reviews = reviewRepository.findByRoomId(roomId)
-                .stream()
-                .map(review -> CustomerRoomDetailResponse.ReviewItem.builder()
-                        .rating(review.getRating())
-                        .comment(review.getComment())
-                        .build())
-                .toList();
-
-        return CustomerRoomDetailResponse.builder()
-                .roomId(room.getId())
-                .roomNumber(room.getRoomNumber())
-                .roomType(room.getRoomType() == null ? null : room.getRoomType().name())
-                .price(room.getPrice())
-                .capacity(room.getMaxPeople())
-                .description(room.getDescription())
-                .status("AVAILABLE")
-                .imagesUrl(room.getImageUrl())
-                .features(List.of())
-                .furniture(furniture)
-                .reviews(reviews)
-                .build();
+        return bookingMapper.toCustomerRoomDetailResponse(room, furniture, reviews);
     }
 
     @Override
-    public PageResponse<BookingSearchManagerResponse> searchBookings(BookingSearchRequest request, Pageable pageable) {
+    public PageResponse<BookingSearchSystemResponse> searchBookingsSystem(BookingSearchSystemRequest request, Pageable pageable) {
+        validateBookingSearchSystemRequest(request);
+
         Specification<Booking> spec = BookingSpecification.searchBookingRequest(request);
         Page<Booking> bookings = bookingRepository.findAll(spec, pageable);
         Map<Long, BookingDetail> bookingDetailByBookingId = getBookingDetailByBookingId(bookings.getContent());
 
         return PageResponse.of(bookings.map(booking ->
-                toBookingSearchManagerResponse(booking, bookingDetailByBookingId.get(booking.getId()))));
+                bookingMapper.toSystemSearchResponse(booking, bookingDetailByBookingId.get(booking.getId()))));
+    }
+
+    @Override
+    public PageResponse<BookingSearchCustomerResponse> searchCustomerBookings(BookingSearchUserRequest request, Pageable pageable) {
+        validateBookingSearchUserRequest(request);
+
+        User customer = getCurrentCustomer();
+        Specification<Booking> spec = BookingSpecification.searchCustomerBookingRequest(request, customer.getId());
+        Page<Booking> bookings = bookingRepository.findAll(spec, pageable);
+        Map<Long, BookingDetail> bookingDetailByBookingId = getBookingDetailByBookingId(bookings.getContent());
+
+        return PageResponse.of(bookings.map(booking ->
+                bookingMapper.toCustomerSearchResponse(booking, bookingDetailByBookingId.get(booking.getId()))));
     }
 
     @Override
     public BookingCreateResponse createBooking(BookingCreateRequest request) {
         validateBookingCreateRequest(request);
 
-        Room room = roomRepository.findById(request.getRoomId())
-                .filter(foundRoom -> !foundRoom.isDeleted())
-                .orElseThrow(RoomNotFoundException::new);
+        Room room = getActiveRoom(request.getRoomId());
+        validateRoomCanBeBooked(room, request.getNumGuests(), request.getCheckIn(), request.getCheckOut());
 
-        if (room.getStatus() != RoomStatus.READY) {
-            throw new RoomConflictException("Room is not available");
-        }
-        if (room.getMaxPeople() != null && request.getNumGuests() > room.getMaxPeople()) {
-            throw new RoomConflictException("numGuests exceeds room capacity");
-        }
-        if (hasOverlappingBookingForCreate(room, request)) {
-            throw new RoomConflictException("Room is not available for the selected date range");
-        }
-
-        int numNights = Math.toIntExact(ChronoUnit.DAYS.between(request.getCheckIn(), request.getCheckOut()));
+        int numNights = calculateNumNights(request.getCheckIn(), request.getCheckOut());
         BigDecimal roomTotal = calculateRoomTotal(room, numNights);
-        Voucher voucher = resolveVoucher(request.getVoucherCode(), roomTotal, request.getCheckIn().atStartOfDay());
-        BigDecimal totalPrice = roomTotal.subtract(calculateDiscount(voucher, roomTotal)).max(BigDecimal.ZERO);
         User customer = resolveCustomer(request.getCustomerId());
+        Voucher voucher = resolveVoucher(request.getVoucherCode(), roomTotal, request.getCheckIn().atStartOfDay());
+        BigDecimal totalPrice = applyVoucherDiscount(roomTotal, voucher);
 
-        Booking booking = bookingMapper.fromCreateRequest(request);
+        Booking booking = bookingMapper.createBookingRequest(request);
         prepareBookingForCreate(booking, customer, voucher, numNights, totalPrice);
 
         room.setStatus(RoomStatus.RESERVED);
         roomRepository.save(room);
         Booking savedBooking = bookingRepository.save(booking);
         createBookingDetail(savedBooking, room);
-        createPayment(savedBooking, request);
         increaseVoucherUsedCount(voucher);
 
         BookingCreateResponse response = bookingMapper.toCreateResponse(savedBooking);
@@ -179,17 +152,12 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingUpdateResponse updateBookingManager(BookingUpdateRequest request) {
-        Booking booking = bookingRepository.findById(request.getBookingId())
-                .orElseThrow(BookingNotFoundException::new);
-        BookingDetail bookingDetail = bookingDetailRepository.findByBookingId(request.getBookingId())
-                .orElseThrow(BookingNotFoundException::new);
-        Room room = bookingDetail.getRoom();
+        BookingContext context = getBookingContext(request.getBookingId());
+        Booking booking = context.booking();
+        Room room = context.room();
+        DateRange dateRange = resolveDateRange(request, booking);
 
-        LocalDate effectiveCheckIn = request.getCheckIn() == null ? booking.getCheckInDate() : request.getCheckIn();
-        LocalDate effectiveCheckOut = request.getCheckOut() == null ? booking.getCheckOutDate() : request.getCheckOut();
-        validateBookingUpdateDateRange(effectiveCheckIn, effectiveCheckOut);
-
-        if (hasDateChange(request) && hasOverlappingBookingForUpdate(room, effectiveCheckIn, effectiveCheckOut, booking)) {
+        if (hasDateChange(request) && hasOverlappingBooking(room, dateRange.checkIn(), dateRange.checkOut(), booking.getId())) {
             throw new RoomConflictException("Room is not available for the selected date range");
         }
 
@@ -203,7 +171,7 @@ public class BookingServiceImpl implements BookingService {
             roomRepository.save(room);
         }
         if (request.getPaymentMethod() != null) {
-            updatePaymentMethod(booking, request);
+            booking.setPaymentDate(LocalDateTime.now());
         }
 
         Booking savedBooking = bookingRepository.save(booking);
@@ -214,12 +182,36 @@ public class BookingServiceImpl implements BookingService {
 
     private void validateSearchRoomAvailableRequest(SearchRoomAvailableRequest request) {
         if (!request.isValidDateRange()) {
-            throw new RoomConflictException("checkIn must be before checkOut");
+            throw new RoomConflictException(INVALID_DATE_RANGE_MESSAGE);
         }
         if (request.getMinPrice() != null && request.getMaxPrice() != null
                 && request.getMinPrice().compareTo(request.getMaxPrice()) > 0) {
             throw new RoomConflictException("minPrice must be less than or equal to maxPrice");
         }
+    }
+
+    private void validateBookingSearchSystemRequest(BookingSearchSystemRequest request) {
+        if (request != null && !request.isValidDateRange()) {
+            throw new RoomConflictException(INVALID_DATE_RANGE_MESSAGE);
+        }
+    }
+
+    private void validateBookingSearchUserRequest(BookingSearchUserRequest request) {
+        if (request != null && !request.isValidDateRange()) {
+            throw new RoomConflictException(INVALID_DATE_RANGE_MESSAGE);
+        }
+    }
+
+    private Room getActiveRoom(Long roomId) {
+        return roomRepository.findById(roomId)
+                .filter(room -> !room.isDeleted())
+                .orElseThrow(RoomNotFoundException::new);
+    }
+
+    private Room getActiveRoomWithFurniture(Long roomId) {
+        return roomRepository.findByIdWithFurnitures(roomId)
+                .filter(room -> !room.isDeleted())
+                .orElseThrow(RoomNotFoundException::new);
     }
 
     private void syncRoomStatusWithBookingStatus(Room room, BookingStatus bookingStatus) {
@@ -234,9 +226,9 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private void validateBookingUpdateDateRange(LocalDate checkIn, LocalDate checkOut) {
+    private void validateDateRange(LocalDate checkIn, LocalDate checkOut) {
         if (checkIn == null || checkOut == null || !checkIn.isBefore(checkOut)) {
-            throw new RoomConflictException("checkIn must be before checkOut");
+            throw new RoomConflictException(INVALID_DATE_RANGE_MESSAGE);
         }
     }
 
@@ -244,34 +236,44 @@ public class BookingServiceImpl implements BookingService {
         return request.getCheckIn() != null || request.getCheckOut() != null;
     }
 
-    private boolean hasOverlappingBookingForCreate(Room room, BookingCreateRequest request) {
-        Specification<Booking> overlapSpec = BookingSpecification.hasOverlappingRoomBooking(
-                room.getId(),
-                request.getCheckIn(),
-                request.getCheckOut(),
-                BLOCKING_BOOKING_STATUSES,
-                null);
-        return bookingRepository.count(overlapSpec) > 0;
-    }
-
-    private boolean hasOverlappingBookingForUpdate(Room room, LocalDate checkIn, LocalDate checkOut, Booking booking) {
+    private boolean hasOverlappingBooking(Room room, LocalDate checkIn, LocalDate checkOut, Long excludedBookingId) {
         Specification<Booking> overlapSpec = BookingSpecification.hasOverlappingRoomBooking(
                 room.getId(),
                 checkIn,
                 checkOut,
                 BLOCKING_BOOKING_STATUSES,
-                booking.getId());
+                excludedBookingId);
         return bookingRepository.count(overlapSpec) > 0;
     }
 
+    private void validateRoomCanBeBooked(Room room, Integer numGuests, LocalDate checkIn, LocalDate checkOut) {
+        if (room.getStatus() != RoomStatus.READY) {
+            throw new RoomConflictException("Room is not available");
+        }
+        if (room.getMaxPeople() != null && numGuests > room.getMaxPeople()) {
+            throw new RoomConflictException("numGuests exceeds room capacity");
+        }
+        if (hasOverlappingBooking(room, checkIn, checkOut, null)) {
+            throw new RoomConflictException("Room is not available for the selected date range");
+        }
+    }
+
     private void recalculateBookingPrice(Booking booking, Room room) {
-        int numNights = Math.toIntExact(ChronoUnit.DAYS.between(booking.getCheckInDate(), booking.getCheckOutDate()));
+        int numNights = calculateNumNights(booking.getCheckInDate(), booking.getCheckOutDate());
         booking.setNumNights(numNights);
         booking.setTotalPrice(calculateRoomTotal(room, numNights));
     }
 
+    private int calculateNumNights(LocalDate checkIn, LocalDate checkOut) {
+        return Math.toIntExact(ChronoUnit.DAYS.between(checkIn, checkOut));
+    }
+
     private BigDecimal calculateRoomTotal(Room room, int numNights) {
         return room.getPrice().multiply(BigDecimal.valueOf(numNights));
+    }
+
+    private BigDecimal applyVoucherDiscount(BigDecimal roomTotal, Voucher voucher) {
+        return roomTotal.subtract(calculateDiscount(voucher, roomTotal)).max(BigDecimal.ZERO);
     }
 
     private User resolveCustomer(Long customerId) {
@@ -293,22 +295,13 @@ public class BookingServiceImpl implements BookingService {
         booking.setExtraCharge(BigDecimal.ZERO);
         booking.setTotalPrice(totalPrice);
         booking.setStatus(BookingStatus.PENDING);
+        booking.setPaymentDate(LocalDateTime.now());
     }
 
     private void createBookingDetail(Booking booking, Room room) {
         bookingDetailRepository.save(BookingDetail.builder()
                 .booking(booking)
                 .room(room)
-                .build());
-    }
-
-    private void createPayment(Booking booking, BookingCreateRequest request) {
-        paymentRepository.save(Payment.builder()
-                .booking(booking)
-                .paymentMethod(request.getPaymentMethod())
-                .depositAmount(BigDecimal.ZERO)
-                .totalPaid(BigDecimal.ZERO)
-                .paymentDate(LocalDateTime.now())
                 .build());
     }
 
@@ -322,16 +315,13 @@ public class BookingServiceImpl implements BookingService {
         voucherRepository.save(voucher);
     }
 
-    private void updatePaymentMethod(Booking booking, BookingUpdateRequest request) {
-        Payment payment = paymentRepository.findByBookingId(booking.getId())
-                .orElseGet(() -> Payment.builder()
-                        .booking(booking)
-                        .depositAmount(BigDecimal.ZERO)
-                        .totalPaid(BigDecimal.ZERO)
-                        .paymentDate(LocalDateTime.now())
-                        .build());
-        payment.setPaymentMethod(request.getPaymentMethod());
-        paymentRepository.save(payment);
+    private User getCurrentCustomer() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getName() == null || "anonymousUser".equals(authentication.getName())) {
+            throw new RoomConflictException("Customer is required");
+        }
+        return userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RoomConflictException("Customer is required"));
     }
 
     private Map<Long, Double> getAverageRatingByRoomId(List<Room> rooms) {
@@ -361,6 +351,7 @@ public class BookingServiceImpl implements BookingService {
         List<Long> bookingIds = bookings.stream()
                 .map(Booking::getId)
                 .toList();
+
         if (bookingIds.isEmpty()) {
             return Map.of();
         }
@@ -369,33 +360,9 @@ public class BookingServiceImpl implements BookingService {
                 .stream()
                 .collect(Collectors.toMap(
                         bookingDetail -> bookingDetail.getBooking().getId(),
-                        bookingDetail -> bookingDetail,
+                        Function.identity(),
                         (first, ignored) -> first));
     }
-
-    private BookingSearchManagerResponse toBookingSearchManagerResponse(Booking booking, BookingDetail bookingDetail) {
-        User customer = booking.getCustomer();
-        Profile profile = customer == null ? null : customer.getProfile();
-        Room room = bookingDetail == null ? null : bookingDetail.getRoom();
-        Payment payment = booking.getPayment();
-
-        return BookingSearchManagerResponse.builder()
-                .bookingId(booking.getId())
-                .username(customer == null ? "" : customer.getUsername())
-                .fullName(profile == null || profile.getFullName() == null ? "" : profile.getFullName())
-                .roomNumber(room == null ? null : room.getRoomNumber())
-                .checkInDate(booking.getCheckInDate())
-                .checkOutDate(booking.getCheckOutDate())
-                .totalPrice(booking.getTotalPrice())
-                .roomStatus(room == null ? null : room.getStatus())
-                .bookingStatus(booking.getStatus())
-                .paymentMethod(payment == null ? null : payment.getPaymentMethod())
-                .build();
-    }
-
-
-
-
 
     private void validateBookingCreateRequest(BookingCreateRequest request) {
         if (request.getRoomId() == null) {
@@ -404,9 +371,7 @@ public class BookingServiceImpl implements BookingService {
         if (request.getCheckIn() == null || request.getCheckOut() == null) {
             throw new RoomConflictException("checkIn and checkOut are required");
         }
-        if (!request.isValidDateRange()) {
-            throw new RoomConflictException("checkIn must be before checkOut");
-        }
+        validateDateRange(request.getCheckIn(), request.getCheckOut());
         if (request.getNumGuests() == null) {
             throw new RoomConflictException("numGuests is required");
         }
@@ -438,6 +403,21 @@ public class BookingServiceImpl implements BookingService {
         return voucher;
     }
 
+    private BookingContext getBookingContext(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(BookingNotFoundException::new);
+        BookingDetail bookingDetail = bookingDetailRepository.findByBookingId(bookingId)
+                .orElseThrow(BookingNotFoundException::new);
+        return new BookingContext(booking, bookingDetail.getRoom());
+    }
+
+    private DateRange resolveDateRange(BookingUpdateRequest request, Booking booking) {
+        LocalDate checkIn = request.getCheckIn() == null ? booking.getCheckInDate() : request.getCheckIn();
+        LocalDate checkOut = request.getCheckOut() == null ? booking.getCheckOutDate() : request.getCheckOut();
+        validateDateRange(checkIn, checkOut);
+        return new DateRange(checkIn, checkOut);
+    }
+
     private BigDecimal calculateDiscount(Voucher voucher, BigDecimal bookingValueBeforeDiscount) {
         if (voucher == null || voucher.getDiscountPercent() == null) {
             return BigDecimal.ZERO;
@@ -453,5 +433,9 @@ public class BookingServiceImpl implements BookingService {
         return discount;
     }
 
+    private record BookingContext(Booking booking, Room room) {
+    }
 
+    private record DateRange(LocalDate checkIn, LocalDate checkOut) {
+    }
 }

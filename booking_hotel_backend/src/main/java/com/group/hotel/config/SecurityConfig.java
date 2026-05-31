@@ -62,11 +62,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/payments/vnpay/return").permitAll()
 
                         .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/vouchers/**").hasAnyAuthority("ADMIN","MANAGER")
-                        .requestMatchers("api/v1/customer/**").permitAll()
-                        .requestMatchers("api/v1/manager/reservation-update").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("/api/v1/customer/reservation-search").authenticated()
+                        .requestMatchers("/api/v1/customer/**").permitAll()
+                        .requestMatchers("/api/v1/manager/reservation-update").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/RoomImages/**").permitAll()

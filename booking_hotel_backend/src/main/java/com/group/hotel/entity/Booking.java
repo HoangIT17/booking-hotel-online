@@ -1,6 +1,7 @@
 package com.group.hotel.entity;
 
 import com.group.hotel.enums.BookingStatus;
+import com.group.hotel.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -47,7 +48,12 @@ public class Booking {
     private BigDecimal totalPrice;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private BookingStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method")
+    private PaymentMethod paymentMethod;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -55,6 +61,6 @@ public class Booking {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "booking", fetch = FetchType.LAZY)
-    private Payment payment;
+    @Column(name = "payment_date")
+    private LocalDateTime paymentDate;
 }
