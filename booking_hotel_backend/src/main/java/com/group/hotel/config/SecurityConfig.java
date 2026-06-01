@@ -71,7 +71,10 @@ public class SecurityConfig {
 
                         // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/v1/chatbot/ask").hasAuthority("CUSTOMER")
 
+                        // Admin được cấu hình Knowledge và xem History
+                        .requestMatchers("/api/v1/chatbot/**", "/api/v1/chatbot/history").hasAuthority("ADMIN")
 
                         .anyRequest().authenticated()
                 );

@@ -4,13 +4,18 @@ import RegisterPage from "../pages/auth/RegisterPage";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 
-
+// Chatbot
+import ChatbotManagement from "../pages/admin/chatbot-management/ChatbotManagement";
+import ChatbotDetailsPage from '../pages/admin/chatbot-management/ChatbotDetailsPage';
+import ChatbotEditPage from '../pages/admin/chatbot-management/ChatbotEditPage';
 
 //  Import tất cả các Khung giao diện (Layouts)
 import AdminLayout from "../layouts/AdminLayout";
 import ManagerLayout from "../layouts/ManagerLayout";
 import ReceptionistLayout from "../layouts/ReceptionistLayout";
 import StaffLayout from "../layouts/StaffLayout";
+import CustomerLayout from '../layouts/CustomerLayout';
+
 
 //  Import các trang Dashboard tương ứng của từng phân hệ
 import DashboardAdmin from "../pages/admin/dashboard/Dashboard";
@@ -34,16 +39,32 @@ import ProfileEditPage from "../pages/profile/ProfileEditPage";
 const AppRoutes = () => {
     return (
         <Routes>
-            {/* Gốc rễ: Tự động đẩy sang login khi mở web */}
-            <Route path="/" element={<Navigate to="/login" replace />} />
-
             {/* ================= PUBLIC ROUTES ================= */}
             {/* Bọc trong PublicRoute để chặn quay lại khi đã đăng nhập */}
             <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+            
             {/* Trang chủ xem phòng của khách hàng sau khi login */}
-            <Route element={<ProtectedRoute allowedRoles={["CUSTOMER"]} />}>
-                <Route path="/home" element={<HomePage />} />
+            <Route element={<CustomerLayout />}>
+
+                {/* 🟢 NHÓM PUBLIC: Không cần đăng nhập */}
+                <Route path="/" element={<HomePage />} />
+                
+                {/* Nếu khách có thói quen gõ /home, tự động bẻ lái về / cho chuẩn SEO */}
+                <Route path="/home" element={<Navigate to="/" replace />} />
+                
+                {/* 🔴 NHÓM PROTECTED: Bắt buộc phải đăng nhập (Có role CUSTOMER) */}
+                <Route path="customer">
+                    {/* Bây giờ đường dẫn sẽ là /customer/change-password */}
+                    <Route path="change-password" element={<ChangePasswordPage />} />
+                    
+                    {/* Đường dẫn sẽ là /customer/profile */}
+                    <Route path="profile" element={<ProfilePage />} />
+                    
+                    {/* Đường dẫn sẽ là /customer/profile/edit */}
+                    <Route path="profile/edit" element={<ProfileEditPage />} />   
+                </Route>
+
             </Route>
 
             {/* ================= ROLE ADMIN ================= */}
@@ -55,16 +76,15 @@ const AppRoutes = () => {
                     {/* Lớp 3: Nội dung (Sẽ chui vào cái <Outlet /> của AdminLayout) */}
                     {/* Lưu ý: path ở đây chỉ cần viết "dashboard" (không có dấu / ở đầu) vì nó nối tiếp từ /admin */}
                     <Route path="dashboard" element={<DashboardAdmin />} />
+                    <Route path="chatbot" element={<ChatbotManagement />} />
+                    <Route path="chatbot/:id" element={<ChatbotDetailsPage />} />
+                    <Route path="chatbot/edit/:id" element={<ChatbotEditPage />} />
                     <Route path="users" element={<UserManagement />} />
                     <Route path="furnitures" element={<FurniturePage />} />
                     <Route path="rooms" element={<RoomPage />} />
                     <Route path="change-password" element={<ChangePasswordPage />} />
                     <Route path="profile" element={<ProfilePage />} />
                     <Route path="profile/edit" element={<ProfileEditPage />} />     
-
-                    {/* Sau này làm thêm các trang khác thì cứ thả vào đây, tự động được bảo vệ và có sẵn Layout! */}
-                    {/* <Route path="room-categories" element={<RoomCategoryList />} /> */}
-                    {/* <Route path="users" element={<UserManagement />} /> */}
                     
                 </Route>
                 
