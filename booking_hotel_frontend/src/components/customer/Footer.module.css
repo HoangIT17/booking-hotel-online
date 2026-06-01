@@ -1,0 +1,135 @@
+.footer {
+    background-color: #1a202c; /* Xám đậm sang trọng */
+    color: #cbd5e1;
+    padding-top: 64px;
+    margin-top: auto; /* Đẩy footer xuống cuối cùng nếu body ngắn */
+}
+
+.footerContainer {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px 48px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+}
+
+/* Cột Thương hiệu */
+.footerBrand {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.logoArea {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.footerLogo {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(199, 162, 82, 0.4)); /* Làm logo sáng nhẹ */
+}
+
+.logoText {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #c7a252, #e2bc7c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.brandDesc {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #94a3b8;
+    max-width: 80%;
+}
+
+.contactInfo p {
+    margin: 8px 0;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #cbd5e1;
+}
+
+.contactInfo i {
+    color: #c7a252; /* Icon màu vàng gold */
+    width: 16px;
+}
+
+/* Cột Links */
+.footerLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.linkTitle {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    position: relative;
+    padding-bottom: 12px;
+}
+
+.linkTitle::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 2px;
+    background-color: #c7a252; /* Gạch dưới màu gold */
+}
+
+.linkItem {
+    text-decoration: none;
+    color: #94a3b8;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.linkItem:hover {
+    color: #c7a252;
+    transform: translateX(5px); /* Hiệu ứng trượt nhẹ sang phải khi hover */
+}
+
+/* Bottom Bar */
+.footerBottom {
+    background-color: #0f172a; /* Tối hơn nền chính một chút */
+    text-align: center;
+    padding: 24px 20px;
+    font-size: 14px;
+    color: #64748b;
+    border-top: 1px solid #334155;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .footerContainer {
+        grid-template-columns: 1fr 1fr;
+    }
+    .footerBrand {
+        grid-column: 1 / -1; /* Thương hiệu trải dài hết hàng đầu */
+    }
+    .brandDesc {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .footerContainer {
+        grid-template-columns: 1fr;
+        padding: 0 20px 32px;
+        gap: 32px;
+    }
+}
