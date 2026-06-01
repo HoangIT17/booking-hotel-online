@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,6 +26,20 @@ public class VoucherServiceImpl implements VoucherService {
     public List<VoucherResponse> getAll() {
         return voucherRepository.findAll()
                 .stream()
+                .map(voucherMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public List<VoucherResponse> getAvailableForCustomer() {
+        LocalDateTime now = LocalDateTime.now();
+        return voucherRepository.findAll()
+                .stream()
+                .filter(voucher -> voucher.getStartDate() == null || !voucher.getStartDate().isAfter(now))
+                .filter(voucher -> voucher.getEndDate() == null || !voucher.getEndDate().isBefore(now))
+                .filter(voucher -> voucher.getUsageLimit() == null
+                        || voucher.getUsedCount() == null
+                        || voucher.getUsedCount() < voucher.getUsageLimit())
                 .map(voucherMapper::toResponse)
                 .toList();
     }

@@ -2,7 +2,6 @@ package com.group.hotel.dto.response;
 
 import com.group.hotel.enums.BookingStatus;
 import com.group.hotel.enums.PaymentMethod;
-import com.group.hotel.enums.RoomStatus;
 import com.group.hotel.enums.RoomTypeName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

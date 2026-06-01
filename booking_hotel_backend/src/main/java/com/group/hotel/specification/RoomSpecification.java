@@ -98,6 +98,7 @@ public class RoomSpecification {
 
     private static Specification<Room> hasMinRating(BigDecimal minRating) {
         return (root, query, builder) -> {
+            assert query != null;
             Subquery<Double> subquery = query.subquery(Double.class);
             var review = subquery.from(Review.class);
             var bookingDetail = subquery.from(BookingDetail.class);
@@ -117,6 +118,7 @@ public class RoomSpecification {
 
     private static Specification<Room> hasNoOverlappingBooking(SearchRoomAvailableRequest request) {
         return (root, query, builder) -> {
+            assert query != null;
             Subquery<Long> subquery = query.subquery(Long.class);
             var bookingDetail = subquery.from(BookingDetail.class);
             var booking = bookingDetail.join("booking", JoinType.INNER);

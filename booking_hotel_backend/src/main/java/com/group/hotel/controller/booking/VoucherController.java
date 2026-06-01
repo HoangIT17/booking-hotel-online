@@ -28,6 +28,11 @@ public class VoucherController {
         return ResponseEntity.ok(BaseResponse.success(voucherService.getAll()));
     }
 
+    @GetMapping("/api/v1/customer/vouchers/available")
+    public ResponseEntity<BaseResponse<List<VoucherResponse>>> getAvailableForCustomer() {
+        return ResponseEntity.ok(BaseResponse.success(voucherService.getAvailableForCustomer()));
+    }
+
     @GetMapping("/api/v1/vouchers/{id}")
     public ResponseEntity<BaseResponse<VoucherResponse>> getDetail(@PathVariable Long id) {
         return ResponseEntity.ok(BaseResponse.success(voucherService.getDetail(id)));
