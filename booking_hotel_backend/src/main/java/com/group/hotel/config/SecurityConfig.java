@@ -73,12 +73,23 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/RoomImages/**").permitAll()
+
                         .requestMatchers("/api/customer/rooms/search/**").permitAll()
                         .requestMatchers("/api/customer/bookings/**").permitAll()
                         .requestMatchers("/api/customer/bookings-search/**").permitAll()
                         .requestMatchers("/api/admin/furnitures/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/admin/room-types/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")
+
+
+
+                        // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
+                        .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/v1/chatbot/ask").hasAuthority("CUSTOMER")
+
+                        // Admin được cấu hình Knowledge và xem History
+                        .requestMatchers("/api/v1/chatbot/**", "/api/v1/chatbot/history").hasAuthority("ADMIN")
+
                         .anyRequest().authenticated()
                 );
 

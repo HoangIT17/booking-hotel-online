@@ -1,24 +1,9 @@
-import { useDispatch } from "react-redux";
-import { logoutThunk } from "../../redux/slices/authSlice";
-import useAuth from "../../hooks/useAuth";
-
 const HomePage = () => {
-  const dispatch = useDispatch();
-  const { user } = useAuth(); // Lấy thông tin user ra test xem Redux có nhận không
-
-  return (
-    <div style={{ padding: "50px", textAlign: "center" }}>
-      <h2>Trang Chủ Khách Hàng (Customer)</h2>
-      <p>Xin chào: {user?.username}</p>
-
-      <button
-        onClick={() => dispatch(logoutThunk())}
-        style={{ marginTop: "20px", padding: "10px 20px", cursor: "pointer" }}
-      >
-        Đăng Xuất
-      </button>
-    </div>
-  );
+    return (
+        <div className="container-fluid d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+            <h1 className="text-primary fw-bold">Hi đây là trang chủ customer</h1>
+        </div>
+    );
 };
 
 export default HomePage;
