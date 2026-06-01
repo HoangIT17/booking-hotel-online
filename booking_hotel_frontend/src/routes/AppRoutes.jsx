@@ -17,8 +17,17 @@ import RoomPage from "../pages/admin/rooms/RoomPage";
 import DashboardManager from "../pages/manager/dashboard/Dashboard";
 import ReceptionistDashboard from "../pages/receptionist/Dashboard";
 import StaffHousekeepingDashboard from "../pages/staff/Dashboard";
-import HomePage from "../pages/HomePage";
-
+import HomePage from "../pages/homepage/HomePage";
+import RoomSearchPage from "../pages/customer/RoomSearchPage";
+import RoomDetailPage from "../pages/customer/RoomDetailPage";
+import BookingPaymentPage from "../pages/customer/BookingPaymentPage";
+import RoomUnavailablePage from "../pages/customer/RoomUnavailablePage";
+import MyBookingPage from "../pages/customer/MyBookingPage";
+import ReservationDetailPage from "../pages/customer/ReservationDetailPage";
+import PaymentRedirectPage from "../pages/customer/PaymentRedirectPage";
+import PaymentResultPage from "../pages/customer/PaymentResultPage";
+import PaymentStatusPage from "../pages/customer/PaymentStatusPage";
+import OffersPage from "../pages/customer/OffersPage";
 // User Management
 import UserManagement from "../pages/admin/usermanagement/UserManagement";
 
@@ -33,7 +42,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* Gốc rễ: Tự động đẩy sang login khi mở web */}
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<Navigate to="/home" replace />} />
 
       {/* ================= PUBLIC ROUTES ================= */}
       {/* Bọc trong PublicRoute để chặn quay lại khi đã đăng nhập */}
@@ -53,10 +62,17 @@ const AppRoutes = () => {
           </PublicRoute>
         }
       />
-      {/* Trang chủ xem phòng của khách hàng sau khi login */}
-      <Route element={<ProtectedRoute allowedRoles={["CUSTOMER"]} />}>
-        <Route path="/home" element={<HomePage />} />
-      </Route>
+      <Route path="/home" element={<HomePage />} />
+      <Route path="/rooms" element={<RoomSearchPage />} />
+      <Route path="/offers" element={<OffersPage />} />
+      <Route path="/rooms/:roomId" element={<RoomDetailPage />} />
+      <Route path="/rooms/unavailable" element={<RoomUnavailablePage />} />
+      <Route path="/booking" element={<BookingPaymentPage />} />
+      <Route path="/reservations" element={<MyBookingPage />} />
+      <Route path="/reservations/:bookingId" element={<ReservationDetailPage />} />
+      <Route path="/payment/redirect" element={<PaymentRedirectPage />} />
+      <Route path="/payment/result" element={<PaymentResultPage />} />
+      <Route path="/payment/status" element={<PaymentStatusPage />} />
 
       {/* ================= ROLE ADMIN ================= */}
       <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
@@ -132,7 +148,7 @@ const AppRoutes = () => {
       />
 
       {/* Hướng đi mặc định nếu gõ sai URL */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
   );
 };

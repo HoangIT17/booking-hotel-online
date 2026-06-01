@@ -1,0 +1,31 @@
+.card {
+  min-height: 112px;
+  padding: 16px;
+  border: 1px solid #e7e7ea;
+  border-radius: 9px;
+  background: #ffffff;
+}
+
+.card p {
+  margin: 10px 0 13px;
+  color: #6b6d76;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.card strong,
+.card small {
+  display: block;
+}
+
+.card strong {
+  color: #111114;
+  font-size: 16px;
+  font-weight: 850;
+}
+
+.card small {
+  margin-top: 2px;
+  color: #858791;
+  font-size: 14px;
+}

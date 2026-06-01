@@ -1,0 +1,315 @@
+.pageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.pageHeader h1 {
+  margin: 0 0 8px;
+  color: #111114;
+  font-size: 34px;
+  line-height: 1.05;
+  font-weight: 900;
+}
+
+.pageHeader p {
+  margin: 0;
+  color: #6b6d76;
+  font-size: 14px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+}
+
+.card,
+.filterCard,
+.summaryCard,
+.panel {
+  border: 1px solid #e5e5e8;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.filterCard,
+.summaryCard,
+.panel {
+  padding: 22px;
+}
+
+.filterCard {
+  position: sticky;
+  top: 82px;
+  height: fit-content;
+}
+
+.filterCard h2,
+.summaryCard h2,
+.panel h2 {
+  margin: 0 0 18px;
+  color: #111114;
+  font-size: 16px;
+  font-weight: 850;
+}
+
+.stack {
+  display: grid;
+  gap: 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.roomsGrid {
+  grid-template-columns: repeat(2, minmax(260px, 360px));
+  justify-content: start;
+  gap: 18px;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 28px;
+  align-items: start;
+}
+
+.heroImage {
+  width: 100%;
+  height: 430px;
+  display: block;
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+.metaRow,
+.buttonRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.buttonRow {
+  margin-top: 22px;
+}
+
+.primaryButton,
+.secondaryButton,
+.dangerButton {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 0 16px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 850;
+}
+
+.primaryButton {
+  border: 0;
+  background: #111114;
+  color: #ffffff;
+}
+
+.secondaryButton {
+  border: 1px solid #e5e5e8;
+  background: #ffffff;
+  color: #111114;
+}
+
+.dangerButton {
+  border: 0;
+  background: #ea5455;
+  color: #ffffff;
+}
+
+.infoList {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.infoList li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f2;
+  color: #6b6d76;
+  font-size: 17px;
+}
+
+.infoList strong {
+  color: #111114;
+}
+
+.bookingDateBox {
+  display: grid;
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.summaryCard .primaryButton {
+  width: 100%;
+}
+
+.iconList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.iconList li {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: 1px solid #e5e5e8;
+  border-radius: 999px;
+  background: #f7f7f8;
+  color: #111114;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.iconList svg {
+  color: #14804a;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.select,
+.textarea {
+  width: 100%;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #111114;
+  font-size: 14px;
+  outline: 0;
+}
+
+.select {
+  height: 44px;
+  padding: 0 14px;
+}
+
+.textarea {
+  min-height: 110px;
+  padding: 14px;
+  resize: vertical;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 16px;
+  border-bottom: 1px solid #efeff1;
+  text-align: left;
+  font-size: 17px;
+}
+
+.table th {
+  color: #747680;
+  font-size: 15px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.resultState {
+  max-width: 620px;
+  margin: 48px auto;
+  padding: 44px;
+  border: 1px solid #e5e5e8;
+  border-radius: 20px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.resultIcon {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  background: #eafaf1;
+  color: #14804a;
+}
+
+.timeline {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 10px;
+  color: #6b6d76;
+  font-size: 17px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: #111114;
+}
+
+@media (max-width: 920px) {
+  .layout,
+  .detailGrid,
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .roomsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .filterCard {
+    position: static;
+  }
+
+  .pageHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
