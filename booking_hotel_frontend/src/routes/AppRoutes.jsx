@@ -32,6 +32,7 @@ import ProfileEditPage from "../pages/profile/ProfileEditPage";
 // Room Detail cho Staff
 import RoomDetail from "../pages/staff/RoomDetail";
 import ViewCleaningTasks from "../pages/staff/ViewCleaningTasks";
+import ViewMyCleaningTasks from "../pages/staff/ViewMyCleaningTasks";
 
 const AppRoutes = () => {
   return (
@@ -123,6 +124,7 @@ const AppRoutes = () => {
           {/* Thêm chức năng nhân viên: tasks, room-status... tại đây */}
           <Route path="view-tasks" element={<ViewCleaningTasks />} />
           <Route path="room-detail/:roomNumber" element={<RoomDetail />} />
+          <Route path="my-tasks" element={<ViewMyCleaningTasks />} />
         </Route>
       </Route>
 

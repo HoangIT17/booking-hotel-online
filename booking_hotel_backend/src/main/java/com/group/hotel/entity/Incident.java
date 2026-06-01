@@ -1,6 +1,7 @@
 package com.group.hotel.entity;
 
 import com.group.hotel.enums.IncidentStatus;
+import com.group.hotel.enums.IncidentType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,6 +27,15 @@ public class Incident {
     @JoinColumn(name = "staff_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private User staff;
+
+    @JoinColumn(name = "furniture_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Furniture furniture;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "incident_type")
+    private IncidentType incidentType;
 
     @Column(columnDefinition = "TEXT")
     private String description;

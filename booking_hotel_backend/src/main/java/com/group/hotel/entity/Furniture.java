@@ -39,4 +39,5 @@ public class Furniture {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    private String status;
 }

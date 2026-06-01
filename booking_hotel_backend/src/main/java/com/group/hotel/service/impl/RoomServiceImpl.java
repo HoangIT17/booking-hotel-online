@@ -1,14 +1,12 @@
 package com.group.hotel.service.impl;
 
-import com.group.hotel.dto.request.CreateMaintenanceRequest;
-import com.group.hotel.dto.request.RoomCreateRequest;
-import com.group.hotel.dto.request.RoomSearchRequest;
-import com.group.hotel.dto.request.RoomUpdateRequest;
+import com.group.hotel.dto.request.*;
 import com.group.hotel.dto.response.*;
 import com.group.hotel.entity.Incident;
 import com.group.hotel.entity.Room;
 import com.group.hotel.entity.User;
 import com.group.hotel.enums.IncidentStatus;
+import com.group.hotel.enums.IncidentType;
 import com.group.hotel.repository.IncidentRepository;
 import com.group.hotel.enums.RoomTypeName;
 import com.group.hotel.exception.RoomConflictException;
@@ -27,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +38,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -348,6 +348,130 @@ public class RoomServiceImpl implements RoomService {
                         .cleaningStatus(room.getStatus().name())
                         .build())
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public UpdateRoomStatusResponse updateRoomStatus(
+            String roomNumber,
+            UpdateRoomStatusRequest request
+    ) {
+
+        Room room = roomRepository
+                .findByRoomNumberAndIsDeletedFalse(roomNumber)
+                .orElseThrow(() ->
+                        new RuntimeException("Room not found"));
+
+        if (!"READY".equalsIgnoreCase(request.getStatus())) {
+            throw new RuntimeException(
+                    "Status must be READY");
+        }
+
+        // Không cho chuyển nếu đang có khách
+        if (room.getStatus() == RoomStatus.OCCUPIED) {
+            throw new RuntimeException(
+                    "Room is occupied");
+        }
+
+        room.setStatus(RoomStatus.READY);
+
+        roomRepository.save(room);
+
+        return UpdateRoomStatusResponse.builder()
+                .success(true)
+                .message("Room status updated to READY successfully")
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public AcceptCleaningTaskResponse acceptCleaningTask(String roomNumber) {
+
+        Room room = roomRepository
+                .findByRoomNumberAndIsDeletedFalse(roomNumber)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phòng: " + roomNumber));
+
+        if (room.getStatus() != RoomStatus.DIRTY) {
+            throw new RuntimeException("Chỉ có phòng trạng thái BẨN (DIRTY) mới có thể nhận dọn dẹp!");
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Kiểm tra an toàn trước khi ép kiểu tránh lỗi 500
+        if (authentication == null || !authentication.isAuthenticated() || !(authentication.getPrincipal() instanceof UserPrincipal)) {
+            throw new RuntimeException("Phiên đăng nhập không hợp lệ hoặc bạn không có quyền nhân viên!");
+        }
+
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+
+        User staff = userRepository
+                .findById(principal.getId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin tài khoản nhân viên dọn dẹp"));
+
+        // Chuyển trạng thái phòng sang CLEANING (Đang dọn)
+        room.setStatus(RoomStatus.CLEANING);
+        roomRepository.save(room);
+
+        return AcceptCleaningTaskResponse.builder()
+                .success(true)
+                .roomNumber(room.getRoomNumber())
+                .cleaningStatus(room.getStatus().name())
+                .assignedStaff(staff.getUsername())
+                .message("Nhận dọn dẹp phòng thành công!")
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public Map<String, Object> createFurnitureIncident(CreateIncidentRequest request) {
+        // 1. Tìm phòng theo số phòng
+        Room room = roomRepository
+                .findByRoomNumberAndIsDeletedFalse(request.getRoomNumber())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phòng tương ứng"));
+
+        // 2. Tìm thiết bị nội thất theo ID
+        Furniture furniture = furnitureRepository
+                .findById(request.getFurnitureItemId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thiết bị này"));
+
+        // 3. Lấy thông tin nhân viên từ Security Context
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        User staff = userRepository
+                .findById(userPrincipal.getId())
+                .orElseThrow(() -> new RuntimeException("Tài khoản nhân viên không tồn tại"));
+
+        // 4. Tạo và lưu thực thể Incident mới (Đã nâng cấp theo cách 1)
+        Incident incident = Incident.builder()
+                .room(room)
+                .staff(staff)
+                .furniture(furniture) // Gán thiết bị hỏng/mất
+                .incidentType(IncidentType.valueOf(request.getIncidentType().toUpperCase())) // DAMAGED hoặc MISSING
+                .description(request.getDescription())
+                .status(IncidentStatus.PENDING) // Đợi kỹ thuật xử lý
+                .build();
+
+        Incident savedIncident = incidentRepository.save(incident);
+
+        // 5. Cập nhật trực tiếp trạng thái thiết bị nội thất trong phòng
+        // (Giúp đồng bộ dữ liệu hiển thị trên giao diện danh sách tiện nghi)
+        if (incident.getIncidentType() == IncidentType.DAMAGED) {
+            furniture.setStatus("DAMAGED"); // Hoặc trạng thái tương ứng trong Enum Furniture của bạn
+        } else if (incident.getIncidentType() == IncidentType.MISSING) {
+            furniture.setStatus("MISSING");
+        }
+        furnitureRepository.save(furniture);
+
+        // 6. Trả về Response Map đồng bộ với cấu trúc kiểm tra success của Frontend
+        return Map.of(
+                "success", true,
+                "message", "Báo cáo sự cố thiết bị thành công!",
+                "ticketId", "INC-" + savedIncident.getId(),
+                "status", savedIncident.getStatus().name()
+        );
     }
 
 }

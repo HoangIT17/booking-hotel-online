@@ -7,6 +7,9 @@ const ViewCleaningTasks = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Trạng thái khóa nút bấm tạm thời khi đang xử lý API nhận dọn phòng
+  const [loadingAccept, setLoadingAccept] = useState(null);
+
   // Các bộ lọc dữ liệu tại FE
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
@@ -22,7 +25,7 @@ const ViewCleaningTasks = () => {
     axiosInstance
       .get("/staff/cleaning-tasks")
       .then((response) => {
-        const resData = response.data;
+        const resData = response.data ? response.data : response;
 
         // Cơ chế bóc mảng thông minh hỗ trợ mọi cấu trúc dữ liệu từ Backend
         if (Array.isArray(resData)) {
@@ -31,17 +34,13 @@ const ViewCleaningTasks = () => {
           setTasks(resData.data);
         } else if (resData && Array.isArray(resData.content)) {
           setTasks(resData.content);
-        } else if (response && Array.isArray(response)) {
-          setTasks(response);
-        } else if (response && Array.isArray(response.data)) {
-          setTasks(response.data);
         } else {
           setTasks([]);
         }
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Lỗi kết nối API:", error);
+        console.error("Lỗi kết nối API lấy danh sách:", error);
         setTasks([]);
         setLoading(false);
       });
@@ -52,6 +51,60 @@ const ViewCleaningTasks = () => {
     setCurrentPage(1);
   }, [searchTerm, statusFilter, floorFilter]);
 
+  // LOGIC GỌI API NHẬN DỌN PHÒNG (ĐÃ SỬA THEO CHUẨN PATH VARIABLE)
+  const handleAcceptCleaning = (roomNumber) => {
+    setLoadingAccept(roomNumber);
+
+    // Sử dụng URL khớp cấu trúc @PostMapping("/rooms/{roomNumber}/accept-cleaning")
+    axiosInstance
+      .post(`/staff/rooms/${roomNumber}/accept-cleaning`)
+      .then((response) => {
+        if (!response) {
+          alert("Hệ thống không phản hồi dữ liệu.");
+          return;
+        }
+
+        const resData = response.data ? response.data : response;
+
+        if (resData && resData.success) {
+          alert(
+            `Phòng ${roomNumber}: ${resData.message || "Nhận dọn thành công!"}`,
+          );
+
+          // Cập nhật trạng thái trực tiếp trên mảng dữ liệu Client
+          setTasks((prevTasks) =>
+            prevTasks.map((task) => {
+              if (String(task.roomNumber) === String(roomNumber)) {
+                return {
+                  ...task,
+                  cleaningStatus: resData.cleaningStatus || "CLEANING",
+                  status: resData.cleaningStatus || "CLEANING",
+                };
+              }
+              return task;
+            }),
+          );
+
+          // Tự động chuyển hướng ngay sang trang "Phòng cần dọn" để nhân viên thực hiện dọn dẹp
+          navigate("/staff/my-tasks");
+        } else {
+          alert(
+            (resData && resData.message) || "Không thể nhận dọn dẹp phòng này.",
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Lỗi khi xử lý API nhận dọn phòng:", error);
+        const errorMsg =
+          error.response?.data?.message ||
+          "Có lỗi xảy ra trong quá trình kết nối hệ thống. Vui lòng thử lại!";
+        alert(errorMsg);
+      })
+      .finally(() => {
+        setLoadingAccept(null);
+      });
+  };
+
   // Áp dụng CSS Badge màu sắc cho các trạng thái chuẩn
   const getStatusClass = (status) => {
     if (!status) return styles.badgeDefault;
@@ -59,7 +112,7 @@ const ViewCleaningTasks = () => {
     if (s === "READY") return styles.badgeReady;
     if (s === "OCCUPIED") return styles.badgeOccupied;
     if (s === "CLEANING") return styles.badgeCleaning;
-    if (s === "MAINTAIN") return styles.badgeMaintain;
+    if (s === "MAINTAIN" || s === "MAINTENANCE") return styles.badgeMaintain;
     if (s === "DIRTY") return styles.badgeDirty;
     return styles.badgeDefault;
   };
@@ -75,6 +128,7 @@ const ViewCleaningTasks = () => {
       case "CLEANING":
         return "Đang dọn";
       case "MAINTAIN":
+      case "MAINTENANCE":
         return "Bảo trì";
       case "DIRTY":
         return "Bẩn";
@@ -83,36 +137,31 @@ const ViewCleaningTasks = () => {
     }
   };
 
-  // 1. Logic lọc dữ liệu tại FE
+  // Logic lọc dữ liệu tại FE
   const filteredTasks = tasks.filter((task) => {
     if (!task) return false;
 
-    // Lọc theo số phòng
     const roomNumStr = task.roomNumber ? String(task.roomNumber) : "";
     const matchesSearch = roomNumStr
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
-    // Lọc theo trạng thái dọn dẹp
     const rawStatus = task.cleaningStatus || task.status || "";
     const currentStatus = rawStatus.toUpperCase();
     const matchesStatus =
       statusFilter === "ALL" || currentStatus === statusFilter.toUpperCase();
 
-    // Lọc theo tầng
     const matchesFloor =
       floorFilter === "ALL" || String(task.floor) === String(floorFilter);
 
     return matchesSearch && matchesStatus && matchesFloor;
   });
 
-  // 2. Logic Phân Trang dữ liệu sau khi lọc
+  // Logic Phân Trang dữ liệu sau khi lọc
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  // Cắt mảng để chỉ lấy đúng 10 phần tử của trang hiện tại hiển thị lên bảng
   const currentItems = filteredTasks.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Tính tổng số trang thực tế
   const totalPages = Math.ceil(filteredTasks.length / itemsPerPage);
 
   if (loading) {
@@ -174,7 +223,7 @@ const ViewCleaningTasks = () => {
         Tổng số: <span>{filteredTasks.length}</span> phòng hiển thị
       </div>
 
-      {/* BẢNG DỮ LIỆU CHUẨN LUXESTAY */}
+      {/* BẢNG DỮ LIỆU CHUẨN */}
       <div className={styles.responsiveTable}>
         <table className={styles.mainTable}>
           <thead>
@@ -200,7 +249,6 @@ const ViewCleaningTasks = () => {
 
                 return (
                   <tr key={room.roomNumber || index}>
-                    {/* Tính số thứ tự liên tục tăng tiến theo từng trang */}
                     <td>{indexOfFirstItem + index + 1}</td>
                     <td className={styles.roomNumberCell}>
                       Phòng {room.roomNumber}
@@ -222,16 +270,16 @@ const ViewCleaningTasks = () => {
                       >
                         Chi tiết
                       </button>
+
                       {currentRawStatus.toUpperCase() === "DIRTY" && (
                         <button
-                          onClick={() =>
-                            alert(
-                              `Tiến hành nhận dọn dẹp phòng ${room.roomNumber}`,
-                            )
-                          }
+                          onClick={() => handleAcceptCleaning(room.roomNumber)}
+                          disabled={loadingAccept === room.roomNumber}
                           className={styles.actionBtn}
                         >
-                          Nhận dọn
+                          {loadingAccept === room.roomNumber
+                            ? "Đang nhận..."
+                            : "Nhận dọn"}
                         </button>
                       )}
                     </td>
@@ -243,7 +291,7 @@ const ViewCleaningTasks = () => {
         </table>
       </div>
 
-      {/* THANH ĐIỀU HƯỚNG PHÂN TRANG (PAGINATION BAR) */}
+      {/* THANH ĐIỀU HƯỚNG PHÂN TRANG */}
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button

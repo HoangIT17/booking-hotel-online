@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../services/axiosInstance";
 import styles from "./RoomDetail.module.css";
+import MaintenanceForm from "./modal/MaintenanceForm";
+import IncidentForm from "./modal/IncidentForm"; // 🔥 BỔ SUNG: Import Form báo cáo mất hỏng mới
 
 // 1. Cấu hình URL gốc của Backend (nơi lưu trữ thư mục ảnh của Spring Boot)
-// Thay đổi cổng 8082 hoặc đường dẫn "/uploads/" nếu cấu hình thực tế của bạn có khác biệt
 const IMAGE_BASE_URL = "http://localhost:8082";
 
 const RoomDetail = () => {
@@ -14,15 +15,15 @@ const RoomDetail = () => {
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false); // State cho Modal Sửa chữa
+  const [isIncidentOpen, setIsIncidentOpen] = useState(false); // 🔥 BỔ SUNG: State cho Modal Mất/Hỏng
 
-  useEffect(() => {
+  // Hàm gọi API lấy dữ liệu phòng (Tách ra để tái sử dụng làm mới dữ liệu sau khi submit đơn)
+  const fetchRoomDetail = () => {
     if (!roomNumber) return;
-
-    // Gọi API Backend theo endpoint lấy chi tiết phòng
     axiosInstance
       .get(`/staff/rooms/${roomNumber}`)
       .then((response) => {
-        // Hỗ trợ bóc tách nếu có bọc dữ liệu .data
         const resData = response.data?.data || response.data || response;
         setRoom(resData);
         setLoading(false);
@@ -32,6 +33,10 @@ const RoomDetail = () => {
         setError("Không thể tải thông tin chi tiết của phòng này.");
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchRoomDetail();
   }, [roomNumber]);
 
   // Định dạng hiển thị tiền tệ
@@ -62,7 +67,7 @@ const RoomDetail = () => {
     }
   };
 
-  // Định dạng badge trạng thái thiết bị nội thất (FIXING, PENDING, FIXED)
+  // Định dạng badge trạng thái thiết bị nội thất (FIXING, PENDING, FIXED, DAMAGED, MISSING)
   const getFurnitureBadgeClass = (status) => {
     if (!status) return styles.furnDefault;
     switch (status.toUpperCase()) {
@@ -72,6 +77,10 @@ const RoomDetail = () => {
         return styles.furnPending;
       case "FIXING":
         return styles.furnFixing;
+      case "DAMAGED": // 🔥 BỔ SUNG
+        return styles.furnDamaged || styles.badgeDirty;
+      case "MISSING": // 🔥 BỔ SUNG
+        return styles.furnMissing || styles.badgeMaintain;
       default:
         return styles.furnDefault;
     }
@@ -85,6 +94,10 @@ const RoomDetail = () => {
         return "Chờ xử lý";
       case "FIXING":
         return "Đang sửa chữa";
+      case "DAMAGED": // 🔥 BỔ SUNG
+        return "Bị hư hỏng";
+      case "MISSING": // 🔥 BỔ SUNG
+        return "Bị thất lạc/mất";
       default:
         return status || "Chưa rõ";
     }
@@ -121,7 +134,6 @@ const RoomDetail = () => {
         {/* KHỐI 1: THÔNG TIN CHUNG & HÌNH ẢNH */}
         <div className={styles.card}>
           <div className={styles.imageWrapper}>
-            {/* 2. Đã sửa đổi logic hiển thị ảnh và thêm onError */}
             <img
               src={
                 room.imageUrl
@@ -133,10 +145,7 @@ const RoomDetail = () => {
               alt={`Phòng ${room.roomNumber}`}
               className={styles.roomImage}
               onError={(e) => {
-                // BƯỚC QUAN TRỌNG: Gỡ bỏ onError để chặn đứng vòng lặp vô hạn ngay lập tức
                 e.target.onerror = null;
-
-                // Thay thế bằng một SVG dạng chuỗi nội tại, không cần gọi ra Internet (tránh ERR_CONNECTION_CLOSED)
                 e.target.src =
                   "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'><rect width='100%' height='100%' fill='%23ffebee'/><text x='50%' y='50%' font-family='sans-serif' font-size='18' fill='%23c62828' dominant-baseline='middle' text-anchor='middle'>Loi load anh phong</text></svg>";
               }}
@@ -188,7 +197,7 @@ const RoomDetail = () => {
 
         {/* KHỐI 2: DANH SÁCH THIẾT BỊ NỘI THẤT */}
         <div className={styles.card}>
-          <h3>🛋️ Danh Sách Thiết Bị & Tiện Nghi</h3>
+          <h3>Danh Sách Thiết Bị & Tiện Nghi</h3>
           {room.furnitures && room.furnitures.length === 0 ? (
             <p className={styles.emptyText}>
               Chưa cập nhật thiết bị nào trong phòng này.
@@ -221,6 +230,81 @@ const RoomDetail = () => {
                   ))}
                 </tbody>
               </table>
+
+              {/* 🔥 KHU VỰC ĐIỀU KHIỂN: CHỨA 2 NÚT THAO TÁC NẰM CẠNH NHAU */}
+              <div style={{ marginTop: "15px", display: "flex", gap: "12px" }}>
+                <button
+                  className={styles.openModalBtn}
+                  onClick={() => setIsModalOpen(true)}
+                  style={{ margin: 0, flex: 1 }}
+                >
+                  + Tạo yêu cầu sửa chữa
+                </button>
+
+                <button
+                  onClick={() => setIsIncidentOpen(true)}
+                  style={{
+                    flex: 1,
+                    padding: "10px 16px",
+                    border: "1px solid #dc2626",
+                    background: "#fef2f2",
+                    color: "#dc2626",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    borderRadius: "6px",
+                    fontSize: "14px",
+                    transition: "all 0.2s",
+                  }}
+                  onMouseOver={(e) => (e.target.style.background = "#fee2e2")}
+                  onMouseOut={(e) => (e.target.style.background = "#fef2f2")}
+                >
+                  ⚠ Báo cáo thiết bị mất, hỏng
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Logic Modal 1: Sửa chữa bảo trì (Dùng reload hoặc fetchRoomDetail tuỳ nhu cầu) */}
+          {isModalOpen && (
+            <div className={styles.modalOverlay}>
+              <div className={styles.modalContent}>
+                <button
+                  className={styles.closeBtn}
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  ×
+                </button>
+                <MaintenanceForm
+                  roomNumber={room.roomNumber}
+                  furnitureList={room.furnitures}
+                  onRefresh={() => {
+                    setIsModalOpen(false);
+                    fetchRoomDetail(); // Cập nhật lại dữ liệu tại chỗ không cần F5 toàn trang
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* 🔥 Logic Modal 2: BÁO CÁO MẤT / HỎNG THIẾT BỊ MỚI */}
+          {isIncidentOpen && (
+            <div className={styles.modalOverlay}>
+              <div className={styles.modalContent}>
+                <button
+                  className={styles.closeBtn}
+                  onClick={() => setIsIncidentOpen(false)}
+                >
+                  ×
+                </button>
+                <IncidentForm
+                  roomNumber={room.roomNumber}
+                  furnitureList={room.furnitures}
+                  onRefresh={() => {
+                    setIsIncidentOpen(false);
+                    fetchRoomDetail(); // Đồng bộ ngay tình trạng thiết bị lên UI
+                  }}
+                />
+              </div>
             </div>
           )}
         </div>
@@ -228,7 +312,7 @@ const RoomDetail = () => {
 
       {/* KHỐI 3: LỊCH SỬ SỰ CỐ / BẢO TRÌ */}
       <div className={`${styles.card} ${styles.fullWidthCard}`}>
-        <h3>🛠️ Lịch Sử Báo Cáo Sự Cố & Bảo Trì</h3>
+        <h3>Lịch Sử Báo Cáo Sự Cố & Bảo Trì</h3>
         {room.incidentHistory && room.incidentHistory.length === 0 ? (
           <p className={styles.emptyText}>
             Phòng này hoạt động ổn định, chưa có lịch sử ghi nhận sự cố.

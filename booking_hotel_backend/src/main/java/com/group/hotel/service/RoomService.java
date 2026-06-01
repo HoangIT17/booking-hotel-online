@@ -1,18 +1,13 @@
 package com.group.hotel.service;
 
-import com.group.hotel.dto.request.CreateMaintenanceRequest;
-import com.group.hotel.dto.request.RoomCreateRequest;
-import com.group.hotel.dto.request.RoomSearchRequest;
-import com.group.hotel.dto.request.RoomUpdateRequest;
+import com.group.hotel.dto.request.*;
 import com.group.hotel.common.response.PageResponse;
-import com.group.hotel.dto.response.CleaningTaskResponse;
-import com.group.hotel.dto.response.MaintenanceResponse;
-import com.group.hotel.dto.response.RoomDetailResponse;
-import com.group.hotel.dto.response.RoomResponse;
+import com.group.hotel.dto.response.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RoomService {
     List<String> getStatuses();
@@ -34,4 +29,10 @@ public interface RoomService {
             Integer floor
     );
 
+    UpdateRoomStatusResponse updateRoomStatus(
+            String roomNumber,
+            UpdateRoomStatusRequest request
+    );
+    AcceptCleaningTaskResponse acceptCleaningTask(String roomNumber);
+    Map<String, Object> createFurnitureIncident(CreateIncidentRequest request);
 }

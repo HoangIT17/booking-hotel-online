@@ -19,10 +19,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -50,6 +52,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception
                         // Xử lý lỗi 401 (Chưa đăng nhập, Token sai/hết hạn)
@@ -68,6 +71,10 @@ public class SecurityConfig {
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/RoomImages/**").permitAll()
 
+                        .requestMatchers("/api/v1/maintenance/**").hasAnyAuthority("STAFF", "ADMIN", "MANAGER")
+                        .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/v1/staff/**").hasAnyAuthority("STAFF", "ADMIN", "MANAGER")
+
 
                         // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
@@ -83,24 +90,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsFilter corsFilter () {
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // Cho phép URL chạy ứng dụng Frontend của bạn
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        // Cho phép đầy đủ mọi phương thức HTTP phổ biến
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        // Cho phép gửi kèm tất cả các Header cần thiết (bao gồm Authorization token nếu có)
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-
-        // 1. Cho phép đính kèm Cookie / Token Auth hệ Stateless
-        config.setAllowCredentials(true);
-
-        // 2. 🌟 Sử dụng Pattern để chấp nhận TẤT CẢ các cổng từ localhost
-        config.setAllowedOriginPatterns(List.of("*"));
-
-        // 3. Cho phép tất cả các Header (Authorization, Content-Type,...)
-        config.setAllowedHeaders(List.of("*"));
-
-        // 4. Định nghĩa tường minh các HTTP Methods theo yêu cầu của bạn
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-        // Áp dụng cấu hình trên cho toàn bộ các endpoint API
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

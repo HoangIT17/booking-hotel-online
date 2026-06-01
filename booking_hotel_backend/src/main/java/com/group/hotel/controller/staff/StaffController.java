@@ -1,19 +1,29 @@
 package com.group.hotel.controller.staff;
 
+import com.group.hotel.dto.request.CreateIncidentRequest;
 import com.group.hotel.dto.request.CreateMaintenanceRequest;
+import com.group.hotel.dto.request.UpdateRoomStatusRequest;
+import com.group.hotel.dto.response.AcceptCleaningTaskResponse;
 import com.group.hotel.dto.response.MaintenanceResponse;
 import com.group.hotel.dto.response.RoomDetailResponse;
+import com.group.hotel.dto.response.UpdateRoomStatusResponse;
+import com.group.hotel.security.UserPrincipal;
 import com.group.hotel.service.RoomService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/staff")
 @RequiredArgsConstructor
+
 public class StaffController {
 
     private final RoomService roomService;
@@ -80,5 +90,35 @@ public class StaffController {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Lỗi xử lý tại RoomService: " + e.getMessage());
         }
+    }
+    @PostMapping("/rooms/{roomNumber}/status")
+    public ResponseEntity<UpdateRoomStatusResponse> updateRoomStatus(
+            @PathVariable String roomNumber,
+            @Valid @RequestBody UpdateRoomStatusRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                roomService.updateRoomStatus(
+                        roomNumber,
+                        request
+                )
+        );
+    }
+
+    @PostMapping("/rooms/{roomNumber}/accept-cleaning")
+    public ResponseEntity<AcceptCleaningTaskResponse> acceptCleaningTask(
+            @PathVariable String roomNumber) {
+
+        return ResponseEntity.ok(
+                roomService.acceptCleaningTask(roomNumber)
+        );
+    }
+    @PostMapping("/incidents/report-furniture")
+    public ResponseEntity<?> reportFurnitureIncident(
+            @Valid @RequestBody CreateIncidentRequest request
+    ) {
+        return ResponseEntity.ok(
+                roomService.createFurnitureIncident(request)
+        );
     }
 }

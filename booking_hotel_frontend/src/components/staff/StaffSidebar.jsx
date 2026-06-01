@@ -2,7 +2,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutThunk } from "../../redux/slices/authSlice";
 import styles from "../admin/Sidebar.module.css";
-
 import logoImg from "../../assets/images/logohotel.png";
 
 const StaffSidebar = () => {
@@ -14,17 +13,14 @@ const StaffSidebar = () => {
     navigate("/login");
   };
 
+  // ĐƯA TRANG MỚI VÀO MẢNG DỮ LIỆU ĐỂ HỆ THỐNG TỰ ĐỘNG RENDERING ĐỒNG BỘ
   const menuItems = [
     { path: "/staff/dashboard", icon: "fa-gauge-high", label: "Trang chủ" },
-    {
-      path: "/staff/view-tasks",
-      icon: "fa-broom",
-      label: "Danh sách phòng",
-    },
+    { path: "/staff/view-tasks", icon: "fa-broom", label: "Danh sách phòng" },
+    { path: "/staff/my-tasks", icon: "fa-list-check", label: "Phòng cần dọn" }, // <- Thêm dòng này ở đây
   ];
 
   return (
-    // Thêm style cứng minWidth để không bao giờ bị bóp méo chữ, phá vỡ liên kết click
     <div
       className={styles.sidebarWrapper}
       style={{ minWidth: "260px", width: "260px" }}
@@ -42,7 +38,6 @@ const StaffSidebar = () => {
           <NavLink
             key={item.path}
             to={item.path}
-            // Ép thêm kiểu hiển thị block rõ ràng để tăng diện tích nhận diện chuột
             className={({ isActive }) =>
               `${styles.navLink} ${isActive ? styles.navLinkActive : ""}`
             }
