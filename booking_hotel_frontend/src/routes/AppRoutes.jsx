@@ -9,6 +9,9 @@ import ChatbotManagement from "../pages/admin/chatbot-management/ChatbotManageme
 import ChatbotDetailsPage from '../pages/admin/chatbot-management/ChatbotDetailsPage';
 import ChatbotEditPage from '../pages/admin/chatbot-management/ChatbotEditPage';
 
+// Lịch sử Chat
+import ChatHistoryList from '../pages/history-chatbot/ChatHistoryList';
+
 //  Import tất cả các Khung giao diện (Layouts)
 import AdminLayout from "../layouts/AdminLayout";
 import ManagerLayout from "../layouts/ManagerLayout";
@@ -79,6 +82,7 @@ const AppRoutes = () => {
                     <Route path="chatbot" element={<ChatbotManagement />} />
                     <Route path="chatbot/:id" element={<ChatbotDetailsPage />} />
                     <Route path="chatbot/edit/:id" element={<ChatbotEditPage />} />
+                    <Route path="chat-history" element={<ChatHistoryList />} />
                     <Route path="users" element={<UserManagement />} />
                     <Route path="furnitures" element={<FurniturePage />} />
                     <Route path="rooms" element={<RoomPage />} />

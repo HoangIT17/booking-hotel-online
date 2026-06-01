@@ -3,40 +3,51 @@ package com.group.hotel.specification;
 import com.group.hotel.entity.AiChatHistory;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AiChatHistorySpecification {
 
     public static Specification<AiChatHistory> filterHistory(String search, LocalDate startDate, LocalDate endDate) {
-        return (root, query, cb) -> {
-            var predicates = cb.conjunction();
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
 
-            // Lọc theo search (Tên khách hàng hoặc nội dung câu hỏi)
-            if (StringUtils.hasText(search)) {
-                String pattern = "%" + search.toLowerCase() + "%";
+            // 1. Xử lý tìm kiếm (Search)
+            if (search != null && !search.trim().isEmpty()) {
+                String searchPattern = "%" + search.toLowerCase().trim() + "%";
+
+                // Tìm trong nội dung câu hỏi
+                Predicate questionMatch = criteriaBuilder.like(criteriaBuilder.lower(root.get("question")), searchPattern);
+
+                // Tìm trong nội dung AI trả lời
+                Predicate responseMatch = criteriaBuilder.like(criteriaBuilder.lower(root.get("aiResponse")), searchPattern);
+
+                // 🌟 CHUẨN NGHIỆP VỤ: Tìm theo Tên Khách Hàng (Nối bảng AiChatHistory -> User -> Profile)
                 Join<Object, Object> customerJoin = root.join("customer", JoinType.LEFT);
+                Join<Object, Object> profileJoin = customerJoin.join("profile", JoinType.LEFT);
 
-                predicates = cb.and(predicates, cb.or(
-                        cb.like(cb.lower(customerJoin.get("fullName")), pattern),
-                        cb.like(cb.lower(customerJoin.get("username")), pattern),
-                        cb.like(cb.lower(root.get("question")), pattern)
-                ));
+                Predicate fullNameMatch = criteriaBuilder.like(criteriaBuilder.lower(profileJoin.get("fullName")), searchPattern);
+
+                // Gom 3 điều kiện lại bằng toán tử OR (Khớp Câu hỏi, Câu trả lời, HOẶC Tên khách hàng)
+                predicates.add(criteriaBuilder.or(questionMatch, responseMatch, fullNameMatch));
             }
 
-            // Lọc theo ngày bắt đầu (Lớn hơn hoặc bằng 00:00:00 của ngày đó)
+            // 2. Xử lý bộ lọc Từ ngày (StartDate)
             if (startDate != null) {
-                predicates = cb.and(predicates, cb.greaterThanOrEqualTo(root.get("createdAt"), startDate.atStartOfDay()));
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), startDate.atStartOfDay()));
             }
 
-            // Lọc theo ngày kết thúc (Nhỏ hơn hoặc bằng 23:59:59 của ngày đó)
+            // 3. Xử lý bộ lọc Đến ngày (EndDate)
             if (endDate != null) {
-                predicates = cb.and(predicates, cb.lessThanOrEqualTo(root.get("createdAt"), endDate.atTime(23, 59, 59)));
+                // Lấy đến 23:59:59 của ngày kết thúc
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("createdAt"), endDate.atTime(23, 59, 59)));
             }
 
-            return predicates;
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
 }
