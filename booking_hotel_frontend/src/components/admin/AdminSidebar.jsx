@@ -20,6 +20,7 @@ const AdminSidebar = () => {
     { path: '/admin/furnitures', icon: 'fa-couch', label: 'Quản Lý Nội Thất' },
     { path: '/admin/rooms', icon: 'fa-door-open', label: 'Quản Lý Phòng' },
     { path: '/admin/chatbot', icon: 'fa-robot', label: 'Quản Lý Chatbot' },
+    
   ];
 
   return (

@@ -4,11 +4,18 @@ import RegisterPage from "../pages/auth/RegisterPage";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 
+// Chatbot
+import ChatbotManagement from "../pages/admin/chatbot-management/ChatbotManagement";
+import ChatbotDetailsPage from '../pages/admin/chatbot-management/ChatbotDetailsPage';
+import ChatbotEditPage from '../pages/admin/chatbot-management/ChatbotEditPage';
+
 //  Import tất cả các Khung giao diện (Layouts)
 import AdminLayout from "../layouts/AdminLayout";
 import ManagerLayout from "../layouts/ManagerLayout";
 import ReceptionistLayout from "../layouts/ReceptionistLayout";
 import StaffLayout from "../layouts/StaffLayout";
+import CustomerLayout from '../layouts/CustomerLayout';
+
 
 //  Import các trang Dashboard tương ứng của từng phân hệ
 import DashboardAdmin from "../pages/admin/dashboard/Dashboard";
@@ -74,54 +81,72 @@ const AppRoutes = () => {
       <Route path="/payment/result" element={<PaymentResultPage />} />
       <Route path="/payment/status" element={<PaymentStatusPage />} />
 
-      {/* ================= ROLE ADMIN ================= */}
-      <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
-        {/* Lớp 2: Khung giao diện - Bọc Header, Sidebar cho toàn bộ các trang con */}
-        <Route path="/admin" element={<AdminLayout />}>
-          {/* Lớp 3: Nội dung (Sẽ chui vào cái <Outlet /> của AdminLayout) */}
-          {/* Lưu ý: path ở đây chỉ cần viết "dashboard" (không có dấu / ở đầu) vì nó nối tiếp từ /admin */}
-          <Route path="dashboard" element={<DashboardAdmin />} />
-          <Route path="users" element={<UserManagement />} />
-          <Route path="furnitures" element={<FurniturePage />} />
-          <Route path="rooms" element={<RoomPage />} />
-          <Route path="change-password" element={<ChangePasswordPage />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="profile/edit" element={<ProfileEditPage />} />
+            </Route>
 
-          {/* Sau này làm thêm các trang khác thì cứ thả vào đây, tự động được bảo vệ và có sẵn Layout! */}
-          {/* <Route path="room-categories" element={<RoomCategoryList />} /> */}
-          {/* <Route path="users" element={<UserManagement />} /> */}
-        </Route>
-      </Route>
+            {/* ================= ROLE ADMIN ================= */}
+            <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+        
+                {/* Lớp 2: Khung giao diện - Bọc Header, Sidebar cho toàn bộ các trang con */}
+                <Route path="/admin" element={<AdminLayout />}>
+                    
+                    {/* Lớp 3: Nội dung (Sẽ chui vào cái <Outlet /> của AdminLayout) */}
+                    {/* Lưu ý: path ở đây chỉ cần viết "dashboard" (không có dấu / ở đầu) vì nó nối tiếp từ /admin */}
+                    <Route path="dashboard" element={<DashboardAdmin />} />
+                    <Route path="chatbot" element={<ChatbotManagement />} />
+                    <Route path="chatbot/:id" element={<ChatbotDetailsPage />} />
+                    <Route path="chatbot/edit/:id" element={<ChatbotEditPage />} />
+                    <Route path="users" element={<UserManagement />} />
+                    <Route path="furnitures" element={<FurniturePage />} />
+                    <Route path="rooms" element={<RoomPage />} />
+                    <Route path="change-password" element={<ChangePasswordPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
+                    <Route path="profile/edit" element={<ProfileEditPage />} />     
+                    
+                </Route>
+                
+            </Route>
 
-      {/* ================= 📊 ROLE: MANAGER ================= */}
-      <Route element={<ProtectedRoute allowedRoles={["MANAGER"]} />}>
-        {/* Đã sửa từ AdminLayout sang ManagerLayout ✅ */}
-        <Route path="/manager" element={<ManagerLayout />}>
-          <Route path="change-password" element={<ChangePasswordPage />} />
+           {/* ================= 📊 ROLE: MANAGER ================= */}
+            <Route element={<ProtectedRoute allowedRoles={["MANAGER"]} />}>
+                {/* Đã sửa từ AdminLayout sang ManagerLayout ✅ */}
+                <Route path="/manager" element={<ManagerLayout />}>
+                    <Route path="change-password" element={<ChangePasswordPage />} />
 
-          <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<DashboardManager />} />
-          <Route path="furnitures" element={<FurniturePage />} />
-          <Route path="rooms" element={<RoomPage />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="profile/edit" element={<ProfileEditPage />} />
-          {/* Thêm chức năng quản lý tại đây */}
-        </Route>
-      </Route>
+                    <Route index element={<Navigate to="dashboard" replace />} />
+                    <Route path="dashboard" element={<DashboardManager />} />
+                    <Route path="furnitures" element={<FurniturePage />} />
+                    <Route path="rooms" element={<RoomPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
+                    <Route path="profile/edit" element={<ProfileEditPage />} /> 
+                    {/* Thêm chức năng quản lý tại đây */}
+                </Route>
+            </Route>
+            
+            {/* ================= 🛎️ ROLE: RECEPTIONIST ================= */}
+            <Route element={<ProtectedRoute allowedRoles={["RECEPTIONIST"]} />}>
+                {/* Đã bọc cấu trúc Layout lồng nhau chuẩn chỉ ✅ */}
+                <Route path="/receptionist" element={<ReceptionistLayout />}>
+                    <Route path="change-password" element={<ChangePasswordPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
+                    <Route path="profile/edit" element={<ProfileEditPage />} /> 
+                    <Route index element={<Navigate to="dashboard" replace />} />
+                    <Route path="dashboard" element={<ReceptionistDashboard />} />
+                    {/* Thêm chức năng lễ tân: bookings, checkin-checkout... tại đây */}
+                </Route>
+            </Route>
 
-      {/* ================= 🛎️ ROLE: RECEPTIONIST ================= */}
-      <Route element={<ProtectedRoute allowedRoles={["RECEPTIONIST"]} />}>
-        {/* Đã bọc cấu trúc Layout lồng nhau chuẩn chỉ ✅ */}
-        <Route path="/receptionist" element={<ReceptionistLayout />}>
-          <Route path="change-password" element={<ChangePasswordPage />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="profile/edit" element={<ProfileEditPage />} />
-          <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<ReceptionistDashboard />} />
-          {/* Thêm chức năng lễ tân: bookings, checkin-checkout... tại đây */}
-        </Route>
-      </Route>
+            {/* ================= 🧹 ROLE: STAFF ================= */}
+            <Route element={<ProtectedRoute allowedRoles={["STAFF"]} />}>
+                {/* Đã bọc cấu trúc Layout lồng nhau chuẩn chỉ ✅ */}
+                <Route path="/staff" element={<StaffLayout />}>
+                    <Route path="change-password" element={<ChangePasswordPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
+                    <Route path="profile/edit" element={<ProfileEditPage />} /> 
+                    <Route index element={<Navigate to="dashboard" replace />} />
+                    <Route path="dashboard" element={<StaffHousekeepingDashboard />} />
+                    {/* Thêm chức năng nhân viên: tasks, room-status... tại đây */}
+                </Route>
+            </Route>
 
       {/* ================= 🧹 ROLE: STAFF ================= */}
       <Route element={<ProtectedRoute allowedRoles={["STAFF"]} />}>
