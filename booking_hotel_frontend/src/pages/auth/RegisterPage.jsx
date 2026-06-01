@@ -53,16 +53,15 @@ const RegisterPage = () => {
                 <div className={style.contentWrapper}>
                     {/* Cột trái: Banner 65% */}
                     <div className={style.leftBanner}>
-                        <img src={ImageAuth} alt="Luxury Hotel" className={style.bannerImage} />
+                        <img src={ImageAuth} alt="Khách sạn sang trọng" className={style.bannerImage} />
                         <div className={style.bannerOverlay}></div>
                         <div className={style.bannerText}>
                             <h1 className={style.bannerTitle}>
-                                Welcome back to <br />
+                                Bắt đầu với <br />
                                 <span className={style.brandHighlight}>LuxeStay</span>
                             </h1>
                             <p className={style.bannerDesc}>
-                                Sign up to continue booking premium stays, manage reservations, chat with Luxe AI, 
-                                or access your hotel operations workspace.
+                                Đăng ký để đặt phòng, quản lý đặt phòng và sử dụng các dịch vụ của khách sạn.
                             </p>
                         </div>
                     </div>
@@ -70,9 +69,9 @@ const RegisterPage = () => {
                     {/* Cột phải: Form đăng ký 35% */}
                     <div className={style.rightForm}>
                         <div className={style.formHeader}>
-                            <h2 className={style.formTitle}>Sign up</h2>
+                            <h2 className={style.formTitle}>Đăng ký</h2>
                             <p className={style.formSubtitle}>
-                                Create your account to get started
+                                Tạo tài khoản để bắt đầu
                             </p>
                         </div>
 
@@ -80,28 +79,28 @@ const RegisterPage = () => {
                             {/* Hàng 1: Username & FullName */}
                             <div className={style.rowGroup}>
                                 <div className={style.formGroup}>
-                                    <label className={style.label}>Username</label>
+                                    <label className={style.label}>Tên đăng nhập</label>
                                     <div className={style.inputWrapper}>
                                         <i className={`fa-solid fa-user ${style.inputIcon}`}></i>
                                         <input
                                             type="text"
-                                            placeholder="Enter username"
+                                            placeholder="Nhập tên đăng nhập"
                                             className={`${style.authInput} ${errors.username ? style.inputError : ""}`}
-                                            {...register("username", { required: "Username is required" })}
+                                            {...register("username", { required: "Vui lòng nhập tên đăng nhập" })}
                                         />
                                     </div>
                                     {errors.username && <span className={style.errorMsg}>{errors.username.message}</span>}
                                 </div>
 
                                 <div className={style.formGroup}>
-                                    <label className={style.label}>Full Name</label>
+                                    <label className={style.label}>Họ và tên</label>
                                     <div className={style.inputWrapper}>
                                         <i className={`fa-solid fa-user-pen ${style.inputIcon}`}></i>
                                         <input
                                             type="text"
-                                            placeholder="Enter full name"
+                                            placeholder="Nhập họ và tên"
                                             className={`${style.authInput} ${errors.fullName ? style.inputError : ""}`}
-                                            {...register("fullName", { required: "Full name is required" })}
+                                            {...register("fullName", { required: "Vui lòng nhập họ và tên" })}
                                         />
                                     </div>
                                     {errors.fullName && <span className={style.errorMsg}>{errors.fullName.message}</span>}
@@ -116,13 +115,13 @@ const RegisterPage = () => {
                                         <i className={`fa-solid fa-envelope ${style.inputIcon}`}></i>
                                         <input
                                             type="email"
-                                            placeholder="Enter your email"
+                                            placeholder="Nhập email"
                                             className={`${style.authInput} ${errors.email ? style.inputError : ""}`}
                                             {...register("email", { 
-                                                required: "Email is required",
+                                                required: "Vui lòng nhập email",
                                                 pattern: { 
                                                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, 
-                                                    message: "Invalid email address" 
+                                                    message: "Email không hợp lệ" 
                                                 }
                                             })}
                                         />
@@ -131,18 +130,18 @@ const RegisterPage = () => {
                                 </div>
 
                                 <div className={style.formGroup}>
-                                    <label className={style.label}>Phone Number</label>
+                                    <label className={style.label}>Số điện thoại</label>
                                     <div className={style.inputWrapper}>
                                         <i className={`fa-solid fa-phone ${style.inputIcon}`}></i>
                                         <input
                                             type="tel"
-                                            placeholder="Enter phone number"
+                                            placeholder="Nhập số điện thoại"
                                             className={`${style.authInput} ${errors.phone ? style.inputError : ""}`}
                                             {...register("phone", { 
-                                                required: "Phone number is required",
+                                                required: "Vui lòng nhập số điện thoại",
                                                 pattern: { 
                                                     value: /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/, 
-                                                    message: "Invalid phone number (10 digits)" 
+                                                    message: "Số điện thoại không hợp lệ (10 chữ số)" 
                                                 }
                                             })}
                                         />
@@ -153,18 +152,18 @@ const RegisterPage = () => {
 
                             {/* Password */}
                             <div className={style.formGroup}>
-                                <label className={style.label}>Password</label>
+                                <label className={style.label}>Mật khẩu</label>
                                 <div className={style.inputWrapper}>
                                     <i className={`fa-solid fa-lock ${style.inputIcon}`}></i>
                                     <input
                                         type={showPassword ? "text" : "password"}
-                                        placeholder="Create a password"
+                                        placeholder="Tạo mật khẩu"
                                         className={`${style.authInput} ${errors.password ? style.inputError : ""}`}
                                         {...register("password", {
-                                            required: "Password is required",
+                                            required: "Vui lòng nhập mật khẩu",
                                             pattern: {
                                                 value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/,
-                                                message: "Password must have ≥8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char"
+                                                message: "Mật khẩu phải có ít nhất 8 ký tự, 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt"
                                             }
                                         })}
                                     />
@@ -177,16 +176,16 @@ const RegisterPage = () => {
 
                             {/* Confirm Password */}
                             <div className={style.formGroup}>
-                                <label className={style.label}>Confirm Password</label>
+                                <label className={style.label}>Xác nhận mật khẩu</label>
                                 <div className={style.inputWrapper}>
                                     <i className={`fa-solid fa-shield-halved ${style.inputIcon}`}></i>
                                     <input
                                         type={showConfirmPassword ? "text" : "password"}
-                                        placeholder="Confirm your password"
+                                        placeholder="Nhập lại mật khẩu"
                                         className={`${style.authInput} ${errors.confirmPassword ? style.inputError : ""}`}
                                         {...register("confirmPassword", {
-                                            required: "Please confirm your password",
-                                            validate: (value) => value === password || "Passwords do not match!"
+                                            required: "Vui lòng xác nhận mật khẩu",
+                                            validate: (value) => value === password || "Mật khẩu xác nhận không khớp!"
                                         })}
                                     />
                                     <button type="button" className={style.eyeButton} onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
@@ -199,31 +198,31 @@ const RegisterPage = () => {
                             {/* Submit Button */}
                             <button type="submit" disabled={loading} className={style.submitBtn}>
                                 {loading ? (
-                                    <><i className="fa-solid fa-spinner fa-spin" style={{ marginRight: "8px" }}></i> Processing...</>
+                                    <><i className="fa-solid fa-spinner fa-spin" style={{ marginRight: "8px" }}></i> Đang xử lý...</>
                                 ) : (
-                                    "Sign up"
+                                    "Đăng ký"
                                 )}
                             </button>
                         </form>
 
                         {/* OR CONTINUE WITH */}
                         <div className={style.divider}>
-                            <span>OR CONTINUE WITH</span>
+                            <span>HOẶC TIẾP TỤC VỚI</span>
                         </div>
 
                         {/* Google + Facebook cùng 1 dòng */}
                         <div className={style.socialRow}>
-                            <button className={`${style.socialBtn} ${style.googleBtn}`} onClick={() => alert("Continue with Google")}>
+                            <button className={`${style.socialBtn} ${style.googleBtn}`} onClick={() => alert("Tiếp tục với Google")}>
                                 <i className="fab fa-google"></i> Google
                             </button>
-                            <button className={`${style.socialBtn} ${style.facebookBtn}`} onClick={() => alert("Continue with Facebook")}>
+                            <button className={`${style.socialBtn} ${style.facebookBtn}`} onClick={() => alert("Tiếp tục với Facebook")}>
                                 <i className="fab fa-facebook-f"></i> Facebook
                             </button>
                         </div>
 
                         {/* Already have account? Login */}
                         <div className={style.switchAuth}>
-                            Already have an account? <Link to="/login">Sign in</Link>
+                            Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
                         </div>
                     </div>
                 </div>

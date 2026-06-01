@@ -1,0 +1,15 @@
+/* Bao bọc toàn bộ trang, đảm bảo chiều cao luôn bằng 100% màn hình */
+.layoutWrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 150vh;
+    background-color: #f8f9fa; /* Màu nền xám nhạt giúp nổi bật form trắng ở giữa */
+    position: relative;
+}
+
+/* Phần nội dung chính ở giữa */
+.mainContent {
+    flex-grow: 1; /* Quan trọng nhất: Tự động giãn ra để chiếm toàn bộ không gian thừa, đẩy Footer xuống đáy */
+    display: flex;
+    flex-direction: column;
+}

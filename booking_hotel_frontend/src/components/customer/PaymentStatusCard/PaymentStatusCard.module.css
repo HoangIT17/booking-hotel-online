@@ -1,0 +1,52 @@
+.card {
+  width: 275px;
+  min-height: 350px;
+  padding: 22px;
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+.card h2 {
+  margin: 0 0 18px;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.status {
+  min-height: 45px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.pending { background: #fff8e6; color: #c46b00; }
+.paid { background: #e8fbf1; color: #14804a; }
+.failed { background: #fff0f0; color: #c53030; }
+.canceled { background: #f1f1f4; color: #52545e; }
+.active { outline: 1px solid currentColor; }
+
+.sync {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #f4f4f5;
+}
+
+.sync strong {
+  font-size: 16px;
+}
+
+.sync p {
+  margin: 6px 0 0;
+  color: #6b6d76;
+  font-size: 16px;
+  line-height: 1.45;
+}

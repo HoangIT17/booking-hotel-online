@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
-
+    RESOURCE_NOT_FOUND(404, "Không tìm thấy dữ liệu yêu cầu", HttpStatus.NOT_FOUND),
     OLD_PASSWORD_INCORRECT(1005, "Mật khẩu hiện tại không chính xác", HttpStatus.BAD_REQUEST),
     PASSWORD_NOT_MATCH(1006, "Mật khẩu xác nhận không khớp với mật khẩu mới", HttpStatus.BAD_REQUEST),
     NEW_PASSWORD_CANNOT_BE_SAME(1007, "Mật khẩu mới không được trùng với mật khẩu hiện tại", HttpStatus.BAD_REQUEST),
