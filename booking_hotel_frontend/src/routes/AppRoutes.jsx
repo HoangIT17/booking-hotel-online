@@ -39,12 +39,16 @@ import ChangePasswordPage from "../pages/auth/ChangepasswordPage";
 import ProfilePage from "../pages/profile/ProfilePage";
 import ProfileEditPage from "../pages/profile/ProfileEditPage";
 
+// Google OAuth Callback
+import LoginSuccess from "../pages/auth/LoginSuccess";
+
 const AppRoutes = () => {
     return (
         <Routes>
             {/* ================= PUBLIC ROUTES ================= */}
             {/* Bọc trong PublicRoute để chặn quay lại khi đã đăng nhập */}
             <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+            <Route path="/login-success" element={<LoginSuccess />} />
             <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
             
             {/* Trang chủ xem phòng của khách hàng sau khi login */}

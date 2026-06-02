@@ -3,9 +3,11 @@ package com.group.hotel.config;
 import com.group.hotel.security.CustomAccessDeniedHandler;
 import com.group.hotel.security.JwtAuthEntryPoint;
 import com.group.hotel.security.JwtAuthenticationFilter;
+import com.group.hotel.security.OAuth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -17,14 +19,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import org.springframework.web.filter.CorsFilter;
-
+import java.util.Arrays;
 import java.util.List;
-
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +35,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -50,60 +50,49 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // 🌟 1. LIÊN KẾT CORS TRỰC TIẾP VỚI SPRING SECURITY
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception
-                        // Xử lý lỗi 401 (Chưa đăng nhập, Token sai/hết hạn)
                         .authenticationEntryPoint(jwtAuthEntryPoint)
-
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Thả cửa cho OPTIONS
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/oauth2/**", "/login/oauth2/code/**").permitAll()
 
                         .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
-                        .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers("/RoomImages/**").permitAll()
-
-
-                        // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
+                        .requestMatchers("/uploads/**", "/RoomImages/**").permitAll()
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/v1/chatbot/ask").hasAuthority("CUSTOMER")
-
-                        // Admin được cấu hình Knowledge và xem History
                         .requestMatchers("/api/v1/chatbot/**", "/api/v1/chatbot/history").hasAuthority("ADMIN")
 
                         .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(oAuth2LoginSuccessHandler)
                 );
 
-        // Chèn filter kiểm tra Token vào trước filter xác thực mặc định
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
+    // 🌟 2. CẤU HÌNH CORS CHUẨN TỪNG MILIMET CHO SPRING SECURITY 6
     @Bean
-    public CorsFilter corsFilter () {
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-
-        // 1. Cho phép đính kèm Cookie / Token Auth hệ Stateless
-        config.setAllowCredentials(true);
-
-        // 2. 🌟 Sử dụng Pattern để chấp nhận TẤT CẢ các cổng từ localhost
-        config.setAllowedOriginPatterns(List.of("*"));
-
-        // 3. Cho phép tất cả các Header (Authorization, Content-Type,...)
-        config.setAllowedHeaders(List.of("*"));
-
-        // 4. Định nghĩa tường minh các HTTP Methods theo yêu cầu của bạn
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-        // Áp dụng cấu hình trên cho toàn bộ các endpoint API
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
