@@ -212,10 +212,23 @@ const RegisterPage = () => {
 
                         {/* Google + Facebook cùng 1 dòng */}
                         <div className={style.socialRow}>
+<<<<<<< HEAD
                             <button className={`${style.socialBtn} ${style.googleBtn}`} onClick={() => alert("Tiếp tục với Google")}>
                                 <i className="fab fa-google"></i> Google
                             </button>
                             <button className={`${style.socialBtn} ${style.facebookBtn}`} onClick={() => alert("Tiếp tục với Facebook")}>
+=======
+                            <button 
+                                className={`${style.socialBtn} ${style.googleBtn}`} 
+                                type="button" 
+                                onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/google"}>
+                                <i className="fab fa-google"></i> Google
+                            </button>
+                            <button 
+                                className={`${style.socialBtn} ${style.facebookBtn}`} 
+                                type="button" 
+                                onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/facebook"}>
+>>>>>>> feature/auth
                                 <i className="fab fa-facebook-f"></i> Facebook
                             </button>
                         </div>
