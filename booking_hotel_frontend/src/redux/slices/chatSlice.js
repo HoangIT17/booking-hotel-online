@@ -22,7 +22,7 @@ const chatSlice = createSlice({
         messages: [
             { 
                 sender: 'bot', 
-                text: "Hello! I'm LuxeStay AI Assistant. How can I help you today? \n (Xin chào! Tôi là trợ lý ảo của LuxeStay. Tôi có thể giúp gì cho bạn?)",
+                text: "Xin chào! Tôi là trợ lý ảo của Khách sạn LuxeStay. Tôi có thể giúp gì cho bạn?",
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             }
         ],
