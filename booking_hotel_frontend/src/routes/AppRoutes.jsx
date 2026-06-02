@@ -68,14 +68,23 @@ const AppRoutes = () => {
       <Route path="/payment/result" element={<PaymentResultPage />} />
       <Route path="/payment/status" element={<PaymentStatusPage />} />
       <Route path="/customer/home" element={<Navigate to="/home" replace />} />
-      <Route path="/seasonal-deals" element={<Navigate to="/offers" replace />} />
-      <Route path="/history-reviews" element={<Navigate to="/home" replace />} />
+      <Route
+        path="/seasonal-deals"
+        element={<Navigate to="/offers" replace />}
+      />
+      <Route
+        path="/history-reviews"
+        element={<Navigate to="/home" replace />}
+      />
       <Route path="/contact" element={<Navigate to="/home" replace />} />
       <Route path="/terms" element={<Navigate to="/home" replace />} />
       <Route path="/privacy" element={<Navigate to="/home" replace />} />
-      <Route path="/book-history" element={<Navigate to="/reservations" replace />} />
+      <Route
+        path="/book-history"
+        element={<Navigate to="/reservations" replace />}
+      />
 
-      <Route element={<ProtectedRoute allowedRoles={["CUSTOMER"]} />}>
+      <Route element={<ProtectedRoute allowedRoles={["CUSTOMER", "ADMIN"]} />}>
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/reservations" element={<ReservationsPage />} />
         <Route
@@ -86,9 +95,18 @@ const AppRoutes = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/profile/edit" element={<ProfileEditPage />} />
         <Route path="/change-password" element={<ChangePasswordPage />} />
-        <Route path="/customer/profile" element={<Navigate to="/profile" replace />} />
-        <Route path="/customer/profile/edit" element={<Navigate to="/profile/edit" replace />} />
-        <Route path="/customer/change-password" element={<Navigate to="/change-password" replace />} />
+        <Route
+          path="/customer/profile"
+          element={<Navigate to="/profile" replace />}
+        />
+        <Route
+          path="/customer/profile/edit"
+          element={<Navigate to="/profile/edit" replace />}
+        />
+        <Route
+          path="/customer/change-password"
+          element={<Navigate to="/change-password" replace />}
+        />
       </Route>
 
       <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
@@ -109,7 +127,7 @@ const AppRoutes = () => {
         </Route>
       </Route>
 
-      <Route element={<ProtectedRoute allowedRoles={["MANAGER"]} />}>
+      <Route element={<ProtectedRoute allowedRoles={["MANAGER", "ADMIN"]} />}>
         <Route path="/manager" element={<ManagerLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<DashboardManager />} />
@@ -124,7 +142,7 @@ const AppRoutes = () => {
         </Route>
       </Route>
 
-      <Route element={<ProtectedRoute allowedRoles={["RECEPTIONIST"]} />}>
+      <Route element={<ProtectedRoute allowedRoles={["RECEPTIONIST", "ADMIN"]} />}>
         <Route path="/receptionist" element={<ReceptionistLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<ReceptionistDashboard />} />

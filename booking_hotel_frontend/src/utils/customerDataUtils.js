@@ -49,7 +49,7 @@ export const getRoomImageUrl = (room) => {
     if (image.startsWith("http://") || image.startsWith("https://")) {
       return image;
     }
-    return `http://localhost:8080/api/v1/RoomImages/${image.replace(/^\/+/, "")}`;
+    return `http://localhost:8080/api/v1/${image.replace(/^\/+/, "")}`;
   }
 
   if (typeof image === "object") {
