@@ -1,9 +1,9 @@
 package com.group.hotel.controller;
 
 import com.group.hotel.common.response.BaseResponse;
-import com.group.hotel.dto.request.AiKnowledgeRequest;
-import com.group.hotel.dto.response.AiKnowledgeResponse;
-import com.group.hotel.dto.response.ChatHistoryResponse;
+import com.group.hotel.dto.request.chatbot.AiKnowledgeRequest;
+import com.group.hotel.dto.response.chatbot.AiKnowledgeResponse;
+import com.group.hotel.dto.response.chatbot.ChatHistoryResponse;
 import com.group.hotel.service.AiKnowledgeService;
 import com.group.hotel.service.GeminiService;
 import jakarta.validation.Valid;

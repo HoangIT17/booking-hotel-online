@@ -1,9 +1,9 @@
 package com.group.hotel.controller;
 
 import com.group.hotel.common.response.BaseResponse;
-import com.group.hotel.dto.request.VoucherCreateRequest;
-import com.group.hotel.dto.request.VoucherUpdateRequest;
-import com.group.hotel.dto.response.VoucherResponse;
+import com.group.hotel.dto.request.voucher.VoucherCreateRequest;
+import com.group.hotel.dto.request.voucher.VoucherUpdateRequest;
+import com.group.hotel.dto.response.voucher.VoucherResponse;
 import com.group.hotel.service.VoucherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

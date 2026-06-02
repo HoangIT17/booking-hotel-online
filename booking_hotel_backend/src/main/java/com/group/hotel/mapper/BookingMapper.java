@@ -1,13 +1,13 @@
 package com.group.hotel.mapper;
 
-import com.group.hotel.dto.request.BookingCreateRequest;
-import com.group.hotel.dto.request.BookingUpdateRequest;
-import com.group.hotel.dto.response.BookingCreateResponse;
-import com.group.hotel.dto.response.BookingSearchCustomerResponse;
-import com.group.hotel.dto.response.BookingSearchSystemResponse;
-import com.group.hotel.dto.response.BookingUpdateResponse;
-import com.group.hotel.dto.response.CustomerRoomDetailResponse;
-import com.group.hotel.dto.response.RoomAvailableResponse;
+import com.group.hotel.dto.request.booking.BookingCreateRequest;
+import com.group.hotel.dto.request.booking.BookingUpdateRequest;
+import com.group.hotel.dto.response.booking.BookingCreateResponse;
+import com.group.hotel.dto.response.booking.BookingSearchCustomerResponse;
+import com.group.hotel.dto.response.booking.BookingSearchSystemResponse;
+import com.group.hotel.dto.response.booking.BookingUpdateResponse;
+import com.group.hotel.dto.response.room.CustomerRoomDetailResponse;
+import com.group.hotel.dto.response.room.RoomAvailableResponse;
 import com.group.hotel.entity.Booking;
 import com.group.hotel.entity.BookingDetail;
 import com.group.hotel.entity.Furniture;

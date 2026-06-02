@@ -9,6 +9,10 @@ const reviewService = {
         const response = await axiosInstance.put(`/reviews/${reviewId}/reply`, data);
         return response.data;
     },
+    getMyReviews: async (params) => {
+        const response = await axiosInstance.get("/customer/reviews", { params });
+        return response.data;
+    },
 };
 
 export default reviewService;

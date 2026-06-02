@@ -1,10 +1,10 @@
 package com.group.hotel.service.impl;
 
-import com.group.hotel.dto.request.RoomCreateRequest;
-import com.group.hotel.dto.request.RoomSearchRequest;
-import com.group.hotel.dto.request.RoomUpdateRequest;
-import com.group.hotel.dto.response.RoomDetailResponse;
-import com.group.hotel.dto.response.RoomResponse;
+import com.group.hotel.dto.request.room.RoomCreateRequest;
+import com.group.hotel.dto.request.room.RoomSearchRequest;
+import com.group.hotel.dto.request.room.RoomUpdateRequest;
+import com.group.hotel.dto.response.room.RoomDetailResponse;
+import com.group.hotel.dto.response.room.RoomResponse;
 import com.group.hotel.entity.Room;
 import com.group.hotel.enums.RoomTypeName;
 import com.group.hotel.exception.RoomConflictException;
@@ -23,7 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

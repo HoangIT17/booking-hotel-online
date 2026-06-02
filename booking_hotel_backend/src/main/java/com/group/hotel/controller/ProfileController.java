@@ -1,7 +1,7 @@
 package com.group.hotel.controller;
 
-import com.group.hotel.dto.request.ProfileUpdateRequest;
-import com.group.hotel.dto.response.ProfileResponse;
+import com.group.hotel.dto.request.user.ProfileUpdateRequest;
+import com.group.hotel.dto.response.user.ProfileResponse;
 import com.group.hotel.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

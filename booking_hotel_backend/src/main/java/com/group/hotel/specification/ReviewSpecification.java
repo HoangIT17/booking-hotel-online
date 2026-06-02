@@ -29,6 +29,11 @@ public class ReviewSpecification {
                 builder.lessThanOrEqualTo(root.get("createdAt").as(java.time.LocalDate.class), toDate);
     }
 
+    public static Specification<Review> hasCustomerId(Long customerId) {
+        return (root, query, builder) ->
+                builder.equal(root.get("customer").get("id"), customerId);
+    }
+
     public static Specification<Review> hasCustomerName(String customerName) {
         return (root, query, builder) -> {
             Join<Object, Object> customer = root.join("customer");

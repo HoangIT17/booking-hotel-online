@@ -1,8 +1,8 @@
 package com.group.hotel.service.impl;
 
-import com.group.hotel.dto.request.ChatAskRequest;
-import com.group.hotel.dto.response.ChatAskResponse;
-import com.group.hotel.dto.response.ChatHistoryResponse;
+import com.group.hotel.dto.request.chatbot.ChatAskRequest;
+import com.group.hotel.dto.response.chatbot.ChatAskResponse;
+import com.group.hotel.dto.response.chatbot.ChatHistoryResponse;
 import com.group.hotel.entity.AiChatHistory;
 import com.group.hotel.entity.AiKnowledgeBase;
 import com.group.hotel.entity.Profile;

@@ -1,8 +1,8 @@
 package com.group.hotel.mapper;
 
-import com.group.hotel.dto.request.ReviewCreateRequest;
-import com.group.hotel.dto.request.ReviewReplyRequest;
-import com.group.hotel.dto.response.ReviewResponse;
+import com.group.hotel.dto.request.review.ReviewCreateRequest;
+import com.group.hotel.dto.request.review.ReviewReplyRequest;
+import com.group.hotel.dto.response.review.ReviewResponse;
 import com.group.hotel.entity.Review;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;

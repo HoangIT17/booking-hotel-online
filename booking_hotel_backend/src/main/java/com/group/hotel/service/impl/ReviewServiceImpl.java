@@ -1,10 +1,10 @@
 package com.group.hotel.service.impl;
 
 import com.group.hotel.common.response.PageResponse;
-import com.group.hotel.dto.request.ReviewCreateRequest;
-import com.group.hotel.dto.request.ReviewReplyRequest;
-import com.group.hotel.dto.request.ReviewSearchRequest;
-import com.group.hotel.dto.response.ReviewResponse;
+import com.group.hotel.dto.request.review.ReviewCreateRequest;
+import com.group.hotel.dto.request.review.ReviewReplyRequest;
+import com.group.hotel.dto.request.review.ReviewSearchRequest;
+import com.group.hotel.dto.response.review.ReviewResponse;
 import com.group.hotel.entity.Booking;
 import com.group.hotel.entity.Review;
 import com.group.hotel.entity.User;
@@ -109,10 +109,21 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public PageResponse<ReviewResponse> getMyReviews(Pageable pageable) {
+    public PageResponse<ReviewResponse> getMyReviews(ReviewSearchRequest searchRequest, Pageable pageable) {
         User currentUser = getCurrentUser();
-        return PageResponse.of(reviewRepository.findByCustomerId(currentUser.getId(), pageable)
-                .map(reviewMapper::toResponse));
+        Specification<Review> spec = ReviewSpecification.hasCustomerId(currentUser.getId());
+
+        if (searchRequest.getRating() != null) {
+            spec = spec.and(ReviewSpecification.hasRating(searchRequest.getRating()));
+        }
+        if (searchRequest.getFromDate() != null) {
+            spec = spec.and(ReviewSpecification.fromDate(searchRequest.getFromDate()));
+        }
+        if (searchRequest.getToDate() != null) {
+            spec = spec.and(ReviewSpecification.toDate(searchRequest.getToDate()));
+        }
+
+        return PageResponse.of(reviewRepository.findAll(spec, pageable).map(reviewMapper::toResponse));
     }
 
     @Override

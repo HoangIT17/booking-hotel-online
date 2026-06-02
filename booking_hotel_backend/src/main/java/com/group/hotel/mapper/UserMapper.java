@@ -1,8 +1,8 @@
 package com.group.hotel.mapper;
 
-import com.group.hotel.dto.request.UserCreateRequest;
-import com.group.hotel.dto.request.UserUpdateRequest;
-import com.group.hotel.dto.response.UserResponse;
+import com.group.hotel.dto.request.user.UserCreateRequest;
+import com.group.hotel.dto.request.user.UserUpdateRequest;
+import com.group.hotel.dto.response.user.UserResponse;
 import com.group.hotel.entity.Profile;
 import com.group.hotel.entity.User;
 import org.mapstruct.Mapper;

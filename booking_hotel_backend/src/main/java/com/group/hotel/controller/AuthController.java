@@ -1,11 +1,11 @@
 package com.group.hotel.controller;
 
 import com.group.hotel.common.response.BaseResponse;
-import com.group.hotel.dto.request.ChangePasswordRequest;
-import com.group.hotel.dto.request.LoginRequest;
-import com.group.hotel.dto.request.LogoutRequest;
-import com.group.hotel.dto.request.RegisterRequest;
-import com.group.hotel.dto.response.LoginResponse;
+import com.group.hotel.dto.request.auth.ChangePasswordRequest;
+import com.group.hotel.dto.request.auth.LoginRequest;
+import com.group.hotel.dto.request.auth.LogoutRequest;
+import com.group.hotel.dto.request.auth.RegisterRequest;
+import com.group.hotel.dto.response.auth.LoginResponse;
 import com.group.hotel.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

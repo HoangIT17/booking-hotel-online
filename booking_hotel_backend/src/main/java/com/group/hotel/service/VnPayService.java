@@ -1,8 +1,8 @@
 package com.group.hotel.service;
 
-import com.group.hotel.dto.request.VnPayCreatePaymentRequest;
-import com.group.hotel.dto.response.VnPayCreatePaymentResponse;
-import com.group.hotel.dto.response.VnPayReturnResponse;
+import com.group.hotel.dto.request.booking.VnPayCreatePaymentRequest;
+import com.group.hotel.dto.response.booking.VnPayCreatePaymentResponse;
+import com.group.hotel.dto.response.booking.VnPayReturnResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Map;

@@ -1,6 +1,6 @@
 package com.group.hotel.specification;
 
-import com.group.hotel.dto.request.SearchRoomAvailableRequest;
+import com.group.hotel.dto.request.room.SearchRoomAvailableRequest;
 import com.group.hotel.entity.BookingDetail;
 import com.group.hotel.entity.Review;
 import com.group.hotel.entity.Room;

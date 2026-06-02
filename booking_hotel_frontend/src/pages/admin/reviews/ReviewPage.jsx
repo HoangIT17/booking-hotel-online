@@ -170,8 +170,6 @@ const ReviewPage = () => {
 
     return (
         <div className={styles.pageWrapper}>
-            <h4 className={styles.pageTitle}>Quản lý đánh giá</h4>
-
             {/* ── Filter bar ── */}
             <div className={styles.filterBar}>
                 {/* Tab trạng thái phản hồi */}

@@ -1,8 +1,8 @@
 package com.group.hotel.service;
 
-import com.group.hotel.dto.request.ChatAskRequest;
-import com.group.hotel.dto.response.ChatAskResponse;
-import com.group.hotel.dto.response.ChatHistoryResponse;
+import com.group.hotel.dto.request.chatbot.ChatAskRequest;
+import com.group.hotel.dto.response.chatbot.ChatAskResponse;
+import com.group.hotel.dto.response.chatbot.ChatHistoryResponse;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;

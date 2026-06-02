@@ -1,9 +1,9 @@
 package com.group.hotel.service.impl;
 
-import com.group.hotel.dto.request.UserCreateRequest;
-import com.group.hotel.dto.request.UserUpdateRequest;
-import com.group.hotel.dto.response.UserCreateResponse;
-import com.group.hotel.dto.response.UserResponse;
+import com.group.hotel.dto.request.user.UserCreateRequest;
+import com.group.hotel.dto.request.user.UserUpdateRequest;
+import com.group.hotel.dto.response.user.UserCreateResponse;
+import com.group.hotel.dto.response.user.UserResponse;
 import com.group.hotel.entity.Profile;
 import com.group.hotel.entity.Role;
 import com.group.hotel.entity.User;

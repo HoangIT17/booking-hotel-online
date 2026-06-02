@@ -1,6 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import reviewService from "../../services/reviewService";
 
+export const fetchMyReviews = createAsyncThunk(
+    "review/fetchMyReviews",
+    async (params, { rejectWithValue }) => {
+        try {
+            return await reviewService.getMyReviews(params);
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || "Lỗi tải đánh giá của bạn");
+        }
+    }
+);
+
 export const fetchReviews = createAsyncThunk(
     "review/fetchReviews",
     async (params, { rejectWithValue }) => {
@@ -37,6 +48,12 @@ const reviewSlice = createSlice({
         loading: false,
         submitting: false,
         error: null,
+        myReviews: {
+            items: [],
+            pagination: { currentPage: 0, pageSize: 10, totalElements: 0, totalPages: 0, last: true },
+            loading: false,
+            error: null,
+        },
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -67,7 +84,27 @@ const reviewSlice = createSlice({
                 const idx = state.items.findIndex((r) => r.id === action.payload.id);
                 if (idx !== -1) state.items[idx] = action.payload;
             })
-            .addCase(replyReview.rejected, (state) => { state.submitting = false; });
+            .addCase(replyReview.rejected, (state) => { state.submitting = false; })
+
+            .addCase(fetchMyReviews.pending, (state) => {
+                state.myReviews.loading = true;
+                state.myReviews.error = null;
+            })
+            .addCase(fetchMyReviews.fulfilled, (state, action) => {
+                state.myReviews.loading = false;
+                state.myReviews.items = action.payload.content;
+                state.myReviews.pagination = {
+                    currentPage: action.payload.currentPage,
+                    pageSize: action.payload.pageSize,
+                    totalElements: action.payload.totalElements,
+                    totalPages: action.payload.totalPages,
+                    last: action.payload.last,
+                };
+            })
+            .addCase(fetchMyReviews.rejected, (state, action) => {
+                state.myReviews.loading = false;
+                state.myReviews.error = action.payload;
+            });
     },
 });
 

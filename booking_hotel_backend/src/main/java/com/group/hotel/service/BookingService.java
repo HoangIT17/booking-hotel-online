@@ -1,12 +1,17 @@
 package com.group.hotel.service;
 
 import com.group.hotel.common.response.PageResponse;
-import com.group.hotel.dto.request.BookingCreateRequest;
-import com.group.hotel.dto.request.BookingSearchSystemRequest;
-import com.group.hotel.dto.request.BookingSearchUserRequest;
-import com.group.hotel.dto.request.BookingUpdateRequest;
-import com.group.hotel.dto.request.SearchRoomAvailableRequest;
-import com.group.hotel.dto.response.*;
+import com.group.hotel.dto.request.booking.BookingCreateRequest;
+import com.group.hotel.dto.request.booking.BookingSearchSystemRequest;
+import com.group.hotel.dto.request.booking.BookingSearchUserRequest;
+import com.group.hotel.dto.request.booking.BookingUpdateRequest;
+import com.group.hotel.dto.request.room.SearchRoomAvailableRequest;
+import com.group.hotel.dto.response.booking.BookingCreateResponse;
+import com.group.hotel.dto.response.booking.BookingSearchCustomerResponse;
+import com.group.hotel.dto.response.booking.BookingSearchSystemResponse;
+import com.group.hotel.dto.response.booking.BookingUpdateResponse;
+import com.group.hotel.dto.response.room.CustomerRoomDetailResponse;
+import com.group.hotel.dto.response.room.RoomAvailableResponse;
 import org.springframework.data.domain.Pageable;
 
 public interface BookingService {

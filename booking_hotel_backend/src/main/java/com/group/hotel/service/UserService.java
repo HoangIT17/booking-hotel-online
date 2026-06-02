@@ -1,9 +1,9 @@
 package com.group.hotel.service;
 
-import com.group.hotel.dto.request.UserCreateRequest;
-import com.group.hotel.dto.request.UserUpdateRequest;
-import com.group.hotel.dto.response.UserCreateResponse;
-import com.group.hotel.dto.response.UserResponse;
+import com.group.hotel.dto.request.user.UserCreateRequest;
+import com.group.hotel.dto.request.user.UserUpdateRequest;
+import com.group.hotel.dto.response.user.UserCreateResponse;
+import com.group.hotel.dto.response.user.UserResponse;
 import org.springframework.data.domain.Page;
 
 public interface UserService {

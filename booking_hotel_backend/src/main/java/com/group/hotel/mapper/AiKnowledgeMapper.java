@@ -1,7 +1,7 @@
 package com.group.hotel.mapper;
 
-import com.group.hotel.dto.request.AiKnowledgeRequest;
-import com.group.hotel.dto.response.AiKnowledgeResponse;
+import com.group.hotel.dto.request.chatbot.AiKnowledgeRequest;
+import com.group.hotel.dto.response.chatbot.AiKnowledgeResponse;
 import com.group.hotel.entity.AiKnowledgeBase;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

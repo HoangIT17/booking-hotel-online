@@ -1,10 +1,10 @@
 package com.group.hotel.service.impl;
 
-import com.group.hotel.dto.request.ChangePasswordRequest;
-import com.group.hotel.dto.request.LoginRequest;
-import com.group.hotel.dto.request.LogoutRequest;
-import com.group.hotel.dto.request.RegisterRequest;
-import com.group.hotel.dto.response.LoginResponse;
+import com.group.hotel.dto.request.auth.ChangePasswordRequest;
+import com.group.hotel.dto.request.auth.LoginRequest;
+import com.group.hotel.dto.request.auth.LogoutRequest;
+import com.group.hotel.dto.request.auth.RegisterRequest;
+import com.group.hotel.dto.response.auth.LoginResponse;
 import com.group.hotel.entity.Profile;
 import com.group.hotel.entity.Role;
 import com.group.hotel.entity.User;
@@ -19,8 +19,6 @@ import com.group.hotel.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

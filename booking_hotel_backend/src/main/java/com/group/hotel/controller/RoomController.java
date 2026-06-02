@@ -1,12 +1,12 @@
 package com.group.hotel.controller;
 
 import com.group.hotel.common.response.BaseResponse;
-import com.group.hotel.dto.request.RoomCreateRequest;
-import com.group.hotel.dto.request.RoomSearchRequest;
-import com.group.hotel.dto.request.RoomUpdateRequest;
+import com.group.hotel.dto.request.room.RoomCreateRequest;
+import com.group.hotel.dto.request.room.RoomSearchRequest;
+import com.group.hotel.dto.request.room.RoomUpdateRequest;
 import com.group.hotel.common.response.PageResponse;
-import com.group.hotel.dto.response.RoomDetailResponse;
-import com.group.hotel.dto.response.RoomResponse;
+import com.group.hotel.dto.response.room.RoomDetailResponse;
+import com.group.hotel.dto.response.room.RoomResponse;
 import com.group.hotel.service.RoomService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;

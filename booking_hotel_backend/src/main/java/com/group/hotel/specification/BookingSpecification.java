@@ -1,7 +1,7 @@
 package com.group.hotel.specification;
 
-import com.group.hotel.dto.request.BookingSearchSystemRequest;
-import com.group.hotel.dto.request.BookingSearchUserRequest;
+import com.group.hotel.dto.request.booking.BookingSearchSystemRequest;
+import com.group.hotel.dto.request.booking.BookingSearchUserRequest;
 import com.group.hotel.entity.Booking;
 import com.group.hotel.entity.BookingDetail;
 import com.group.hotel.enums.BookingStatus;

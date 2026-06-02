@@ -1,10 +1,10 @@
 package com.group.hotel.controller;
 
 import com.group.hotel.common.response.BaseResponse;
-import com.group.hotel.dto.request.FurnitureCreateRequest;
-import com.group.hotel.dto.request.FurnitureSearchRequest;
-import com.group.hotel.dto.request.FurnitureUpdateRequest;
-import com.group.hotel.dto.response.FurnitureResponse;
+import com.group.hotel.dto.request.furniture.FurnitureCreateRequest;
+import com.group.hotel.dto.request.furniture.FurnitureSearchRequest;
+import com.group.hotel.dto.request.furniture.FurnitureUpdateRequest;
+import com.group.hotel.dto.response.furniture.FurnitureResponse;
 import com.group.hotel.service.FurnitureService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

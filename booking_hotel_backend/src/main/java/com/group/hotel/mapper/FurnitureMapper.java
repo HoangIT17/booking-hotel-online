@@ -1,8 +1,8 @@
 package com.group.hotel.mapper;
 
-import com.group.hotel.dto.request.FurnitureCreateRequest;
-import com.group.hotel.dto.request.FurnitureUpdateRequest;
-import com.group.hotel.dto.response.FurnitureResponse;
+import com.group.hotel.dto.request.furniture.FurnitureCreateRequest;
+import com.group.hotel.dto.request.furniture.FurnitureUpdateRequest;
+import com.group.hotel.dto.response.furniture.FurnitureResponse;
 import com.group.hotel.entity.Furniture;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;

@@ -27,7 +27,10 @@ import ReviewPage from "../pages/admin/reviews/ReviewPage";
 import StaffHousekeepingDashboard from "../pages/staff/Dashboard";
 import HomePage from "../pages/customer/HomePage";
 
-// User Management 
+// Customer pages
+import MyReviewsPage from "../pages/customer/MyReviewsPage";
+
+// User Management
 import UserManagement from "../pages/admin/usermanagement/UserManagement";
 
 // Change Password
@@ -58,13 +61,16 @@ const AppRoutes = () => {
                 <Route path="customer">
                     {/* Bây giờ đường dẫn sẽ là /customer/change-password */}
                     <Route path="change-password" element={<ChangePasswordPage />} />
-                    
+
                     {/* Đường dẫn sẽ là /customer/profile */}
                     <Route path="profile" element={<ProfilePage />} />
-                    
+
                     {/* Đường dẫn sẽ là /customer/profile/edit */}
-                    <Route path="profile/edit" element={<ProfileEditPage />} />   
+                    <Route path="profile/edit" element={<ProfileEditPage />} />
                 </Route>
+
+                {/* Đánh giá của tôi - /history-reviews */}
+                <Route path="/history-reviews" element={<MyReviewsPage />} />
 
             </Route>
 

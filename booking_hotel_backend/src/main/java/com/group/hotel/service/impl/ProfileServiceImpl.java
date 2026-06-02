@@ -1,7 +1,7 @@
 package com.group.hotel.service.impl;
 
-import com.group.hotel.dto.request.ProfileUpdateRequest;
-import com.group.hotel.dto.response.ProfileResponse;
+import com.group.hotel.dto.request.user.ProfileUpdateRequest;
+import com.group.hotel.dto.response.user.ProfileResponse;
 import com.group.hotel.entity.Profile;
 import com.group.hotel.entity.User;
 import com.group.hotel.exception.AppException;

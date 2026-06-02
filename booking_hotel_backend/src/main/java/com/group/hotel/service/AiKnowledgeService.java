@@ -1,7 +1,7 @@
 package com.group.hotel.service;
 
-import com.group.hotel.dto.request.AiKnowledgeRequest;
-import com.group.hotel.dto.response.AiKnowledgeResponse;
+import com.group.hotel.dto.request.chatbot.AiKnowledgeRequest;
+import com.group.hotel.dto.response.chatbot.AiKnowledgeResponse;
 import org.springframework.data.domain.Page;
 
 public interface AiKnowledgeService {

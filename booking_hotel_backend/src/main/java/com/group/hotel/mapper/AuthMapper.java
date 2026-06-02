@@ -1,7 +1,7 @@
 package com.group.hotel.mapper;
 
-import com.group.hotel.dto.request.RegisterRequest;
-import com.group.hotel.dto.response.RegisterResponse;
+import com.group.hotel.dto.request.auth.RegisterRequest;
+import com.group.hotel.dto.response.auth.RegisterResponse;
 import com.group.hotel.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

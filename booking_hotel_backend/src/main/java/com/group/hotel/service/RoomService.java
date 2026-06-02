@@ -1,11 +1,11 @@
 package com.group.hotel.service;
 
-import com.group.hotel.dto.request.RoomCreateRequest;
-import com.group.hotel.dto.request.RoomSearchRequest;
-import com.group.hotel.dto.request.RoomUpdateRequest;
+import com.group.hotel.dto.request.room.RoomCreateRequest;
+import com.group.hotel.dto.request.room.RoomSearchRequest;
+import com.group.hotel.dto.request.room.RoomUpdateRequest;
 import com.group.hotel.common.response.PageResponse;
-import com.group.hotel.dto.response.RoomDetailResponse;
-import com.group.hotel.dto.response.RoomResponse;
+import com.group.hotel.dto.response.room.RoomDetailResponse;
+import com.group.hotel.dto.response.room.RoomResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 

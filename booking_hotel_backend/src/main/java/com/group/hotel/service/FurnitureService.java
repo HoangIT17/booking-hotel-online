@@ -1,9 +1,9 @@
 package com.group.hotel.service;
 
-import com.group.hotel.dto.request.FurnitureCreateRequest;
-import com.group.hotel.dto.request.FurnitureSearchRequest;
-import com.group.hotel.dto.request.FurnitureUpdateRequest;
-import com.group.hotel.dto.response.FurnitureResponse;
+import com.group.hotel.dto.request.furniture.FurnitureCreateRequest;
+import com.group.hotel.dto.request.furniture.FurnitureSearchRequest;
+import com.group.hotel.dto.request.furniture.FurnitureUpdateRequest;
+import com.group.hotel.dto.response.furniture.FurnitureResponse;
 
 import java.util.List;
 

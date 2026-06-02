@@ -1,8 +1,8 @@
 package com.group.hotel.service;
 
-import com.group.hotel.dto.request.VoucherCreateRequest;
-import com.group.hotel.dto.request.VoucherUpdateRequest;
-import com.group.hotel.dto.response.VoucherResponse;
+import com.group.hotel.dto.request.voucher.VoucherCreateRequest;
+import com.group.hotel.dto.request.voucher.VoucherUpdateRequest;
+import com.group.hotel.dto.response.voucher.VoucherResponse;
 
 import java.util.List;
 

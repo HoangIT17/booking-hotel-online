@@ -2,10 +2,10 @@ package com.group.hotel.controller;
 
 import com.group.hotel.common.response.BaseResponse;
 import com.group.hotel.common.response.PageResponse;
-import com.group.hotel.dto.request.ReviewCreateRequest;
-import com.group.hotel.dto.request.ReviewReplyRequest;
-import com.group.hotel.dto.request.ReviewSearchRequest;
-import com.group.hotel.dto.response.ReviewResponse;
+import com.group.hotel.dto.request.review.ReviewCreateRequest;
+import com.group.hotel.dto.request.review.ReviewReplyRequest;
+import com.group.hotel.dto.request.review.ReviewSearchRequest;
+import com.group.hotel.dto.response.review.ReviewResponse;
 import com.group.hotel.service.ReviewService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -46,8 +46,9 @@ public class ReviewController {
 
     @GetMapping("/api/v1/customer/reviews")
     public ResponseEntity<BaseResponse<PageResponse<ReviewResponse>>> getMyReviews(
+            @ModelAttribute ReviewSearchRequest searchRequest,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(BaseResponse.success(reviewService.getMyReviews(pageable)));
+        return ResponseEntity.ok(BaseResponse.success(reviewService.getMyReviews(searchRequest, pageable)));
     }
 
     @GetMapping("/api/v1/customer/reviews/booking/{bookingId}")
