@@ -1,9 +1,9 @@
 package com.group.hotel.controller;
 
 import com.group.hotel.common.response.BaseResponse;
-import com.group.hotel.dto.request.VnPayCreatePaymentRequest;
-import com.group.hotel.dto.response.VnPayCreatePaymentResponse;
-import com.group.hotel.dto.response.VnPayReturnResponse;
+import com.group.hotel.dto.request.booking.VnPayCreatePaymentRequest;
+import com.group.hotel.dto.response.booking.VnPayCreatePaymentResponse;
+import com.group.hotel.dto.response.booking.VnPayReturnResponse;
 import com.group.hotel.service.VnPayService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

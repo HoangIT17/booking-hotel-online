@@ -1,9 +1,9 @@
 package com.group.hotel.service.impl;
 
 import com.group.hotel.config.VnPayProperties;
-import com.group.hotel.dto.request.VnPayCreatePaymentRequest;
-import com.group.hotel.dto.response.VnPayCreatePaymentResponse;
-import com.group.hotel.dto.response.VnPayReturnResponse;
+import com.group.hotel.dto.request.booking.VnPayCreatePaymentRequest;
+import com.group.hotel.dto.response.booking.VnPayCreatePaymentResponse;
+import com.group.hotel.dto.response.booking.VnPayReturnResponse;
 import com.group.hotel.entity.Booking;
 import com.group.hotel.enums.BookingStatus;
 import com.group.hotel.enums.PaymentMethod;
