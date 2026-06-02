@@ -3,50 +3,6 @@ export const getPageContent = (response) => response?.data?.content || [];
 export const getResponseData = (response, fallback = null) =>
   response?.data ?? fallback;
 
-const pickImageSource = (source) => {
-  if (!source) return "";
-  if (typeof source === "string") return source;
-  if (Array.isArray(source)) {
-    return source.map(pickImageSource).find(Boolean) || "";
-  }
-  if (typeof source === "object") {
-    return (
-      pickImageSource(source.imageUrl) ||
-      pickImageSource(source.imagesUrl) ||
-      pickImageSource(source.url) ||
-      pickImageSource(source.path) ||
-      pickImageSource(source.filePath) ||
-      pickImageSource(source.name)
-    );
-  }
-  return "";
-};
-
-export const getRoomImageUrl = (room = {}) => {
-  const rawSource = pickImageSource([
-    room.imageUrl,
-    room.imagesUrl,
-    room.thumbnailUrl,
-    room.thumbnail,
-    room.image,
-    room.images,
-    room.roomImages,
-  ]);
-
-  const imageSource = rawSource.trim().replaceAll("\\", "/");
-  if (!imageSource) return "";
-  if (/^https?:\/\//i.test(imageSource)) return imageSource;
-
-  const normalizedSource =
-    imageSource.startsWith("/") ||
-    imageSource.startsWith("RoomImages/") ||
-    imageSource.startsWith("uploads/")
-      ? imageSource
-      : `/RoomImages/${imageSource}`;
-
-  return toAbsoluteAssetUrl(normalizedSource);
-};
-
 export const formatCurrency = (value) => {
   const amount = Number(value || 0);
   return amount.toLocaleString("vi-VN", {
@@ -69,4 +25,43 @@ export const formatDateTime = (value) => {
 export const formatDate = (value) => {
   if (!value) return "-";
   return new Date(value).toLocaleDateString("vi-VN");
+};
+
+export const getRoomImageUrl = (room) => {
+  const image =
+    room?.imageUrl ||
+    room?.image ||
+    room?.thumbnail ||
+    room?.thumbnailUrl ||
+    room?.roomImage ||
+    room?.roomImageUrl ||
+    room?.mainImageUrl ||
+    room?.coverImageUrl ||
+    room?.coverImage ||
+    (Array.isArray(room?.images) && room.images[0]) ||
+    (Array.isArray(room?.imageUrls) && room.imageUrls[0]) ||
+    (Array.isArray(room?.imagesUrl) && room.imagesUrl[0]) ||
+    (Array.isArray(room?.roomImages) && room.roomImages[0]) ||
+    (Array.isArray(room?.roomImagesUrl) && room.roomImagesUrl[0]);
+
+  if (!image) return "";
+  if (typeof image === "string") {
+    if (image.startsWith("http://") || image.startsWith("https://")) {
+      return image;
+    }
+    return `http://localhost:8080/api/v1/RoomImages/${image.replace(/^\/+/, "")}`;
+  }
+
+  if (typeof image === "object") {
+    return (
+      image.url ||
+      image.imageUrl ||
+      image.path ||
+      image.fileUrl ||
+      image.name ||
+      ""
+    );
+  }
+
+  return "";
 };
