@@ -1,3 +1,3 @@
 package com.group.hotel.enums;
 
-public enum RoomStatus { READY, OCCUPIED, CLEANING, MAINTAIN, DIRTY, RESERVED }
+public enum RoomStatus { READY, OCCUPIED, CLEANING, MAINTAIN, DIRTY }

@@ -125,8 +125,8 @@ public class RoomSpecification {
                     .where(
                             builder.equal(bookingDetail.get("room"), root),
                             booking.get("status").in(BLOCKING_BOOKING_STATUSES),
-                            builder.lessThan(booking.get("checkInDate"), request.getCheckOut()),
-                            builder.greaterThan(booking.get("checkOutDate"), request.getCheckIn())
+                            builder.lessThan(booking.get("checkInDate"), request.getCheckOut().atStartOfDay()),
+                            builder.greaterThan(booking.get("checkOutDate"), request.getCheckIn().atStartOfDay())
                     );
 
             return builder.not(builder.exists(subquery));

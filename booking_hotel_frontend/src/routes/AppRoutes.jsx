@@ -25,7 +25,17 @@ import DashboardManager from "../pages/manager/dashboard/Dashboard";
 import ReceptionistDashboard from "../pages/receptionist/Dashboard";
 import ReviewPage from "../pages/admin/reviews/ReviewPage";
 import StaffHousekeepingDashboard from "../pages/staff/Dashboard";
-import HomePage from "../pages/customer/HomePage";
+import HomePage from "../pages/homepage/HomePage";
+import RoomSearchPage from "../pages/customer/RoomSearchPage";
+import RoomDetailPage from "../pages/customer/RoomDetailPage";
+import BookingPaymentPage from "../pages/customer/BookingPaymentPage";
+import RoomUnavailablePage from "../pages/customer/RoomUnavailablePage";
+import MyBookingPage from "../pages/customer/MyBookingPage";
+import ReservationDetailPage from "../pages/customer/ReservationDetailPage";
+import PaymentRedirectPage from "../pages/customer/PaymentRedirectPage";
+import PaymentResultPage from "../pages/customer/PaymentResultPage";
+import PaymentStatusPage from "../pages/customer/PaymentStatusPage";
+import OffersPage from "../pages/customer/OffersPage";
 
 // Customer pages
 import MyReviewsPage from "../pages/customer/MyReviewsPage";
@@ -41,46 +51,51 @@ import ProfilePage from "../pages/profile/ProfilePage";
 import ProfileEditPage from "../pages/profile/ProfileEditPage";
 
 const AppRoutes = () => {
-    return (
-        <Routes>
-            {/* ================= PUBLIC ROUTES ================= */}
-            {/* Bọc trong PublicRoute để chặn quay lại khi đã đăng nhập */}
-            <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-            <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
-            
-            {/* Trang chủ xem phòng của khách hàng sau khi login */}
-            <Route element={<CustomerLayout />}>
+  return (
+    <Routes>
+      {/* Gốc rễ: Tự động đẩy sang login khi mở web */}
+      <Route path="/" element={<Navigate to="/home" replace />} />
 
-                {/* 🟢 NHÓM PUBLIC: Không cần đăng nhập */}
-                <Route path="/" element={<HomePage />} />
-                
-                {/* Nếu khách có thói quen gõ /home, tự động bẻ lái về / cho chuẩn SEO */}
-                <Route path="/home" element={<Navigate to="/" replace />} />
-                
-                {/* 🔴 NHÓM PROTECTED: Bắt buộc phải đăng nhập (Có role CUSTOMER) */}
-                <Route path="customer">
-                    {/* Bây giờ đường dẫn sẽ là /customer/change-password */}
-                    <Route path="change-password" element={<ChangePasswordPage />} />
+      {/* ================= PUBLIC ROUTES ================= */}
+      {/* Bọc trong PublicRoute để chặn quay lại khi đã đăng nhập */}
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <PublicRoute>
+            <RegisterPage />
+          </PublicRoute>
+        }
+      />
+      <Route path="/home" element={<HomePage />} />
+      <Route path="/rooms" element={<RoomSearchPage />} />
+      <Route path="/offers" element={<OffersPage />} />
+      <Route path="/rooms/:roomId" element={<RoomDetailPage />} />
+      <Route path="/rooms/unavailable" element={<RoomUnavailablePage />} />
+      <Route path="/booking" element={<BookingPaymentPage />} />
+      <Route path="/reservations" element={<MyBookingPage />} />
+      <Route path="/reservations/:bookingId" element={<ReservationDetailPage />} />
+      <Route path="/payment/redirect" element={<PaymentRedirectPage />} />
+      <Route path="/payment/result" element={<PaymentResultPage />} />
+      <Route path="/payment/status" element={<PaymentStatusPage />} />
 
-                    {/* Đường dẫn sẽ là /customer/profile */}
-                    <Route path="profile" element={<ProfilePage />} />
-
-                    {/* Đường dẫn sẽ là /customer/profile/edit */}
-                    <Route path="profile/edit" element={<ProfileEditPage />} />
-                </Route>
-
-                {/* Đánh giá của tôi - /history-reviews */}
-                <Route path="/history-reviews" element={<MyReviewsPage />} />
-
-            </Route>
+      {/* Đánh giá của tôi - /history-reviews */}
+      <Route path="/history-reviews" element={<MyReviewsPage />} />
 
 
             {/* ================= ROLE ADMIN ================= */}
             <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
-        
+
                 {/* Lớp 2: Khung giao diện - Bọc Header, Sidebar cho toàn bộ các trang con */}
                 <Route path="/admin" element={<AdminLayout />}>
-                    
+
                     {/* Lớp 3: Nội dung (Sẽ chui vào cái <Outlet /> của AdminLayout) */}
                     {/* Lưu ý: path ở đây chỉ cần viết "dashboard" (không có dấu / ở đầu) vì nó nối tiếp từ /admin */}
                     <Route path="dashboard" element={<DashboardAdmin />} />
@@ -96,7 +111,7 @@ const AppRoutes = () => {
                     <Route path="profile/edit" element={<ProfileEditPage />} />
 
                 </Route>
-                
+
             </Route>
 
            {/* ================= 📊 ROLE: MANAGER ================= */}
@@ -134,27 +149,28 @@ const AppRoutes = () => {
                 <Route path="/staff" element={<StaffLayout />}>
                     <Route path="change-password" element={<ChangePasswordPage />} />
                     <Route path="profile" element={<ProfilePage />} />
-                    <Route path="profile/edit" element={<ProfileEditPage />} /> 
+                    <Route path="profile/edit" element={<ProfileEditPage />} />
                     <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<StaffHousekeepingDashboard />} />
                     {/* Thêm chức năng nhân viên: tasks, room-status... tại đây */}
                 </Route>
             </Route>
 
-            {/* ================= ERROR 403 ================= */}
-            <Route 
-                path="/403" 
-                element={
-                    <div className="text-center mt-20 text-xl font-bold text-red-600">
-                        403 Forbidden - Bạn không có quyền truy cập vào khu vực làm việc này!
-                    </div>
-                } 
-            />
-            
-            {/* Hướng đi mặc định nếu gõ sai URL */}
-            <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-    );
+      {/* ================= ERROR 403 ================= */}
+      <Route
+        path="/403"
+        element={
+          <div className="text-center mt-20 text-xl font-bold text-red-600">
+            403 Forbidden - Bạn không có quyền truy cập vào khu vực làm việc
+            này!
+          </div>
+        }
+      />
+
+      {/* Hướng đi mặc định nếu gõ sai URL */}
+      <Route path="*" element={<Navigate to="/home" replace />} />
+    </Routes>
+  );
 };
 
 export default AppRoutes;

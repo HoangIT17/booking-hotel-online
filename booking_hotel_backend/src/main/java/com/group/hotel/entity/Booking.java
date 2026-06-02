@@ -30,10 +30,10 @@ public class Booking {
     private Voucher voucher;
 
     @Column(name = "check_in_date")
-    private LocalDate checkInDate;
+    private LocalDateTime checkInDate;
 
     @Column(name = "check_out_date")
-    private LocalDate checkOutDate;
+    private LocalDateTime checkOutDate;
 
     @Column(name = "num_nights")
     private Integer numNights;

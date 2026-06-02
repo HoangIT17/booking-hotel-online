@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -32,21 +32,17 @@ public class BookingCreateRequest {
     @NotNull(message = "Payment method is required!")
     private PaymentMethod paymentMethod;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @NotNull(message = "checkIn is required!")
-    private LocalDate checkIn;
+    private LocalDateTime checkIn;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @NotNull(message = "checkOut is required!")
-    private LocalDate checkOut;
+    private LocalDateTime checkOut;
 
     @NotNull(message = "numGuests is required!")
     @Min(value = 1, message = "numGuests must be greater than or equal to 1")
     private Integer numGuests;
 
     private String voucherCode;
-
-    public boolean isValidDateRange() {
-        return checkIn == null || checkOut == null || checkIn.isBefore(checkOut);
-    }
 }

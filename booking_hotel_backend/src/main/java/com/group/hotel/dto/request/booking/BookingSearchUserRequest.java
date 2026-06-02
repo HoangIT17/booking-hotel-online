@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -16,20 +16,12 @@ public class BookingSearchUserRequest {
     private Long bookingId;
     private String roomNumber;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate checkIn;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime checkIn;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate checkOut;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime checkOut;
 
     private BookingStatus bookingStatus;
     private PaymentMethod paymentMethod;
-
-    public boolean hasDateRange() {
-        return checkIn != null && checkOut != null;
-    }
-
-    public boolean isValidDateRange() {
-        return checkIn == null || checkOut == null || checkIn.isBefore(checkOut);
-    }
 }

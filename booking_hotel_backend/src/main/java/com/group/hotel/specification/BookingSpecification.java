@@ -11,7 +11,7 @@ import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Subquery;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 public class BookingSpecification {
@@ -33,7 +33,7 @@ public class BookingSpecification {
             if (request.getRoomNumber() != null && !request.getRoomNumber().isBlank()) {
                 spec = spec.and(hasRoomNumber(request.getRoomNumber()));
             }
-            if (request.hasDateRange()) {
+            if (hasDateRange(request.getCheckIn(), request.getCheckOut())) {
                 spec = spec.and(overlapsDateRange(request.getCheckIn(), request.getCheckOut()));
             }
             if (request.getRoomStatus() != null) {
@@ -64,7 +64,7 @@ public class BookingSpecification {
             if (request.getRoomNumber() != null && !request.getRoomNumber().isBlank()) {
                 spec = spec.and(hasRoomNumber(request.getRoomNumber()));
             }
-            if (request.hasDateRange()) {
+            if (hasDateRange(request.getCheckIn(), request.getCheckOut())) {
                 spec = spec.and(overlapsDateRange(request.getCheckIn(), request.getCheckOut()));
             } else {
                 if (request.getCheckIn() != null) {
@@ -95,6 +95,10 @@ public class BookingSpecification {
                 builder.equal(root.get("customer").get("id"), customerId);
     }
 
+    private static boolean hasDateRange(LocalDateTime checkIn, LocalDateTime checkOut) {
+        return checkIn != null && checkOut != null;
+    }
+
     public static Specification<Booking> hasCustomerName(String customerName) {
         return (root, query, builder) -> {
             var customer = root.join("customer", JoinType.LEFT);
@@ -108,17 +112,17 @@ public class BookingSpecification {
         };
     }
 
-    public static Specification<Booking> hasCheckInFrom(java.time.LocalDate checkIn) {
+    public static Specification<Booking> hasCheckInFrom(LocalDateTime checkIn) {
         return (root, query, builder) ->
                 builder.greaterThanOrEqualTo(root.get("checkInDate"), checkIn);
     }
 
-    public static Specification<Booking> hasCheckOutTo(java.time.LocalDate checkOut) {
+    public static Specification<Booking> hasCheckOutTo(LocalDateTime checkOut) {
         return (root, query, builder) ->
                 builder.lessThanOrEqualTo(root.get("checkOutDate"), checkOut);
     }
 
-    public static Specification<Booking> overlapsDateRange(java.time.LocalDate checkIn, java.time.LocalDate checkOut) {
+    public static Specification<Booking> overlapsDateRange(LocalDateTime checkIn, LocalDateTime checkOut) {
         return (root, query, builder) ->
                 builder.and(
                         builder.lessThan(root.get("checkInDate"), checkOut),
@@ -173,8 +177,8 @@ public class BookingSpecification {
 
     public static Specification<Booking> hasOverlappingRoomBooking(
             Long roomId,
-            LocalDate checkIn,
-            LocalDate checkOut,
+            LocalDateTime checkIn,
+            LocalDateTime checkOut,
             Collection<BookingStatus> statuses,
             Long excludedBookingId) {
         return (root, query, builder) -> {
