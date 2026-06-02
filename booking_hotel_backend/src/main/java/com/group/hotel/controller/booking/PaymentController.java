@@ -8,18 +8,26 @@ import com.group.hotel.service.VnPayService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
 public class PaymentController {
     private final VnPayService vnPayService;
+
+    @Value("${app.frontend-url:http://localhost:5173}")
+    private String frontendUrl;
 
     @PostMapping("/api/v1/payments/vnpay/create")
     public ResponseEntity<BaseResponse<VnPayCreatePaymentResponse>> createVnPayPayment(
@@ -30,7 +38,7 @@ public class PaymentController {
     }
 
     @GetMapping("/api/v1/payments/vnpay/return")
-    public ResponseEntity<BaseResponse<VnPayReturnResponse>> handleVnPayReturn(HttpServletRequest request) {
+    public ResponseEntity<Void> handleVnPayReturn(HttpServletRequest request) {
         Map<String, String[]> parameterMap = request.getParameterMap();
         Map<String, String> params = parameterMap.entrySet().stream()
                 .collect(java.util.stream.Collectors.toMap(
@@ -39,6 +47,16 @@ public class PaymentController {
                 ));
 
         VnPayReturnResponse response = vnPayService.handleReturn(params);
-        return ResponseEntity.ok(BaseResponse.success(response, response.getMessage()));
+        URI redirectUri = UriComponentsBuilder
+                .fromUriString(frontendUrl)
+                .path("/reservations")
+                .queryParam("paymentSuccess", response.isSuccess())
+                .queryParam("bookingId", response.getBookingId())
+                .build()
+                .toUri();
+
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header(HttpHeaders.LOCATION, redirectUri.toString())
+                .build();
     }
 }

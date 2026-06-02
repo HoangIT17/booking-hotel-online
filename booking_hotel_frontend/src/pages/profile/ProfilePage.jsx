@@ -80,7 +80,9 @@ const ProfilePage = () => {
                             </h5>
                             <button 
                                 className="btn btn-outline-primary btn-sm fw-bold d-flex align-items-center gap-2 px-3"
-                                onClick={() => navigate(`/${currentRole.toLowerCase()}/profile/edit`)}
+                                onClick={() =>
+                                    navigate(currentRole === "CUSTOMER" ? "/profile/edit" : `/${currentRole.toLowerCase()}/profile/edit`)
+                                }
                             >
                                 <i className="fa-solid fa-user-pen"></i>
                                 Chỉnh sửa hồ sơ

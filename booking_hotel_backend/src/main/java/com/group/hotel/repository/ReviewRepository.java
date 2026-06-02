@@ -11,6 +11,7 @@ import java.util.List;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
+    boolean existsByBookingId(Long bookingId);
 
     @Query("""
             SELECT bd.room.id AS roomId, AVG(r.rating) AS averageRating

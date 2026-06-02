@@ -133,6 +133,12 @@ public class GlobalExceptionHandler {
                 .body(BaseResponse.error(409, ex.getMessage()));
     }
 
+    @ExceptionHandler(ReviewNotFoundException.class)
+    public ResponseEntity<BaseResponse<Void>> handleReviewNotFound(ReviewNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(BaseResponse.error(404, ex.getMessage()));
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
 

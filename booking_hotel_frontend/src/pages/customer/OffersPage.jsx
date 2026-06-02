@@ -37,7 +37,7 @@ const OffersPage = () => {
         if (mounted) {
           setError(
             err.response?.data?.message ||
-              "Không thể tải voucher đang áp dụng.",
+              "Unable to load active vouchers.",
           );
           setVouchers([]);
         }
@@ -61,39 +61,38 @@ const OffersPage = () => {
   const handleCopy = async (code) => {
     try {
       await navigator.clipboard.writeText(code);
-      toast.success(`Đã sao chép ${code}`);
+      toast.success(`Copied ${code}`);
     } catch {
-      toast.error("Không thể sao chép mã voucher");
+      toast.error("Unable to copy voucher code");
     }
   };
 
   return (
     <CustomerPageShell active="Offers">
       <section className={styles.hero}>
-        <span>Ưu đãi đang áp dụng</span>
-        <h1>Chương trình khuyến mãi đang hoạt động</h1>
+        <h1>Active promotions</h1>
         <p>
-          Xem các voucher đang hoạt động. Nhập mã voucher khi đặt phòng nếu tổng
-          tiền đáp ứng giá trị tối thiểu.
+          Browse active vouchers. Enter a voucher code during booking if your
+          total meets the minimum value.
         </p>
       </section>
 
       <div className={styles.toolbar}>
         <div>
-          <strong>{availableVouchers.length} voucher đang áp dụng</strong>
+          <strong>{availableVouchers.length} active vouchers</strong>
           <p>
             {loading
-              ? "Đang đồng bộ voucher mới nhất..."
-              : error || "Dữ liệu được cập nhật từ kho voucher của khách sạn."}
+              ? "Syncing the latest vouchers..."
+              : error || "Data is updated from the hotel voucher catalog."}
           </p>
         </div>
-        <a href="/rooms">Tìm phòng</a>
+        <a href="/rooms">Find rooms</a>
       </div>
 
       {availableVouchers.length === 0 ? (
         <section className={styles.empty}>
-          <h2>Chưa có voucher</h2>
-          <p>Hiện chưa có voucher đang hoạt động. Vui lòng quay lại sau.</p>
+          <h2>No vouchers yet</h2>
+          <p>There are no active vouchers right now. Please check back later.</p>
         </section>
       ) : (
         <section className={styles.grid}>

@@ -1,12 +1,14 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth"; // Dùng hook tập trung cho sạch code
 
 const ProtectedRoute = ({ allowedRoles }) => {
     const { isAuthenticated, role } = useAuth();
+    const location = useLocation();
 
     // 1. Nếu chưa đăng nhập -> Đá văng về trang Login ngay
     if (!isAuthenticated) {
-        return <Navigate to="/login" replace />;
+        const redirectPath = `${location.pathname}${location.search}`;
+        return <Navigate to={`/login?redirect=${encodeURIComponent(redirectPath)}`} replace />;
     }
 
     // 2. Nếu đã đăng nhập nhưng sai quyền hạn -> Đá sang trang chặn 403

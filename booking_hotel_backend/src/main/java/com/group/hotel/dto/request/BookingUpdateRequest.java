@@ -23,12 +23,6 @@ public class BookingUpdateRequest {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime checkOut;
 
-    private String fullName;
-
-    private String email;
-
-    private String phone;
-
     private PaymentMethod paymentMethod;
 
     private BookingStatus bookingStatus;

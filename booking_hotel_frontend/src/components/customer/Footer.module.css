@@ -1,8 +1,8 @@
 .footer {
-    background-color: #1a202c; /* Xám đậm sang trọng */
+    background-color: #1a202c; /* Refined dark gray */
     color: #cbd5e1;
     padding-top: 64px;
-    margin-top: auto; /* Đẩy footer xuống cuối cùng nếu body ngắn */
+    margin-top: auto; /* Push footer to the bottom on short pages */
 }
 
 .footerContainer {
@@ -14,7 +14,7 @@
     gap: 40px;
 }
 
-/* Cột Thương hiệu */
+/* Brand column */
 .footerBrand {
     display: flex;
     flex-direction: column;
@@ -31,7 +31,7 @@
     height: 48px;
     width: auto;
     object-fit: contain;
-    filter: drop-shadow(0 0 8px rgba(199, 162, 82, 0.4)); /* Làm logo sáng nhẹ */
+    filter: drop-shadow(0 0 8px rgba(199, 162, 82, 0.4)); /* Soft logo glow */
 }
 
 .logoText {
@@ -60,11 +60,11 @@
 }
 
 .contactInfo i {
-    color: #c7a252; /* Icon màu vàng gold */
+    color: #c7a252; /* Gold icon color */
     width: 16px;
 }
 
-/* Cột Links */
+/* Link column */
 .footerLinks {
     display: flex;
     flex-direction: column;
@@ -81,13 +81,13 @@
 }
 
 .linkTitle::after {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     bottom: 0;
     width: 40px;
     height: 2px;
-    background-color: #c7a252; /* Gạch dưới màu gold */
+    background-color: #c7a252; /* Gold underline */
 }
 
 .linkItem {
@@ -100,12 +100,12 @@
 
 .linkItem:hover {
     color: #c7a252;
-    transform: translateX(5px); /* Hiệu ứng trượt nhẹ sang phải khi hover */
+    transform: translateX(5px); /* Subtle right slide on hover */
 }
 
 /* Bottom Bar */
 .footerBottom {
-    background-color: #0f172a; /* Tối hơn nền chính một chút */
+    background-color: #0f172a; /* Slightly darker than the main background */
     text-align: center;
     padding: 24px 20px;
     font-size: 14px;
@@ -118,9 +118,11 @@
     .footerContainer {
         grid-template-columns: 1fr 1fr;
     }
+
     .footerBrand {
-        grid-column: 1 / -1; /* Thương hiệu trải dài hết hàng đầu */
+        grid-column: 1 / -1; /* Span the first row */
     }
+
     .brandDesc {
         max-width: 100%;
     }

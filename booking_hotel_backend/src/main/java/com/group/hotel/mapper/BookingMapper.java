@@ -29,6 +29,7 @@ public interface BookingMapper {
     @Mapping(source = "id", target = "roomId")
     @Mapping(source = "roomNumber", target = "roomNumber")
     @Mapping(source = "roomType", target = "roomType")
+    @Mapping(source = "description", target = "description")
     @Mapping(source = "price", target = "price")
     @Mapping(source = "maxPeople", target = "capacity")
     @Mapping(source = "imageUrl", target = "imageUrl")

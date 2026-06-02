@@ -6,14 +6,14 @@ const Footer = () => {
     return (
         <footer className={style.footer}>
             <div className={style.footerContainer}>
-                {/* Cột 1: Thông tin thương hiệu */}
+                {/* Brand column */}
                 <div className={style.footerBrand}>
                     <div className={style.logoArea}>
                         <img src={LogoHotel} alt="LuxeStay" className={style.footerLogo} />
                         <span className={style.logoText}>LuxeStay</span>
                     </div>
                     <p className={style.brandDesc}>
-                        Trải nghiệm nghỉ dưỡng đẳng cấp và dịch vụ hoàn hảo tại LuxeStay. Nơi lưu giữ những khoảnh khắc tuyệt vời của bạn.
+                        Enjoy premium stays and excellent service at LuxeStay, where your best travel moments are kept.
                     </p>
                     <div className={style.contactInfo}>
                         <p><i className="fa-solid fa-phone"></i> +84 123 456 789</p>
@@ -22,26 +22,26 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* Cột 2: Khám phá (Discover) */}
+                {/* Explore column */}
                 <div className={style.footerLinks}>
-                    <h4 className={style.linkTitle}>Khám Phá</h4>
-                    <Link to="/" className={style.linkItem}>Trang Chủ</Link>
-                    <Link to="/rooms" className={style.linkItem}>Danh Sách Phòng</Link>
-                    <Link to="/history-reviews" className={style.linkItem}>Đánh Giá Khách Hàng</Link>
-                    <Link to="/seasonal-deals" className={style.linkItem}>Ưu Đãi Theo Mùa</Link>
+                    <h4 className={style.linkTitle}>Explore</h4>
+                    <Link to="/home" className={style.linkItem}>Home</Link>
+                    <Link to="/rooms" className={style.linkItem}>Rooms</Link>
+                    <Link to="/home" className={style.linkItem}>Customer Reviews</Link>
+                    <Link to="/offers" className={style.linkItem}>Seasonal Deals</Link>
                 </div>
 
-                {/* Cột 3: Hỗ trợ & Chính sách */}
+                {/* Support and policies column */}
                 <div className={style.footerLinks}>
-                    <h4 className={style.linkTitle}>Hỗ Trợ & Chính Sách</h4>
-                    <Link to="/book-history" className={style.linkItem}>Quản Lý Đặt Phòng</Link>
-                    <Link to="/contact" className={style.linkItem}>Chăm Sóc Khách Hàng</Link>
-                    <Link to="/terms" className={style.linkItem}>Điều Khoản Dịch Vụ</Link>
-                    <Link to="/privacy" className={style.linkItem}>Chính Sách Bảo Mật</Link>
+                    <h4 className={style.linkTitle}>Support & Policies</h4>
+                    <Link to="/reservations" className={style.linkItem}>Manage Reservations</Link>
+                    <Link to="/home" className={style.linkItem}>Customer Support</Link>
+                    <Link to="/home" className={style.linkItem}>Terms of Service</Link>
+                    <Link to="/home" className={style.linkItem}>Privacy Policy</Link>
                 </div>
             </div>
 
-            {/* Phần Copyright dưới cùng */}
+            {/* Copyright bar */}
             <div className={style.footerBottom}>
                 <p>&copy; {new Date().getFullYear()} LuxeStay. All rights reserved.</p>
             </div>

@@ -52,7 +52,7 @@ export const SearchPanelField = ({
               aria-expanded={open}
               onClick={() => setOpen((current) => !current)}
             >
-              <span>{selectedOption?.label || placeholder || "Chọn"}</span>
+              <span>{selectedOption?.label || placeholder || "Select"}</span>
               <i aria-hidden="true" />
             </button>
             {open && (
@@ -85,7 +85,7 @@ export const SearchPanelField = ({
   );
 };
 
-const SearchPanel = ({ children, onSubmit, submitLabel = "Tìm kiếm" }) => {
+const SearchPanel = ({ children, onSubmit, submitLabel = "Search" }) => {
   return (
     <form className={styles.searchCard} onSubmit={onSubmit}>
       <div className={styles.fields}>{children}</div>

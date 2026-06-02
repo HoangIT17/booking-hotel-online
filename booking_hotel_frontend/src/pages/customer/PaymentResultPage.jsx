@@ -16,11 +16,16 @@ const PaymentResultPage = () => {
       try {
         setError("");
         setLoading(true);
-        const params = Object.fromEntries(new URLSearchParams(window.location.search));
+        const params = Object.fromEntries(
+          new URLSearchParams(window.location.search),
+        );
         const response = await customerBookingService.handleVnPayReturn(params);
         setResult(response?.data || null);
       } catch (err) {
-        setError(err.response?.data?.message || "Không thể xác minh kết quả thanh toán.");
+        setError(
+          err.response?.data?.message ||
+            "Unable to verify payment result.",
+        );
       } finally {
         setLoading(false);
       }
@@ -37,28 +42,54 @@ const PaymentResultPage = () => {
         {loading ? (
           <>
             <div className={styles.resultIcon}>...</div>
-            <h1>Đang xác minh thanh toán</h1>
-            <p>Vui lòng chờ trong khi hệ thống xác minh kết quả thanh toán.</p>
+            <h1>Verifying payment</h1>
+            <p>Please wait while the system verifies the payment result.</p>
           </>
         ) : (
           <>
-        <div className={styles.resultIcon} style={!success ? { background: "#fff0f0", color: "#c53030" } : undefined}>
-          {success ? <CheckCircle size={34} /> : <XCircle size={34} />}
-        </div>
-        <h1>{success ? "Thanh toán thành công" : "Thanh toán thất bại"}</h1>
-        <p>{error || result?.message}</p>
-        <StatusBadge status={success ? "CONFIRMED" : "FAILED"} />
-        <ul className={styles.infoList} style={{ marginTop: 22 }}>
-          <li><span>Mã đặt phòng</span><strong>{result?.bookingId || "-"}</strong></li>
-          <li><span>Mã giao dịch</span><strong>{result?.transactionNo || "-"}</strong></li>
-          <li><span>Mã ngân hàng</span><strong>{result?.bankCode || "-"}</strong></li>
-          <li><span>Số tiền</span><strong>{formatCurrency(result?.amount)}</strong></li>
-          <li><span>Ngày thanh toán</span><strong>{formatDateTime(result?.payDate)}</strong></li>
-        </ul>
-        <div className={styles.buttonRow}>
-          <a className={styles.primaryButton} href="/reservations">Xem đặt phòng</a>
-          <a className={styles.secondaryButton} href="/rooms">Quay lại danh sách phòng</a>
-        </div>
+            <div
+              className={styles.resultIcon}
+              style={
+                !success
+                  ? { background: "#fff0f0", color: "#c53030" }
+                  : undefined
+              }
+            >
+              {success ? <CheckCircle size={34} /> : <XCircle size={34} />}
+            </div>
+            <h1>{success ? "Payment successful" : "Payment failed"}</h1>
+            <p>{error || result?.message}</p>
+            <StatusBadge status={success ? "CONFIRMED" : "FAILED"} />
+            <ul className={styles.infoList} style={{ marginTop: 22 }}>
+              <li>
+                <span>Booking ID</span>
+                <strong>{result?.bookingId || "-"}</strong>
+              </li>
+              <li>
+                <span>Transaction ID</span>
+                <strong>{result?.transactionNo || "-"}</strong>
+              </li>
+              <li>
+                <span>Bank code</span>
+                <strong>{result?.bankCode || "-"}</strong>
+              </li>
+              <li>
+                <span>Amount</span>
+                <strong>{formatCurrency(result?.amount)}</strong>
+              </li>
+              <li>
+                <span>Payment date</span>
+                <strong>{formatDateTime(result?.payDate)}</strong>
+              </li>
+            </ul>
+            <div className={styles.buttonRow}>
+              <a className={styles.primaryButton} href="/reservations">
+                View reservations
+              </a>
+              <a className={styles.secondaryButton} href="/rooms">
+                Back to room list
+              </a>
+            </div>
           </>
         )}
       </section>

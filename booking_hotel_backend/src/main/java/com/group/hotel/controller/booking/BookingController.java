@@ -27,7 +27,7 @@ public class BookingController {
     @GetMapping("/api/v1/customer/rooms/search")
     public ResponseEntity<BaseResponse<PageResponse<RoomAvailableResponse>>> searchAvailableRooms(
             @Valid @ModelAttribute SearchRoomAvailableRequest searchRoomAvailableRequest,
-            @PageableDefault(size = 10, sort = "price", direction = Sort.Direction.ASC) Pageable pageable) {
+            @PageableDefault(size = 4, sort = "price", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(BaseResponse.success(bookingService.searchAvailableRooms(searchRoomAvailableRequest, pageable)));
     }
 
@@ -47,7 +47,7 @@ public class BookingController {
     @GetMapping("/api/v1/customer/reservation-search")
     public ResponseEntity<BaseResponse<PageResponse<BookingSearchCustomerResponse>>> getCustomerBookingSearch(
             @ModelAttribute @Valid BookingSearchUserRequest bookingSearchRequest,
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 4, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ){
         return ResponseEntity.ok(BaseResponse.success(bookingService.searchCustomerBookings(bookingSearchRequest, pageable)));
     }

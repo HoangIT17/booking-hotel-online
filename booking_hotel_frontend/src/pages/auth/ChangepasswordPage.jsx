@@ -104,7 +104,7 @@ const ChangePasswordPage = () => {
                         break;
                     case 'CUSTOMER':
                     default:
-                        navigate('/customer/home');
+                        navigate('/home');
                         break;
                 }
             }, 500);

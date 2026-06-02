@@ -7,11 +7,10 @@ const RoomCard = ({
   description,
   price,
   formattedPrice,
-  priceUnit = "/ đêm",
+  priceUnit = "/night",
   rating,
   reviewCount,
-  amenities = [],
-  actionLabel = "Xem chi tiết",
+  actionLabel = "View details",
   onAction,
 }) => {
   return (
@@ -28,22 +27,16 @@ const RoomCard = ({
 
       <div className={styles.body}>
         <h3>{name}</h3>
-        {description && <p>{description}</p>}
-
-        {amenities.length > 0 && (
-          <div className={styles.amenities}>
-            {amenities.map((amenity) => (
-              <span key={amenity}>{amenity}</span>
-            ))}
-          </div>
-        )}
+        {description}
 
         <div className={styles.footer}>
           <div className={styles.price}>
             <strong>{formattedPrice ?? `$${price}`}</strong>
             <span>{priceUnit}</span>
           </div>
-          <button type="button" onClick={onAction}>{actionLabel}</button>
+          <button type="button" onClick={onAction}>
+            {actionLabel}
+          </button>
         </div>
       </div>
     </article>

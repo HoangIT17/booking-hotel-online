@@ -1,20 +1,20 @@
 import styles from "./StatusBadge.module.css";
 
 const statusLabels = {
-  READY: "Sẵn sàng",
-  AVAILABLE: "Còn trống",
-  UNAVAILABLE: "Không khả dụng",
-  OCCUPIED: "Đang sử dụng",
-  PENDING: "Đang chờ",
-  CONFIRMED: "Đã xác nhận",
-  CHECKED_IN: "Đã nhận phòng",
-  CHECKED_OUT: "Đã trả phòng",
-  CANCELLED: "Đã hủy",
-  CANCELED: "Đã hủy",
-  FAILED: "Thất bại",
-  SUCCESS: "Thành công",
-  PAID: "Đã thanh toán",
-  REFUNDED: "Đã hoàn tiền",
+  READY: "Ready",
+  AVAILABLE: "Available",
+  UNAVAILABLE: "Unavailable",
+  OCCUPIED: "Occupied",
+  PENDING: "Pending",
+  CONFIRMED: "Confirmed",
+  CHECKED_IN: "Checked in",
+  CHECKED_OUT: "Checked out",
+  CANCELLED: "Cancelled",
+  CANCELED: "Cancelled",
+  FAILED: "Failed",
+  SUCCESS: "Success",
+  PAID: "Paid",
+  REFUNDED: "Refunded",
 };
 
 const StatusBadge = ({ status }) => {

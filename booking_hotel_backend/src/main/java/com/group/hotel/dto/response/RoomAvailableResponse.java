@@ -15,6 +15,7 @@ public class RoomAvailableResponse {
     private Long roomId;
     private String roomNumber;
     private String roomType;
+    private String description;
     private BigDecimal price;
     private Integer capacity;
     private String status;

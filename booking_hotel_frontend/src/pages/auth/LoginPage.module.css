@@ -1,394 +1,400 @@
 /* Container chính */
 .authContainer {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
-    display: flex;
-    flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+  display: flex;
+  flex-direction: column;
 }
 
 /* ========== MAIN CONTENT ========== */
 .mainContent {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 32px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
 }
 
 .contentWrapper {
-    max-width: 1280px;
-    width: 100%;
-    display: flex;
-    background: #ffffff;
-    border-radius: 32px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
+  max-width: 1280px;
+  width: 100%;
+  display: flex;
+  background: #ffffff;
+  border-radius: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
 }
 
 /* ========== CỘT TRÁI - BANNER (65%) ========== */
 .leftBanner {
-    flex: 65%;
-    position: relative;
-    overflow: hidden;
-    min-height: 600px;
-    border-radius: 32px 0 0 32px;
+  flex: 65%;
+  position: relative;
+  overflow: hidden;
+  min-height: 600px;
+  border-radius: 32px 0 0 32px;
 }
 
 .bannerImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .bannerOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.3) 0%,
-        rgba(0, 0, 0, 0.6) 100%
-    );
-    z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  z-index: 1;
 }
 
 .bannerText {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 85%;
-    z-index: 2;
-    text-align: left;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  z-index: 2;
+  text-align: left;
 }
 
 .bannerTitle {
-    font-size: 42px;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0 0 20px 0;
-    line-height: 1.2;
+  font-size: 42px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  line-height: 1.2;
 }
 
 .brandHighlight {
-    background: linear-gradient(135deg, #c7a252, #e2bc7c);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    display: inline-block;
+  background: linear-gradient(135deg, #c7a252, #e2bc7c);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
 }
 
 .bannerDesc {
-    font-size: 15px;
-    color: rgba(255, 255, 255, 0.9);
-    line-height: 1.6;
-    margin: 0;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  margin: 0;
 }
 
 /* ========== CỘT PHẢI - FORM (35%) ========== */
 .rightForm {
-    flex: 35%;
-    padding: 48px 32px;
-    background: #ffffff;
+  flex: 35%;
+  padding: 48px 32px;
+  background: #ffffff;
 }
 
 .formHeader {
-    margin-bottom: 28px;
+  margin-bottom: 28px;
 }
 
 .formTitle {
-    font-size: 28px;
-    font-weight: 700;
-    color: #1a2a3a;
-    margin: 0 0 12px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a2a3a;
+  margin: 0 0 12px 0;
 }
 
 .formSubtitle {
-    font-size: 14px;
-    color: #718096;
-    margin: 0;
-    line-height: 1.5;
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+  line-height: 1.5;
 }
 
 /* Form Login */
 .loginForm {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .formGroup {
-    margin-bottom: 24px;
+  margin-bottom: 24px;
 }
 
 .label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 8px;
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 8px;
 }
 
 .inputWrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .inputIcon {
-    position: absolute;
-    left: 16px;
-    color: #a0aec0;
-    font-size: 16px;
-    pointer-events: none;
+  position: absolute;
+  left: 16px;
+  color: #a0aec0;
+  font-size: 16px;
+  pointer-events: none;
 }
 
 .authInput {
-    width: 100%;
-    padding: 14px 16px 14px 48px;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 16px;
-    font-size: 15px;
-    color: #1a2a3a;
-    background: #ffffff;
-    outline: none;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 14px 16px 14px 48px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  font-size: 15px;
+  color: #1a2a3a;
+  background: #ffffff;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .authInput:focus {
-    border-color: #c7a252;
-    box-shadow: 0 0 0 3px rgba(199, 162, 82, 0.1);
+  border-color: #c7a252;
+  box-shadow: 0 0 0 3px rgba(199, 162, 82, 0.1);
 }
 
 .authInput::placeholder {
-    color: #cbd5e0;
+  color: #cbd5e0;
 }
 
 .inputError {
-    border-color: #f56565 !important;
+  border-color: #f56565 !important;
 }
 
 /* Eye button */
 .eyeButton {
-    position: absolute;
-    right: 16px;
-    background: none;
-    border: none;
-    color: #a0aec0;
-    cursor: pointer;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: absolute;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #a0aec0;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .eyeButton:hover {
-    color: #4a5568;
+  color: #4a5568;
 }
 
 /* Options row */
 .optionsRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
 }
 
 .checkboxLabel {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    color: #4a5568;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #4a5568;
+  cursor: pointer;
 }
 
 .rememberCheckbox {
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-    accent-color: #c7a252;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #c7a252;
 }
 
 .forgotLink {
-    font-size: 14px;
-    color: #c7a252;
-    text-decoration: none;
-    font-weight: 500;
+  font-size: 14px;
+  color: #c7a252;
+  text-decoration: none;
+  font-weight: 500;
 }
 
 .forgotLink:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* Submit button */
 .submitBtn {
-    width: 100%;
-    background: #c7a252;
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 16px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-bottom: 28px;
+  width: 100%;
+  background: #c7a252;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 28px;
 }
 
 .submitBtn:hover {
-    background: #b08a3e;
-    transform: translateY(-1px);
+  background: #b08a3e;
+  transform: translateY(-1px);
 }
 
 .submitBtn:disabled {
-    background: #cbd5e0;
-    cursor: not-allowed;
-    transform: none;
+  background: #cbd5e0;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Divider OR */
 .divider {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    margin: 0 0 24px;
-    color: #a0aec0;
-    font-size: 13px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 0 0 24px;
+  color: #a0aec0;
+  font-size: 13px;
 }
 
 .divider::before,
 .divider::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid #e2e8f0;
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .divider span {
-    margin: 0 16px;
+  margin: 0 16px;
 }
 
 /* Social row */
 .socialRow {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 32px;
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
 .socialBtn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 12px;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 16px;
-    background: #ffffff;
-    font-size: 14px;
-    font-weight: 500;
-    color: #4a5568;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .socialBtn:hover {
-    background: #f7fafc;
-    border-color: #cbd5e0;
+  background: #f7fafc;
+  border-color: #cbd5e0;
 }
 
 .googleBtn i {
-    background: linear-gradient(135deg, #4285F4 0%, #EA4335 50%, #FBBC05 75%, #34A853 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    font-size: 18px;
+  background: linear-gradient(
+    135deg,
+    #4285f4 0%,
+    #ea4335 50%,
+    #fbbc05 75%,
+    #34a853 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 18px;
 }
 
 .facebookBtn i {
-    color: #1877F2;
-    font-size: 18px;
+  color: #1877f2;
+  font-size: 18px;
 }
 
 /* Switch auth */
 .switchAuth {
-    text-align: center;
-    font-size: 14px;
-    color: #718096;
+  text-align: center;
+  font-size: 14px;
+  color: #718096;
 }
 
 .switchAuth a {
-    color: #c7a252;
-    text-decoration: none;
-    font-weight: 600;
+  color: #c7a252;
+  text-decoration: none;
+  font-weight: 600;
 }
 
 .switchAuth a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* Error message */
 .errorMsg {
-    color: #f56565;
-    font-size: 12px;
-    margin-top: 6px;
-    display: block;
+  color: #f56565;
+  font-size: 12px;
+  margin-top: 6px;
+  display: block;
 }
 
 /* Responsive */
 @media (max-width: 1024px) {
-    .contentWrapper {
-        flex-direction: column;
-    }
-    
-    .leftBanner {
-        flex: auto;
-        min-height: 320px;
-        border-radius: 32px 32px 0 0;
-    }
-    
-    .rightForm {
-        flex: auto;
-        padding: 36px 28px;
-    }
-    
-    .bannerTitle {
-        font-size: 32px;
-    }
-    
-    .bannerDesc {
-        font-size: 14px;
-    }
+  .contentWrapper {
+    flex-direction: column;
+  }
+
+  .leftBanner {
+    flex: auto;
+    min-height: 320px;
+    border-radius: 32px 32px 0 0;
+  }
+
+  .rightForm {
+    flex: auto;
+    padding: 36px 28px;
+  }
+
+  .bannerTitle {
+    font-size: 32px;
+  }
+
+  .bannerDesc {
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 768px) {
-    .mainContent {
-        padding: 24px 20px;
-    }
-    
-    .rightForm {
-        padding: 28px 20px;
-    }
-    
-    .bannerTitle {
-        font-size: 28px;
-    }
-    
-    .formTitle {
-        font-size: 24px;
-    }
-    
-    .socialRow {
-        flex-direction: column;
-    }
-    
-    .optionsRow {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
+  .mainContent {
+    padding: 24px 20px;
+  }
+
+  .rightForm {
+    padding: 28px 20px;
+  }
+
+  .bannerTitle {
+    font-size: 28px;
+  }
+
+  .formTitle {
+    font-size: 24px;
+  }
+
+  .socialRow {
+    flex-direction: column;
+  }
+
+  .optionsRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 }

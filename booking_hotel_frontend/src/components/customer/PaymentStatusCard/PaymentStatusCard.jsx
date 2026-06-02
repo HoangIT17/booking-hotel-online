@@ -2,16 +2,16 @@ import styles from "./PaymentStatusCard.module.css";
 
 const statuses = ["Pending", "Paid", "Failed", "Canceled"];
 const statusLabels = {
-  Pending: "Đang chờ",
-  Paid: "Đã thanh toán",
-  Failed: "Thất bại",
-  Canceled: "Đã hủy",
+  Pending: "Pending",
+  Paid: "Paid",
+  Failed: "Failed",
+  Canceled: "Canceled",
 };
 
 const PaymentStatusCard = ({ active = "Pending" }) => {
   return (
     <section className={styles.card}>
-      <h2>Trạng thái thanh toán</h2>
+      <h2>Payment status</h2>
       <div className={styles.grid}>
         {statuses.map((status) => (
           <span
@@ -23,8 +23,8 @@ const PaymentStatusCard = ({ active = "Pending" }) => {
         ))}
       </div>
       <div className={styles.sync}>
-        <strong>Đồng bộ hệ thống</strong>
-        <p>Cổng thanh toán cập nhật trạng thái đặt phòng và lưu giao dịch mới nhất.</p>
+        <strong>System sync</strong>
+        <p>The payment gateway updates booking status and stores the latest transaction.</p>
       </div>
     </section>
   );

@@ -11,7 +11,7 @@ const formatCurrency = (value) => {
 };
 
 const formatDate = (value) => {
-  if (!value) return "Không giới hạn";
+  if (!value) return "No limit";
   return new Date(value).toLocaleDateString("vi-VN");
 };
 
@@ -26,20 +26,20 @@ const VoucherCard = ({ voucher, onCopy }) => {
 
       <div className={styles.content}>
         <div className={styles.top}>
-          <span className={styles.badge}>Đang áp dụng</span>
-          <span className={styles.remaining}>Còn {remaining}</span>
+          <span className={styles.badge}>Active</span>
+          <span className={styles.remaining}>Remaining {remaining}</span>
         </div>
 
-        <h2>Giảm {voucher.discountPercent}%</h2>
-        <p>Dùng mã <strong>{voucher.code}</strong> cho các đặt phòng đủ điều kiện.</p>
+        <h2>Save {voucher.discountPercent}%</h2>
+        <p>Use code <strong>{voucher.code}</strong> for eligible bookings.</p>
 
         <ul className={styles.meta}>
           <li>
-            <span>Giảm tối đa</span>
+            <span>Max discount</span>
             <strong>{formatCurrency(voucher.maxDiscount)}</strong>
           </li>
           <li>
-            <span>Giá trị tối thiểu</span>
+            <span>Minimum value</span>
             <strong>{formatCurrency(voucher.minBookingValue)}</strong>
           </li>
         </ul>
@@ -47,11 +47,11 @@ const VoucherCard = ({ voucher, onCopy }) => {
         <div className={styles.footer}>
           <span>
             <CalendarDays size={14} />
-            Hết hạn {formatDate(voucher.endDate)}
+            Expires {formatDate(voucher.endDate)}
           </span>
           <button type="button" onClick={() => onCopy?.(voucher.code)}>
             <Copy size={14} />
-            Sao chép mã
+            Copy code
           </button>
         </div>
       </div>
