@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import SectionHeader from "../../components/common/SectionHeader/SectionHeader";
 import StaySearchForm from "../../components/common/StaySearchForm/StaySearchForm";
-import Header from "../../components/customer/Header";
-import Footer from "../../components/customer/Footer";
+// import Header from "../../components/customer/Header";
+// import Footer from "../../components/customer/Footer";
 import HeroBanner from "../../components/customer/HeroBanner/HeroBanner";
 import ReviewCard from "../../components/customer/ReviewCard/ReviewCard";
 import RoomCard from "../../components/customer/RoomCard/RoomCard";
@@ -147,7 +147,6 @@ const HomePage = () => {
 
   return (
     <div className={styles.page}>
-      <Header />
 
       <main className={styles.main}>
         <HeroBanner
@@ -226,7 +225,6 @@ const HomePage = () => {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 };

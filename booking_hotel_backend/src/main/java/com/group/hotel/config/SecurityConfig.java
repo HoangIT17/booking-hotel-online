@@ -57,17 +57,18 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthEntryPoint)
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Thả cửa cho OPTIONS
                         .requestMatchers("/api/v1/auth/**").permitAll()
-<<<<<<< HEAD
+
                         .requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/payments/vnpay/return").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/reservation-create").authenticated()
-=======
+
                         .requestMatchers("/oauth2/**", "/login/oauth2/code/**").permitAll()
->>>>>>> feature/auth
+
 
                         .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/customer/rooms/search/**").permitAll()
@@ -79,7 +80,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/manager/reservation-update").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/manager/reviews/**").permitAll()
                         .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
-<<<<<<< HEAD
+
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/RoomImages/**").permitAll()
 
@@ -93,9 +94,9 @@ public class SecurityConfig {
 
 
                         // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
-=======
+
                         .requestMatchers("/uploads/**", "/RoomImages/**").permitAll()
->>>>>>> feature/auth
+
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/v1/chatbot/ask").hasAuthority("CUSTOMER")
                         .requestMatchers("/api/v1/chatbot/**", "/api/v1/chatbot/history").hasAuthority("ADMIN")

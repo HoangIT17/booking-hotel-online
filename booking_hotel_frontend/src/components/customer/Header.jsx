@@ -19,8 +19,8 @@ const Header = () => {
     const displayUsername = user?.fullName || user?.username || "Customer";
     const role = user?.role || "CUSTOMER";
 
-    const getProfileLink = () => "/profile";
-    const getChangePasswordLink = () => "/change-password";
+    const getProfileLink = () => "customer/profile";
+    const getChangePasswordLink = () => "customer/change-password";
 
     const onLogout = () => {
         // Clear Redux state and local storage.
