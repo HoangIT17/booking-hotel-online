@@ -24,26 +24,10 @@ import CustomerLayout from '../layouts/CustomerLayout';
 import DashboardAdmin from "../pages/admin/dashboard/Dashboard";
 import FurniturePage from "../pages/admin/furniture/FurniturePage";
 import RoomPage from "../pages/admin/rooms/RoomPage";
-
-import DashboardManager from "../pages/manager/dashboard/Dashboard";
+import DashboardManager from "../pages/manager/Dashboard";
 import ReceptionistDashboard from "../pages/receptionist/Dashboard";
 import StaffHousekeepingDashboard from "../pages/staff/Dashboard";
 import HomePage from "../pages/homepage/HomePage";
-
-
-import RoomsPage from "../pages/customer/RoomsPage";
-import RoomDetailPage from "../pages/customer/RoomDetailPage";
-import BookingPage from "../pages/customer/BookingPage";
-import RoomUnavailablePage from "../pages/customer/RoomUnavailablePage";
-import ReservationsPage from "../pages/customer/ReservationsPage";
-import ReservationDetailPage from "../pages/customer/ReservationDetailPage";
-import PaymentRedirectPage from "../pages/customer/PaymentRedirectPage";
-import PaymentResultPage from "../pages/customer/PaymentResultPage";
-import PaymentStatusPage from "../pages/customer/PaymentStatusPage";
-import OffersPage from "../pages/customer/OffersPage";
-import ReviewManagementPage from "../pages/admin/bookingmanagement/ReviewManagementPage";
-import BookingManagementPage from "../pages/admin/bookingmanagement/BookingManagementPage";
-import VoucherManagementPage from "../pages/admin/bookingmanagement/VoucherManagementPage";
 
 // User Management 
 import UserManagement from "../pages/admin/usermanagement/UserManagement";
@@ -58,6 +42,12 @@ import ProfileEditPage from "../pages/profile/ProfileEditPage";
 // Google OAuth Callback
 import LoginSuccess from "../pages/auth/LoginSuccess";
 
+import IncidentManager from "../pages/manager/IncidentManager";
+import IncidentReport from "../pages/manager/IncidentReport";
+import ViewCleaningTasks from "../pages/staff/ViewCleaningTasks";
+import ViewMyCleaningTasks from "../pages/staff/ViewMyCleaningTasks";
+import RoomDetail from "../pages/staff/RoomDetail";
+
 const AppRoutes = () => {
     return (
         <Routes>
@@ -70,26 +60,22 @@ const AppRoutes = () => {
             {/* Trang chủ xem phòng của khách hàng sau khi login */}
             <Route element={<CustomerLayout />}>
 
-                {/*  NHÓM PUBLIC: Không cần đăng nhập */}
+                {/* 🟢 NHÓM PUBLIC: Không cần đăng nhập */}
                 <Route path="/" element={<HomePage />} />
                 
                 {/* Nếu khách có thói quen gõ /home, tự động bẻ lái về / cho chuẩn SEO */}
                 <Route path="/home" element={<Navigate to="/" replace />} />
-                <Route path="/rooms" element={<RoomsPage />} />
-                <Route path="/offers" element={<OffersPage />} />
-                <Route path="/rooms/:roomId" element={<RoomDetailPage />} />
-                <Route path="/rooms/unavailable" element={<RoomUnavailablePage />} />
-                <Route path="/payment/result" element={<PaymentResultPage />} />
-                <Route path="/payment/status" element={<PaymentStatusPage />} />
-                {/*  NHÓM PROTECTED: Bắt buộc phải đăng nhập (Có role CUSTOMER) */}
-                <Route element={<ProtectedRoute allowedRoles={['CUSTOMER', 'ADMIN']} />}>
-                    <Route path="/customer/change-password" element={<ChangePasswordPage />} />
-                    <Route path="/customer/profile" element={<ProfilePage />} />
-                    <Route path="/customer/profile/edit" element={<ProfileEditPage />} />
-                    <Route path="/customer/booking" element={<BookingPage />} />
-                    <Route path="/customer/reservations" element={<ReservationsPage />} />
-                    <Route path="/customer/reservations/:bookingId" element={<ReservationDetailPage />} />
-                    <Route path="/customer/payment/redirect" element={<PaymentRedirectPage />} />
+                
+                {/* 🔴 NHÓM PROTECTED: Bắt buộc phải đăng nhập (Có role CUSTOMER) */}
+                <Route path="customer">
+                    {/* Bây giờ đường dẫn sẽ là /customer/change-password */}
+                    <Route path="change-password" element={<ChangePasswordPage />} />
+                    
+                    {/* Đường dẫn sẽ là /customer/profile */}
+                    <Route path="profile" element={<ProfilePage />} />
+                    
+                    {/* Đường dẫn sẽ là /customer/profile/edit */}
+                    <Route path="profile/edit" element={<ProfileEditPage />} />   
                 </Route>
 
             </Route>
@@ -113,15 +99,13 @@ const AppRoutes = () => {
                     <Route path="change-password" element={<ChangePasswordPage />} />
                     <Route path="profile" element={<ProfilePage />} />
                     <Route path="profile/edit" element={<ProfileEditPage />} />     
-                    <Route path="reviews" element={<ReviewManagementPage />} />
-                    <Route path="bookings" element={<BookingManagementPage />} />
-                    <Route path="vouchers" element={<VoucherManagementPage />} />
+                    
                 </Route>
                 
             </Route>
 
            {/* ================= 📊 ROLE: MANAGER ================= */}
-            <Route element={<ProtectedRoute allowedRoles={["MANAGER","ADMIN"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["MANAGER"]} />}>
                 {/* Đã sửa từ AdminLayout sang ManagerLayout ✅ */}
                 <Route path="/manager" element={<ManagerLayout />}>
                     <Route path="change-password" element={<ChangePasswordPage />} />
@@ -133,14 +117,16 @@ const AppRoutes = () => {
                     <Route path="profile" element={<ProfilePage />} />
                     <Route path="profile/edit" element={<ProfileEditPage />} /> 
                     {/* Thêm chức năng quản lý tại đây */}
-                    <Route path="reviews" element={<ReviewManagementPage />} />
-                    <Route path="bookings" element={<BookingManagementPage />} />
-                    <Route path="vouchers" element={<VoucherManagementPage />} />
+                    <Route path="incidents" element={<IncidentManager />} />
+                    <Route
+                        path="/manager/incident-reports"
+                        element={<IncidentReport />}
+                    />
                 </Route>
             </Route>
             
             {/* ================= 🛎️ ROLE: RECEPTIONIST ================= */}
-            <Route element={<ProtectedRoute allowedRoles={["RECEPTIONIST","ADMIN"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["RECEPTIONIST", "STAFF"]} />}>
                 {/* Đã bọc cấu trúc Layout lồng nhau chuẩn chỉ ✅ */}
                 <Route path="/receptionist" element={<ReceptionistLayout />}>
                     <Route path="change-password" element={<ChangePasswordPage />} />
@@ -149,13 +135,15 @@ const AppRoutes = () => {
                     <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<ReceptionistDashboard />} />
                     {/* Thêm chức năng lễ tân: bookings, checkin-checkout... tại đây */}
-                    <Route path="bookings" element={<BookingManagementPage />} />
-
-                </Route>
+                    <Route path="cleaning-tasks" element={<ViewCleaningTasks />} />
+                    <Route
+                        path="/receptionist/room-detail/:roomNumber"
+                        element={<RoomDetail />}/>
+                            </Route>
             </Route>
 
-            {/* =================  ROLE: STAFF ================= */}
-            <Route element={<ProtectedRoute allowedRoles={["STAFF","ADMIN"]} />}>
+            {/* ================= 🧹 ROLE: STAFF ================= */}
+            <Route element={<ProtectedRoute allowedRoles={["STAFF", "RECEPTIONIST"]} />}>
                 {/* Đã bọc cấu trúc Layout lồng nhau chuẩn chỉ ✅ */}
                 <Route path="/staff" element={<StaffLayout />}>
                     <Route path="change-password" element={<ChangePasswordPage />} />
@@ -164,6 +152,12 @@ const AppRoutes = () => {
                     <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<StaffHousekeepingDashboard />} />
                     {/* Thêm chức năng nhân viên: tasks, room-status... tại đây */}
+                    <Route path="view-tasks" element={<ViewCleaningTasks />} />
+                    <Route
+                        path="/staff/room-detail/:roomNumber"
+                        element={<RoomDetail />}
+                    />
+                    <Route path="my-tasks" element={<ViewMyCleaningTasks />} />
                 </Route>
             </Route>
 

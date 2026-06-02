@@ -50,7 +50,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
                 // 🌟 1. LIÊN KẾT CORS TRỰC TIẾP VỚI SPRING SECURITY
+
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception
@@ -84,12 +86,19 @@ public class SecurityConfig {
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/RoomImages/**").permitAll()
 
+
                         .requestMatchers("/api/customer/rooms/search/**").permitAll()
                         .requestMatchers("/api/customer/bookings/**").permitAll()
                         .requestMatchers("/api/customer/bookings-search/**").permitAll()
                         .requestMatchers("/api/admin/furnitures/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/admin/room-types/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")
+
+
+                        .requestMatchers("/api/v1/maintenance/**").hasAnyAuthority("STAFF", "ADMIN", "MANAGER")
+                        .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/v1/staff/**").hasAnyAuthority("STAFF", "ADMIN", "MANAGER","RECEPTIONIST")
+                        .requestMatchers("/api/v1/incidents/**").hasAnyAuthority("ADMIN", "MANAGER", "STAFF")
 
 
 
@@ -121,6 +130,15 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+
+        // Cho phép URL chạy ứng dụng Frontend của bạn
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        // Cho phép đầy đủ mọi phương thức HTTP phổ biến
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        // Cho phép gửi kèm tất cả các Header cần thiết (bao gồm Authorization token nếu có)
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

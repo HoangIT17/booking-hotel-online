@@ -20,7 +20,7 @@ public class HousekeepingLog {
     private Room room;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "staff_id")
+    @JoinColumn(name = "staff_id", nullable = true, insertable = true, updatable = true, columnDefinition = "BIGINT NULL")
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private User staff;
 
@@ -35,4 +35,7 @@ public class HousekeepingLog {
 
     @Enumerated(EnumType.STRING)
     private HousekeepingStatus status;
+
+    @Column(name = "priority")
+    private String priority;
 }

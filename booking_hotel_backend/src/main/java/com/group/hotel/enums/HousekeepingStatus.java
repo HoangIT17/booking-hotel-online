@@ -1,3 +1,8 @@
 package com.group.hotel.enums;
 
-public enum HousekeepingStatus { IN_PROGRESS, COMPLETED }
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
+
+public enum HousekeepingStatus { PENDING,IN_PROGRESS, COMPLETED }

@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutThunk } from "../../redux/slices/authSlice";
 import styles from "../admin/Sidebar.module.css";
+
 import logoImg from "../../assets/images/logohotel.png";
 
 const ReceptionistSidebar = () => {
@@ -16,6 +17,12 @@ const ReceptionistSidebar = () => {
   const menuItems = [
     { path: "/receptionist/dashboard", icon: "fa-gauge-high", label: "Trang chủ" },
     { path: "/receptionist/bookings", icon: "fa-calendar-check", label: "Quản Lý Booking" },
+    {
+      path: "/receptionist/cleaning-tasks",
+      icon: "fa-broom",
+      label: "Quản lý dọn dẹp",
+    },
+
   ];
 
   return (
