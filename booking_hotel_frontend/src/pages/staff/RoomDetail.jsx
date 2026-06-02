@@ -3,22 +3,25 @@ import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../services/axiosInstance";
 import styles from "./RoomDetail.module.css";
 import MaintenanceForm from "./modal/MaintenanceForm";
-import IncidentForm from "./modal/IncidentForm"; // 🔥 BỔ SUNG: Import Form báo cáo mất hỏng mới
+import IncidentForm from "./modal/IncidentForm";
+import useAuth from "../../hooks/useAuth"; // Giả định bạn dùng hook này
 
-// 1. Cấu hình URL gốc của Backend (nơi lưu trữ thư mục ảnh của Spring Boot)
 const IMAGE_BASE_URL = "http://localhost:8082";
 
 const RoomDetail = () => {
-  const { roomNumber } = useParams(); // Lấy số phòng từ URL (vd: /staff/room-detail/101)
+  const { roomNumber } = useParams();
   const navigate = useNavigate();
+  const { role } = useAuth();
+
+  const isStaff = role === "STAFF";
+  const isReceptionist = role === "RECEPTIONIST";
 
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // State cho Modal Sửa chữa
-  const [isIncidentOpen, setIsIncidentOpen] = useState(false); // 🔥 BỔ SUNG: State cho Modal Mất/Hỏng
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isIncidentOpen, setIsIncidentOpen] = useState(false);
 
-  // Hàm gọi API lấy dữ liệu phòng (Tách ra để tái sử dụng làm mới dữ liệu sau khi submit đơn)
   const fetchRoomDetail = () => {
     if (!roomNumber) return;
     axiosInstance
@@ -39,7 +42,45 @@ const RoomDetail = () => {
     fetchRoomDetail();
   }, [roomNumber]);
 
-  // Định dạng hiển thị tiền tệ
+  // const handleCreateCleaningTask = async () => {
+  //   try {
+  //     await axiosInstance.post(`/staff/rooms/${roomNumber}/create-cleaning`);
+  //     alert("Đã tạo yêu cầu dọn dẹp thành công!");
+  //     fetchRoomDetail();
+  //   } catch (err) {
+  //     alert("Có lỗi xảy ra khi tạo yêu cầu.");
+  //   }
+  // };
+
+  const handleCreateCleaningTask = async () => {
+    if (
+      !window.confirm(
+        `Bạn có chắc chắn muốn tạo yêu cầu dọn dẹp cho phòng ${roomNumber}?`,
+      )
+    ) {
+      return;
+    }
+
+    try {
+      // Gửi request tới server
+      await axiosInstance.post(
+        `/receptionist/rooms/${roomNumber}/create-cleaning`,
+        {
+          note: "Cần dọn dẹp sau khi check-out",
+        },
+      );
+
+      alert("Tạo yêu cầu dọn dẹp thành công!");
+
+      // BƯỚC QUAN TRỌNG: Gọi lại hàm này để lấy dữ liệu mới nhất (trạng thái DIRTY) từ DB
+      fetchRoomDetail();
+    } catch (error) {
+      // Xử lý lỗi nếu có
+      const errorMsg = error.response?.data?.message || "Có lỗi xảy ra!";
+      alert(errorMsg);
+    }
+  };
+
   const formatPrice = (price) => {
     if (!price) return "0 đ";
     return price.toLocaleString("vi-VN", {
@@ -48,7 +89,6 @@ const RoomDetail = () => {
     });
   };
 
-  // Áp dụng class CSS Badge trạng thái phòng
   const getRoomStatusClass = (status) => {
     if (!status) return styles.badgeDefault;
     switch (status.toUpperCase()) {
@@ -67,7 +107,6 @@ const RoomDetail = () => {
     }
   };
 
-  // Định dạng badge trạng thái thiết bị nội thất (FIXING, PENDING, FIXED, DAMAGED, MISSING)
   const getFurnitureBadgeClass = (status) => {
     if (!status) return styles.furnDefault;
     switch (status.toUpperCase()) {
@@ -77,9 +116,9 @@ const RoomDetail = () => {
         return styles.furnPending;
       case "FIXING":
         return styles.furnFixing;
-      case "DAMAGED": // 🔥 BỔ SUNG
+      case "DAMAGED":
         return styles.furnDamaged || styles.badgeDirty;
-      case "MISSING": // 🔥 BỔ SUNG
+      case "MISSING":
         return styles.furnMissing || styles.badgeMaintain;
       default:
         return styles.furnDefault;
@@ -94,9 +133,9 @@ const RoomDetail = () => {
         return "Chờ xử lý";
       case "FIXING":
         return "Đang sửa chữa";
-      case "DAMAGED": // 🔥 BỔ SUNG
+      case "DAMAGED":
         return "Bị hư hỏng";
-      case "MISSING": // 🔥 BỔ SUNG
+      case "MISSING":
         return "Bị thất lạc/mất";
       default:
         return status || "Chưa rõ";
@@ -122,7 +161,6 @@ const RoomDetail = () => {
 
   return (
     <div className={styles.detailContainer}>
-      {/* Nút quay lại */}
       <div className={styles.headerActions}>
         <button className={styles.backBtn} onClick={() => navigate(-1)}>
           ← Quay lại danh sách
@@ -131,7 +169,6 @@ const RoomDetail = () => {
       </div>
 
       <div className={styles.mainGrid}>
-        {/* KHỐI 1: THÔNG TIN CHUNG & HÌNH ẢNH */}
         <div className={styles.card}>
           <div className={styles.imageWrapper}>
             <img
@@ -144,11 +181,6 @@ const RoomDetail = () => {
               }
               alt={`Phòng ${room.roomNumber}`}
               className={styles.roomImage}
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src =
-                  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'><rect width='100%' height='100%' fill='%23ffebee'/><text x='50%' y='50%' font-family='sans-serif' font-size='18' fill='%23c62828' dominant-baseline='middle' text-anchor='middle'>Loi load anh phong</text></svg>";
-              }}
             />
           </div>
           <div className={styles.infoList}>
@@ -183,25 +215,16 @@ const RoomDetail = () => {
               <span className={styles.value}>{room.area} m²</span>
             </div>
             <div className={styles.infoItem}>
-              <span className={styles.label}>Sức chứa tối đa:</span>
+              <span className={styles.label}>Sức chứa:</span>
               <span className={styles.value}>{room.maxPeople} người</span>
             </div>
-            {room.description && (
-              <div className={styles.descBox}>
-                <span className={styles.label}>Mô tả chi tiết:</span>
-                <p className={styles.descText}>{room.description}</p>
-              </div>
-            )}
           </div>
         </div>
 
-        {/* KHỐI 2: DANH SÁCH THIẾT BỊ NỘI THẤT */}
         <div className={styles.card}>
           <h3>Danh Sách Thiết Bị & Tiện Nghi</h3>
-          {room.furnitures && room.furnitures.length === 0 ? (
-            <p className={styles.emptyText}>
-              Chưa cập nhật thiết bị nào trong phòng này.
-            </p>
+          {room.furnitures?.length === 0 ? (
+            <p className={styles.emptyText}>Chưa cập nhật thiết bị.</p>
           ) : (
             <div className={styles.tableResponsive}>
               <table className={styles.subTable}>
@@ -231,131 +254,143 @@ const RoomDetail = () => {
                 </tbody>
               </table>
 
-              {/* 🔥 KHU VỰC ĐIỀU KHIỂN: CHỨA 2 NÚT THAO TÁC NẰM CẠNH NHAU */}
-              <div style={{ marginTop: "15px", display: "flex", gap: "12px" }}>
-                <button
-                  className={styles.openModalBtn}
-                  onClick={() => setIsModalOpen(true)}
-                  style={{ margin: 0, flex: 1 }}
+              {isStaff && (
+                <div
+                  style={{ marginTop: "15px", display: "flex", gap: "12px" }}
                 >
-                  + Tạo yêu cầu sửa chữa
-                </button>
-
-                <button
-                  onClick={() => setIsIncidentOpen(true)}
-                  style={{
-                    flex: 1,
-                    padding: "10px 16px",
-                    border: "1px solid #dc2626",
-                    background: "#fef2f2",
-                    color: "#dc2626",
-                    fontWeight: "600",
-                    cursor: "pointer",
-                    borderRadius: "6px",
-                    fontSize: "14px",
-                    transition: "all 0.2s",
-                  }}
-                  onMouseOver={(e) => (e.target.style.background = "#fee2e2")}
-                  onMouseOut={(e) => (e.target.style.background = "#fef2f2")}
-                >
-                  ⚠ Báo cáo thiết bị mất, hỏng
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Logic Modal 1: Sửa chữa bảo trì (Dùng reload hoặc fetchRoomDetail tuỳ nhu cầu) */}
-          {isModalOpen && (
-            <div className={styles.modalOverlay}>
-              <div className={styles.modalContent}>
-                <button
-                  className={styles.closeBtn}
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  ×
-                </button>
-                <MaintenanceForm
-                  roomNumber={room.roomNumber}
-                  furnitureList={room.furnitures}
-                  onRefresh={() => {
-                    setIsModalOpen(false);
-                    fetchRoomDetail(); // Cập nhật lại dữ liệu tại chỗ không cần F5 toàn trang
-                  }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* 🔥 Logic Modal 2: BÁO CÁO MẤT / HỎNG THIẾT BỊ MỚI */}
-          {isIncidentOpen && (
-            <div className={styles.modalOverlay}>
-              <div className={styles.modalContent}>
-                <button
-                  className={styles.closeBtn}
-                  onClick={() => setIsIncidentOpen(false)}
-                >
-                  ×
-                </button>
-                <IncidentForm
-                  roomNumber={room.roomNumber}
-                  furnitureList={room.furnitures}
-                  onRefresh={() => {
-                    setIsIncidentOpen(false);
-                    fetchRoomDetail(); // Đồng bộ ngay tình trạng thiết bị lên UI
-                  }}
-                />
-              </div>
+                  <button
+                    className={styles.openModalBtn}
+                    onClick={() => setIsModalOpen(true)}
+                    style={{ margin: 0, flex: 1 }}
+                  >
+                    + Tạo yêu cầu sửa chữa
+                  </button>
+                  <button
+                    onClick={() => setIsIncidentOpen(true)}
+                    style={{
+                      flex: 1,
+                      padding: "10px 16px",
+                      border: "1px solid #dc2626",
+                      background: "#fef2f2",
+                      color: "#dc2626",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    ⚠ Báo cáo thiết bị mất, hỏng
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
 
-      {/* KHỐI 3: LỊCH SỬ SỰ CỐ / BẢO TRÌ */}
-      <div className={`${styles.card} ${styles.fullWidthCard}`}>
-        <h3>Lịch Sử Báo Cáo Sự Cố & Bảo Trì</h3>
-        {room.incidentHistory && room.incidentHistory.length === 0 ? (
-          <p className={styles.emptyText}>
-            Phòng này hoạt động ổn định, chưa có lịch sử ghi nhận sự cố.
-          </p>
-        ) : (
-          <div className={styles.tableResponsive}>
-            <table className={styles.subTable}>
-              <thead>
-                <tr>
-                  <th>Mã đơn</th>
-                  <th>Mô tả sự cố</th>
-                  <th>Người báo cáo</th>
-                  <th>Thời gian</th>
-                  <th>Trạng thái xử lý</th>
-                </tr>
-              </thead>
-              <tbody>
-                {room.incidentHistory?.map((incident) => (
-                  <tr key={incident.id}>
-                    <td>
-                      <code>#INC-{incident.id}</code>
-                    </td>
-                    <td>{incident.description}</td>
-                    <td>{incident.reportedBy}</td>
-                    <td>
-                      {new Date(incident.createdAt).toLocaleString("vi-VN")}
-                    </td>
-                    <td>
-                      <span
-                        className={`${styles.incidentBadge} ${incident.status === "PENDING" ? styles.incPending : styles.incFixed}`}
-                      >
-                        {incident.status === "PENDING"
-                          ? "Chờ xử lý"
-                          : "Đã khắc phục"}
-                      </span>
-                    </td>
+      {isStaff && (
+        <div className={`${styles.card} ${styles.fullWidthCard}`}>
+          <h3>Lịch Sử Báo Cáo Sự Cố & Bảo Trì</h3>
+          {room.incidentHistory?.length === 0 ? (
+            <p className={styles.emptyText}>Phòng hoạt động ổn định.</p>
+          ) : (
+            <div className={styles.tableResponsive}>
+              <table className={styles.subTable}>
+                <thead>
+                  <tr>
+                    <th>Mã đơn</th>
+                    <th>Mô tả</th>
+                    <th>Người báo cáo</th>
+                    <th>Thời gian</th>
+                    <th>Trạng thái</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {room.incidentHistory?.map((inc) => (
+                    <tr key={inc.id}>
+                      <td>
+                        <code>#INC-{inc.id}</code>
+                      </td>
+                      <td>{inc.description}</td>
+                      <td>{inc.reportedBy}</td>
+                      <td>{new Date(inc.createdAt).toLocaleString("vi-VN")}</td>
+                      <td>
+                        <span
+                          className={`${styles.incidentBadge} ${inc.status === "PENDING" ? styles.incPending : styles.incFixed}`}
+                        >
+                          {inc.status === "PENDING"
+                            ? "Chờ xử lý"
+                            : "Đã khắc phục"}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+      {/* Nút dành cho Lễ tân */}
+      {isReceptionist && (
+        <button
+          onClick={handleCreateCleaningTask}
+          className={styles.cleaningBtn}
+          style={{
+            flex: 1,
+            padding: "10px",
+            background: "#059669",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontWeight: "600",
+          }}
+        >
+          ✨ Tạo yêu cầu dọn dẹp
+        </button>
+      )}
+
+      {isModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <button
+              className={styles.closeBtn}
+              onClick={() => setIsModalOpen(false)}
+            >
+              ×
+            </button>
+            <MaintenanceForm
+              roomNumber={room.roomNumber}
+              furnitureList={room.furnitures}
+              onRefresh={() => {
+                setIsModalOpen(false);
+                fetchRoomDetail();
+              }}
+            />
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {isIncidentOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <button
+              className={styles.closeBtn}
+              onClick={() => setIsIncidentOpen(false)}
+            >
+              ×
+            </button>
+            <IncidentForm
+              roomNumber={room.roomNumber}
+              furnitureList={room.furnitures}
+              onRefresh={() => {
+                setIsIncidentOpen(false);
+                fetchRoomDetail();
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

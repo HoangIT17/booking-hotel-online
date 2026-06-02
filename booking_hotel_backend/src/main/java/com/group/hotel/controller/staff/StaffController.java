@@ -1,23 +1,24 @@
 package com.group.hotel.controller.staff;
 
+
 import com.group.hotel.dto.request.CreateIncidentRequest;
 import com.group.hotel.dto.request.CreateMaintenanceRequest;
 import com.group.hotel.dto.request.UpdateRoomStatusRequest;
-import com.group.hotel.dto.response.AcceptCleaningTaskResponse;
-import com.group.hotel.dto.response.MaintenanceResponse;
-import com.group.hotel.dto.response.RoomDetailResponse;
-import com.group.hotel.dto.response.UpdateRoomStatusResponse;
+import com.group.hotel.dto.response.*;
 import com.group.hotel.security.UserPrincipal;
+import com.group.hotel.service.IncidentService;
 import com.group.hotel.service.RoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
@@ -27,6 +28,7 @@ import java.util.Map;
 public class StaffController {
 
     private final RoomService roomService;
+//    private final IncidentService incidentService;
 
     @GetMapping("/rooms/{roomNumber}")
     public RoomDetailResponse getRoomDetail(
@@ -121,4 +123,25 @@ public class StaffController {
                 roomService.createFurnitureIncident(request)
         );
     }
+//    @GetMapping
+//    public ResponseEntity<ApiResponse<IncidentListResponse>> getListIncidents(
+//            @RequestParam(required = false) String status,
+//            @RequestParam(required = false) String type,
+//            @RequestParam(required = false) String priority,
+//            @RequestParam(required = false) Long roomId,
+//            @RequestParam(required = false) Long staffId,
+//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+//            @RequestParam(defaultValue = "created_at") String sortBy,
+//            @RequestParam(defaultValue = "desc") String direction,
+//            @RequestParam(defaultValue = "1") int page,
+//            @RequestParam(defaultValue = "10") int size
+//    ) {
+//
+//        IncidentListResponse data = incidentService.getListIncidents(
+//                status, type, priority, roomId, staffId, fromDate, toDate, sortBy, direction, page, size
+//        );
+//
+//        return ResponseEntity.ok(ApiResponse.success(data));
+//    }
 }

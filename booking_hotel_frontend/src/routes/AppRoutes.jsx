@@ -14,13 +14,15 @@ import StaffLayout from "../layouts/StaffLayout";
 import DashboardAdmin from "../pages/admin/dashboard/Dashboard";
 import FurniturePage from "../pages/admin/furniture/FurniturePage";
 import RoomPage from "../pages/admin/rooms/RoomPage";
-import DashboardManager from "../pages/manager/dashboard/Dashboard";
+import DashboardManager from "../pages/manager/Dashboard";
 import ReceptionistDashboard from "../pages/receptionist/Dashboard";
 import StaffHousekeepingDashboard from "../pages/staff/Dashboard";
 import HomePage from "../pages/customer/HomePage";
 
 // User Management
 import UserManagement from "../pages/admin/usermanagement/UserManagement";
+import IncidentManager from "../pages/manager/IncidentManager";
+import IncidentReport from "../pages/manager/IncidentReport";
 
 // Change Password
 import ChangePasswordPage from "../pages/auth/ChangepasswordPage";
@@ -96,11 +98,18 @@ const AppRoutes = () => {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="profile/edit" element={<ProfileEditPage />} />
           {/* Thêm chức năng quản lý tại đây */}
+          <Route path="incidents" element={<IncidentManager />} />
+          <Route
+            path="/manager/incident-reports"
+            element={<IncidentReport />}
+          />
         </Route>
       </Route>
 
       {/* ================= 🛎️ ROLE: RECEPTIONIST ================= */}
-      <Route element={<ProtectedRoute allowedRoles={["RECEPTIONIST"]} />}>
+      <Route
+        element={<ProtectedRoute allowedRoles={["RECEPTIONIST", "STAFF"]} />}
+      >
         {/* Đã bọc cấu trúc Layout lồng nhau chuẩn chỉ ✅ */}
         <Route path="/receptionist" element={<ReceptionistLayout />}>
           <Route path="change-password" element={<ChangePasswordPage />} />
@@ -109,11 +118,18 @@ const AppRoutes = () => {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<ReceptionistDashboard />} />
           {/* Thêm chức năng lễ tân: bookings, checkin-checkout... tại đây */}
+          <Route path="cleaning-tasks" element={<ViewCleaningTasks />} />
+          <Route
+            path="/receptionist/room-detail/:roomNumber"
+            element={<RoomDetail />}
+          />
         </Route>
       </Route>
 
       {/* ================= 🧹 ROLE: STAFF ================= */}
-      <Route element={<ProtectedRoute allowedRoles={["STAFF"]} />}>
+      <Route
+        element={<ProtectedRoute allowedRoles={["STAFF", "RECEPTIONIST"]} />}
+      >
         {/* Đã bọc cấu trúc Layout lồng nhau chuẩn chỉ ✅ */}
         <Route path="/staff" element={<StaffLayout />}>
           <Route path="change-password" element={<ChangePasswordPage />} />
@@ -123,7 +139,10 @@ const AppRoutes = () => {
           <Route path="dashboard" element={<StaffHousekeepingDashboard />} />
           {/* Thêm chức năng nhân viên: tasks, room-status... tại đây */}
           <Route path="view-tasks" element={<ViewCleaningTasks />} />
-          <Route path="room-detail/:roomNumber" element={<RoomDetail />} />
+          <Route
+            path="/staff/room-detail/:roomNumber"
+            element={<RoomDetail />}
+          />
           <Route path="my-tasks" element={<ViewMyCleaningTasks />} />
         </Route>
       </Route>

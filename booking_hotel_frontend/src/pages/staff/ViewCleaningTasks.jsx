@@ -10,6 +10,23 @@ const ViewCleaningTasks = () => {
   // Trạng thái khóa nút bấm tạm thời khi đang xử lý API nhận dọn phòng
   const [loadingAccept, setLoadingAccept] = useState(null);
 
+  const userString = localStorage.getItem("user");
+  let isStaff = false;
+
+  if (userString) {
+    try {
+      const userObj = JSON.parse(userString);
+      // Kiểm tra xem trường role nằm ở đâu trong object userObj của bạn.
+      // Thông thường nó là userObj.role hoặc userObj.authorities
+      const role = userObj.role || "";
+      isStaff = role.toUpperCase() === "STAFF";
+    } catch (e) {
+      console.error("Lỗi khi parse JSON user:", e);
+    }
+  }
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const rolePath = user.role === "RECEPTIONIST" ? "/receptionist" : "/staff";
+
   // Các bộ lọc dữ liệu tại FE
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
@@ -262,26 +279,31 @@ const ViewCleaningTasks = () => {
                       </span>
                     </td>
                     <td className={styles.actionCell}>
+                      {/* NÚT CHI TIẾT: Hiển thị cho MỌI role (không cần isStaff) */}
                       <button
                         onClick={() =>
-                          navigate(`/staff/room-detail/${room.roomNumber}`)
+                          navigate(`${rolePath}/room-detail/${room.roomNumber}`)
                         }
                         className={styles.detailBtn}
                       >
                         Chi tiết
                       </button>
 
-                      {currentRawStatus.toUpperCase() === "DIRTY" && (
-                        <button
-                          onClick={() => handleAcceptCleaning(room.roomNumber)}
-                          disabled={loadingAccept === room.roomNumber}
-                          className={styles.actionBtn}
-                        >
-                          {loadingAccept === room.roomNumber
-                            ? "Đang nhận..."
-                            : "Nhận dọn"}
-                        </button>
-                      )}
+                      {/* ĐIỀU KIỆN QUAN TRỌNG: Chỉ hiện nếu là STAFF và trạng thái là DIRTY */}
+                      {isStaff &&
+                        currentRawStatus.toUpperCase() === "DIRTY" && (
+                          <button
+                            onClick={() =>
+                              handleAcceptCleaning(room.roomNumber)
+                            }
+                            disabled={loadingAccept === room.roomNumber}
+                            className={styles.actionBtn}
+                          >
+                            {loadingAccept === room.roomNumber
+                              ? "Đang nhận..."
+                              : "Nhận dọn"}
+                          </button>
+                        )}
                     </td>
                   </tr>
                 );
@@ -299,7 +321,7 @@ const ViewCleaningTasks = () => {
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
-            « Trước
+            «
           </button>
 
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -319,7 +341,7 @@ const ViewCleaningTasks = () => {
             }
             disabled={currentPage === totalPages}
           >
-            Sau »
+            »
           </button>
         </div>
       )}

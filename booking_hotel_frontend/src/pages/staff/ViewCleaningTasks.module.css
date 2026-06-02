@@ -273,3 +273,24 @@
   color: #ffffff !important;
   font-weight: 600;
 }
+.cleaningBtn {
+  background-color: #059669; /* Màu xanh lá chủ đạo */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cleaningBtn:hover {
+  background-color: #047857;
+}
+
+.cleaningBtn:active {
+  transform: scale(0.98);
+}

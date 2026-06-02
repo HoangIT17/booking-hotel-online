@@ -49,4 +49,16 @@ public class Incident {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Column(name = "manager_note", length = 1000)
+    private String managerNote;
+
+    @Column(name = "decided_at")
+    private LocalDateTime decidedAt;
+
+    @Column(name = "resolution_note", length = 1000)
+    private String resolutionNote;
+
+    @Column(name = "resolved_at")
+    private LocalDateTime resolvedAt;
+
 }

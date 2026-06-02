@@ -73,7 +73,8 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/v1/maintenance/**").hasAnyAuthority("STAFF", "ADMIN", "MANAGER")
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/v1/staff/**").hasAnyAuthority("STAFF", "ADMIN", "MANAGER")
+                        .requestMatchers("/api/v1/staff/**").hasAnyAuthority("STAFF", "ADMIN", "MANAGER","RECEPTIONIST")
+                        .requestMatchers("/api/v1/incidents/**").hasAnyAuthority("ADMIN", "MANAGER", "STAFF")
 
 
                         // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
