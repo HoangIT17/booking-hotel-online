@@ -1,0 +1,47 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.default,
+.pending {
+  background: #fff6e8;
+  color: #b46a00;
+}
+
+.available,
+.confirmed,
+.success {
+  background: #eafaf1;
+  color: #14804a;
+}
+
+.checked_in,
+.info {
+  background: #eaf5ff;
+  color: #1769aa;
+}
+
+.checked_out {
+  background: #f0f0f4;
+  color: #4b4d57;
+}
+
+.cancelled,
+.failed,
+.danger {
+  background: #fff0f0;
+  color: #c53030;
+}
+
+.refunded {
+  background: #f2edff;
+  color: #5d3fd3;
+}

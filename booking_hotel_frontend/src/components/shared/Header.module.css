@@ -1,0 +1,101 @@
+.header {
+  height: 65px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+}
+
+.badgeCustom {
+  font-size: 0.7rem;
+  padding: 0.25em 0.6em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.notificationBtn {
+  position: relative;
+  background: none;
+  border: none;
+  color: #6c757d;
+  transition: color 0.2s ease;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.notificationBtn:hover {
+  background-color: #f8f9fa;
+  color: #0d6efd;
+}
+
+.userSection {
+  padding-left: 1.5rem;
+  border-left: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatarCircle {
+  width: 38px;
+  height: 38px;
+  background-color: #e9ecef;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #adb5bd;
+}
+
+/* Container bọc nút Logout để đẩy xuống đáy Sidebar */
+.logoutArea {
+  margin-top: auto; 
+  padding-top: 15px; /* Khoảng cách sau đường kẻ ngang */
+}
+
+/* NÚT SIGN OUT - CHỈNH GIAO DIỆN THEO HEADER */
+.logoutBtn {
+  /* Copy logic d-flex align-items-center gap-3 của Header */
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* Khớp với .userSection gap của Header */
+  
+  /* Copy phong cách rounded và text-danger */
+  width: 100%;
+  padding: 8px 12px; /* py-2 tương đương 8px */
+  border-radius: 8px; /* rounded chuẩn */
+  color: #dc3545; /* Màu đỏ text-danger */
+  
+  /* Reset button mặc định */
+  border: none !important;
+  background: transparent !important;
+  font-weight: 600;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+.logoutBtn:hover {
+  background-color: #fff5f5 !important; 
+  color: #bb2d3b; /* Đỏ đậm hơn chút khi di chuột */
+  padding-left: 20px; /* Nhích nhẹ sang phải tạo cảm giác mượt mà */
+}
+
+.logoutBtn i {
+  font-size: 18px; 
+  width: 24px; /* Cố định độ rộng để chữ luôn thẳng hàng */
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Chữ Sign Out bọc trong span */
+.logoutBtn span {
+  white-space: nowrap;
+}
+

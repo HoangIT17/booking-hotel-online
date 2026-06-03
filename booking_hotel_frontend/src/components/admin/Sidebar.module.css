@@ -1,0 +1,137 @@
+/* src/components/admin/Sidebar.module.css */
+
+.sidebarWrapper {
+  width: 280px;
+  min-width: 280px;
+  height: 100vh; /* Ép Sidebar cao bằng màn hình */
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+  background-color: #ffffff;
+  border-right: 1px solid #e9ecef;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.02);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* KHU VỰC LOGO */
+.logoArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #f8f9fa;
+}
+
+.logoArea img {
+  width: 40px;
+  height: auto;
+  transition: transform 0.3s ease;
+  object-fit: cover;
+}
+
+.logoArea span {
+  font-weight: 800;
+  color: #343a40;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 20px;
+}
+
+/* KHU VỰC MENU NAVIGATION */
+.navArea {
+  flex-grow: 1; 
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; 
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 4px;
+  border-radius: 10px;
+  text-decoration: none !important;
+  color: #495057;
+  font-weight: 500;
+  font-size: 14.5px;
+  transition: all 0.25s ease-in-out;
+  white-space: nowrap;
+}
+
+.navLink i {
+  min-width: 20px;
+  text-align: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* Hiệu ứng Hover & Active (Admin dùng màu Blue #0d6efd) */
+.navLink:hover {
+  background-color: #f8f9fa;
+  color: #0d6efd;
+  padding-left: 18px;
+}
+
+.navLinkActive {
+  background-color: #0d6efd !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+  font-weight: 600;
+}
+
+.navLinkActive i {
+  color: #ffffff !important;
+}
+
+/* KHU VỰC LOGOUT (NẰM DƯỚI CÙNG) */
+.logoutArea {
+  margin-top: auto; /* Ép khối này xuống cuối cùng của wrapper */
+  padding-top: 10px;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none !important;
+  background: transparent !important;
+  color: #dc3545;
+  font-weight: 600;
+  font-size: 14.5px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.logoutBtn:hover {
+  background-color: #fff5f5 !important;
+  padding-left: 18px;
+}
+
+.footerHr {
+  border: 0;
+  border-top: 1px solid #dee2e6;
+  margin-bottom: 10px;
+  opacity: 0.5;
+}
+
+.logoText {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #343a40;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 50px;
+}
