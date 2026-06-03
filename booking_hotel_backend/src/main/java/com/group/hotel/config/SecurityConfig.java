@@ -69,7 +69,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/payments/vnpay/return").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/reservation-create").authenticated()
 
-                        .requestMatchers("/oauth2/**", "/login/oauth2/code/**").permitAll()
 
 
                         .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
@@ -102,8 +101,6 @@ public class SecurityConfig {
 
 
                         // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
-
-                        .requestMatchers("/uploads/**", "/RoomImages/**").permitAll()
 
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/v1/chatbot/ask").hasAuthority("CUSTOMER")
