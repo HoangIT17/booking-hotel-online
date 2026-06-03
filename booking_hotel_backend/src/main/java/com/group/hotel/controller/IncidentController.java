@@ -1,4 +1,4 @@
-package com.group.hotel.controller.manager;
+package com.group.hotel.controller;
 
 //import com.group.hotel.common.response.ApiResponse;
 import com.group.hotel.dto.request.incident.IncidentDecisionRequest;
