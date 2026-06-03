@@ -24,43 +24,36 @@ axiosInstance.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// 2. RESPONSE INTERCEPTOR: Xử lý kết quả trả về toàn cục
+// 2. RESPONSE INTERCEPTOR
 axiosInstance.interceptors.response.use(
-    (response) => {
-        // Trả về cục { status, message, data } sạch cho Front-end dùng
-        return response.data; 
-    },
+    (response) => response.data,
     async (error) => {
         const originalRequest = error.config;
         const statusCode = error.response?.status;
         const serverMessage = error.response?.data?.message;
 
-        // --- A. XỬ LÝ LỖI 403 (Sai quyền hạn / Cấm truy cập) ---
         if (statusCode === 403) {
             toast.error("Bạn không có quyền truy cập vào chức năng này!"); 
             return Promise.reject(error);
         }
 
-        // --- B. XỬ LÝ LỖI 401 (Hết hạn Token hoặc Lỗi Đăng Nhập) ---
         if (statusCode === 401) {
-            
-            // 🛡️ BẮT RIÊNG API LOGIN: Nếu lỗi 401 xảy ra tại API đăng nhập thực sự
             if (originalRequest.url?.includes("/auth/login")) {
                 toast.error(serverMessage || "Tài khoản hoặc mật khẩu không chính xác!");
                 return Promise.reject(error);
             }
 
-            // Nếu lỗi 401 ở các API khác (như đổi mật khẩu, lấy data...) -> Tiến hành tự động Refresh Token
             if (!originalRequest._retry) {
                 originalRequest._retry = true; 
 
                 try {
                     const refreshToken = tokenUtils.getRefreshToken();
+                    
+                    // 🛡️ NẾU KHÔNG CÓ REFRESH TOKEN (Google Login), KHÔNG ĐƯỢC GỌI API REFRESH
                     if (!refreshToken || refreshToken === "null" || refreshToken === "undefined") {
-                        throw new Error("Không tìm thấy Refresh Token");
+                        throw new Error("GOOGLE_USER_NO_REFRESH");
                     }
 
-                    // Dùng axios thô để gọi API cấp lại Access Token mới
                     const refreshResponse = await axios.post(
                         `${axiosInstance.defaults.baseURL}/auth/refresh-token`,
                         { refreshToken }
@@ -70,33 +63,31 @@ axiosInstance.interceptors.response.use(
                     const newAccessToken = responseData?.data?.accessToken;
                     const newRefreshToken = responseData?.data?.refreshToken;
 
-                    if (!newAccessToken) {
-                        throw new Error("Backend không trả về Access Token mới");
-                    }
+                    if (!newAccessToken) throw new Error("No token");
 
-                    // Lưu mã khóa mới vào túi
                     tokenUtils.setTokens(newAccessToken, newRefreshToken || refreshToken);
-                    
-                    // Gắn Token mới vào Request cũ và chạy tiếp tục
                     originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                     return axiosInstance(originalRequest);
 
                 } catch (refreshError) {
-                    toast.error("Phiên đăng nhập đã hết hạn toàn cục. Vui lòng đăng nhập lại!");
+                    // 🌟 XỬ LÝ NHẸ NHÀNG KHI HẾT HẠN
+                    if (refreshError.message !== "GOOGLE_USER_NO_REFRESH") {
+                        toast.error("Phiên đăng nhập đã hết hạn!");
+                    }
+                    
                     tokenUtils.clearTokens();
                     localStorage.removeItem("user"); 
+                    // Chuyển về login nếu thật sự hết hạn
                     window.location.href = "/login";
                     return Promise.reject(refreshError);
                 }
             }
         }
 
-        // --- C. BẪY LỖI 400 (VALIDATION / NGHIỆP VỤ) HOẶC CÁC LỖI KHÁC ---
         if (originalRequest.url?.includes("/auth/change-password")) {
-            return Promise.reject(error); // Trả thẳng cục error về cho Page xử lý
+            return Promise.reject(error);
         }
 
-        // Đối với các API thông thường khác, tự động bắn toast lỗi lên màn hình
         const finalMessage = serverMessage || "Đã xảy ra lỗi hệ thống!";
         toast.error(finalMessage); 
         

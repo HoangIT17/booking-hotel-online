@@ -47,7 +47,40 @@ import ReviewManagementPage from "../pages/admin/bookingmanagement/ReviewManagem
 import BookingManagementPage from "../pages/admin/bookingmanagement/BookingManagementPage";
 import VoucherManagementPage from "../pages/admin/bookingmanagement/VoucherManagementPage";
 
+// Google OAuth Callback
+import LoginSuccess from "../pages/auth/LoginSuccess";
+
 const AppRoutes = () => {
+    return (
+        <Routes>
+            {/* ================= PUBLIC ROUTES ================= */}
+            {/* Bọc trong PublicRoute để chặn quay lại khi đã đăng nhập */}
+            <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+            <Route path="/login-success" element={<LoginSuccess />} />
+            <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+            
+            {/* Trang chủ xem phòng của khách hàng sau khi login */}
+            <Route element={<CustomerLayout />}>
+
+                {/* 🟢 NHÓM PUBLIC: Không cần đăng nhập */}
+                <Route path="/" element={<HomePage />} />
+                
+                {/* Nếu khách có thói quen gõ /home, tự động bẻ lái về / cho chuẩn SEO */}
+                <Route path="/home" element={<Navigate to="/" replace />} />
+                
+                {/* 🔴 NHÓM PROTECTED: Bắt buộc phải đăng nhập (Có role CUSTOMER) */}
+                <Route path="customer">
+                    {/* Bây giờ đường dẫn sẽ là /customer/change-password */}
+                    <Route path="change-password" element={<ChangePasswordPage />} />
+                    
+                    {/* Đường dẫn sẽ là /customer/profile */}
+                    <Route path="profile" element={<ProfilePage />} />
+                    
+                    {/* Đường dẫn sẽ là /customer/profile/edit */}
+                    <Route path="profile/edit" element={<ProfileEditPage />} />   
+                </Route>
+
+            </Route>
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/home" replace />} />
