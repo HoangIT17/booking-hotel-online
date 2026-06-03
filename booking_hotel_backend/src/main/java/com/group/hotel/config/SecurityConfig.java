@@ -82,7 +82,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/customer/reservation-search").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/customer/reviews").hasAuthority("CUSTOMER")
                         .requestMatchers("/api/v1/customer/**").authenticated()
-                        .requestMatchers("/api/v1/manager/reservation-update").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("/api/v1/manager/reservation-update").hasAnyAuthority("RECEPTIONIST","ADMIN","MANAGER")
                         .requestMatchers("/api/v1/manager/reviews/**").permitAll()
                         .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/uploads/**", "/RoomImages/**").permitAll()

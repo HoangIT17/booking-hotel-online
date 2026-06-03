@@ -23,6 +23,9 @@ import CustomerLayout from "../layouts/CustomerLayout";
 import DashboardAdmin from "../pages/admin/dashboard/Dashboard";
 import FurniturePage from "../pages/admin/furniture/FurniturePage";
 import RoomPage from "../pages/admin/rooms/RoomPage";
+import ReviewManagementPage from "../pages/admin/bookingmanagement/ReviewManagementPage";
+import BookingManagementPage from "../pages/admin/bookingmanagement/BookingManagementPage";
+import VoucherManagementPage from "../pages/admin/bookingmanagement/VoucherManagementPage";
 import DashboardManager from "../pages/manager/Dashboard";
 import ReceptionistDashboard from "../pages/receptionist/Dashboard";
 import StaffHousekeepingDashboard from "../pages/staff/Dashboard";
@@ -105,7 +108,9 @@ const AppRoutes = () => {
       </Route>
 
       <Route element={<CustomerLayout />}>
-        <Route element={<ProtectedRoute allowedRoles={["CUSTOMER", "ADMIN"]} />}>
+        <Route
+          element={<ProtectedRoute allowedRoles={["CUSTOMER", "ADMIN"]} />}
+        >
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/reservations" element={<ReservationsPage />} />
           <Route
@@ -149,6 +154,9 @@ const AppRoutes = () => {
           <Route path="users" element={<UserManagement />} />
           <Route path="furnitures" element={<FurniturePage />} />
           <Route path="rooms" element={<RoomPage />} />
+          <Route path="reviews" element={<ReviewManagementPage />} />
+          <Route path="bookings" element={<BookingManagementPage />} />
+          <Route path="vouchers" element={<VoucherManagementPage />} />
           <Route path="change-password" element={<ChangePasswordPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="profile/edit" element={<ProfileEditPage />} />
@@ -156,7 +164,7 @@ const AppRoutes = () => {
       </Route>
 
       {/* ================= 📊 ROLE: MANAGER ================= */}
-      <Route element={<ProtectedRoute allowedRoles={["MANAGER"]} />}>
+      <Route element={<ProtectedRoute allowedRoles={["MANAGER", "ADMIN"]} />}>
         {/* Đã sửa từ AdminLayout sang ManagerLayout ✅ */}
         <Route path="/manager" element={<ManagerLayout />}>
           <Route path="change-password" element={<ChangePasswordPage />} />
@@ -168,14 +176,17 @@ const AppRoutes = () => {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="profile/edit" element={<ProfileEditPage />} />
           {/* Thêm chức năng quản lý tại đây */}
-          <Route path="incidents" element={<IncidentManager />} />
+          <Route path="reviews" element={<ReviewManagementPage />} />
+          <Route path="bookings" element={<BookingManagementPage />} />
+          <Route path="vouchers" element={<VoucherManagementPage />} />
+
           <Route path="incident-reports" element={<IncidentReport />} />
         </Route>
       </Route>
 
       {/* ================= 🛎️ ROLE: RECEPTIONIST ================= */}
       <Route
-        element={<ProtectedRoute allowedRoles={["RECEPTIONIST", "STAFF"]} />}
+        element={<ProtectedRoute allowedRoles={["RECEPTIONIST", "ADMIN"]} />}
       >
         {/* Đã bọc cấu trúc Layout lồng nhau chuẩn chỉ ✅ */}
         <Route path="/receptionist" element={<ReceptionistLayout />}>
@@ -191,9 +202,7 @@ const AppRoutes = () => {
       </Route>
 
       {/* ================= 🧹 ROLE: STAFF ================= */}
-      <Route
-        element={<ProtectedRoute allowedRoles={["STAFF", "RECEPTIONIST"]} />}
-      >
+      <Route element={<ProtectedRoute allowedRoles={["STAFF", "ADMIN"]} />}>
         {/* Đã bọc cấu trúc Layout lồng nhau chuẩn chỉ ✅ */}
         <Route path="/staff" element={<StaffLayout />}>
           <Route path="change-password" element={<ChangePasswordPage />} />

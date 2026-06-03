@@ -22,13 +22,6 @@ const ManagerSidebar = () => {
     { path: "/manager/reviews", icon: "fa-star", label: "Quản Lý Reviews" },
     { path: "/manager/bookings", icon: "fa-calendar-check", label: "Quản Lý Booking" },
     { path: "/manager/vouchers", icon: "fa-ticket", label: "Quản Lý Vouchers" },
-
-    {
-      path: "/manager/furnitures",
-      icon: "fa-couch",
-      label: "Quản Lý Nội Thất",
-    },
-    { path: "/manager/rooms", icon: "fa-door-open", label: "Quản Lý Phòng" },
     {
       path: "/manager/incidents",
       icon: "fa-triangle-exclamation",

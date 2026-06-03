@@ -15,14 +15,21 @@ const ReceptionistSidebar = () => {
   };
 
   const menuItems = [
-    { path: "/receptionist/dashboard", icon: "fa-gauge-high", label: "Trang chủ" },
-    { path: "/receptionist/bookings", icon: "fa-calendar-check", label: "Quản Lý Booking" },
+    {
+      path: "/receptionist/dashboard",
+      icon: "fa-gauge-high",
+      label: "Trang chủ",
+    },
+    {
+      path: "/admin/bookings",
+      icon: "fa-calendar-check",
+      label: "Quản Lý Booking",
+    },
     {
       path: "/receptionist/cleaning-tasks",
       icon: "fa-broom",
       label: "Quản lý dọn dẹp",
     },
-
   ];
 
   return (
