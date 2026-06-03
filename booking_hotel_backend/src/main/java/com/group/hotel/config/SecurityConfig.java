@@ -77,11 +77,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,  "/api/v1/reviews").permitAll()
                         .requestMatchers(HttpMethod.GET,  "/api/v1/customer/rooms/search/**").permitAll()
                         .requestMatchers(HttpMethod.GET,  "/api/v1/payments/vnpay/return").permitAll()
+                        .requestMatchers(HttpMethod.GET,  "/api/v1/customer/vouchers/available").permitAll()
 
                         // ── Customer ───────────────────────────────────────────────────────
                         .requestMatchers(HttpMethod.POST, "/api/v1/chatbot/ask").hasAuthority("CUSTOMER")
                         .requestMatchers(HttpMethod.POST, "/api/v1/reservation-create").hasAuthority("CUSTOMER")
-                        .requestMatchers("/api/v1/customer/**").hasAuthority("CUSTOMER")
+                        .requestMatchers("/api/v1/customer/**").hasAnyAuthority("CUSTOMER", "ADMIN")
 
                         // ── Staff + Receptionist + Admin + Manager ─────────────────────────
                         .requestMatchers("/api/v1/staff/**").hasAnyAuthority("STAFF", "RECEPTIONIST", "ADMIN", "MANAGER")
