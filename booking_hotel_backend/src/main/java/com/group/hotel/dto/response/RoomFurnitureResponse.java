@@ -15,4 +15,5 @@ public class RoomFurnitureResponse {
     private String furnitureType;
     private String icon;
     private String description;
+    private String status;
 }

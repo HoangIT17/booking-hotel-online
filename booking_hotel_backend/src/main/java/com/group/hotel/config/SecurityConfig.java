@@ -50,13 +50,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
                 // 🌟 1. LIÊN KẾT CORS TRỰC TIẾP VỚI SPRING SECURITY
+
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(jwtAuthEntryPoint)
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Thả cửa cho OPTIONS
@@ -65,6 +68,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/payments/vnpay/return").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/reservation-create").authenticated()
+
+                        .requestMatchers("/oauth2/**", "/login/oauth2/code/**").permitAll()
+
 
                         .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/api/v1/customer/rooms/search/**").permitAll()
@@ -79,6 +85,7 @@ public class SecurityConfig {
                         .requestMatchers("/uploads/**", "/RoomImages/**").permitAll()
                         .requestMatchers("/RoomImages/**").permitAll()
 
+
                         .requestMatchers("/api/customer/rooms/search/**").permitAll()
                         .requestMatchers("/api/customer/bookings/**").permitAll()
                         .requestMatchers("/api/customer/bookings-search/**").permitAll()
@@ -87,8 +94,17 @@ public class SecurityConfig {
                         .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")
 
 
+                        .requestMatchers("/api/v1/maintenance/**").hasAnyAuthority("STAFF", "ADMIN", "MANAGER")
+                        .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/v1/staff/**").hasAnyAuthority("STAFF", "ADMIN", "MANAGER","RECEPTIONIST")
+                        .requestMatchers("/api/v1/incidents/**").hasAnyAuthority("ADMIN", "MANAGER", "STAFF")
+
+
 
                         // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
+
+                        .requestMatchers("/uploads/**", "/RoomImages/**").permitAll()
+
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/v1/chatbot/ask").hasAuthority("CUSTOMER")
                         .requestMatchers("/api/v1/chatbot/**", "/api/v1/chatbot/history").hasAuthority("ADMIN")
@@ -113,6 +129,15 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+
+        // Cho phép URL chạy ứng dụng Frontend của bạn
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        // Cho phép đầy đủ mọi phương thức HTTP phổ biến
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        // Cho phép gửi kèm tất cả các Header cần thiết (bao gồm Authorization token nếu có)
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

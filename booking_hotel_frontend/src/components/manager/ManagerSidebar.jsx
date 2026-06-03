@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logoutThunk } from "../../redux/slices/authSlice";
 import styles from "../admin/Sidebar.module.css";
+
 import logoImg from "../../assets/images/logohotel.png";
 
 const ManagerSidebar = () => {
@@ -13,6 +14,7 @@ const ManagerSidebar = () => {
     navigate("/login");
   };
 
+  // 🔥 THÊM MỤC QUẢN LÝ SỰ CỐ VÀO ĐÂY (Dòng cuối cùng trong mảng)
   const menuItems = [
     { path: "/manager/dashboard", icon: "fa-gauge-high", label: "Trang chủ" },
     { path: "/manager/furnitures", icon: "fa-couch", label: "Quản Lý Nội Thất" },
@@ -20,6 +22,24 @@ const ManagerSidebar = () => {
     { path: "/manager/reviews", icon: "fa-star", label: "Quản Lý Reviews" },
     { path: "/manager/bookings", icon: "fa-calendar-check", label: "Quản Lý Booking" },
     { path: "/manager/vouchers", icon: "fa-ticket", label: "Quản Lý Vouchers" },
+
+    {
+      path: "/manager/furnitures",
+      icon: "fa-couch",
+      label: "Quản Lý Nội Thất",
+    },
+    { path: "/manager/rooms", icon: "fa-door-open", label: "Quản Lý Phòng" },
+    {
+      path: "/manager/incidents",
+      icon: "fa-triangle-exclamation",
+      label: "Quản Lý Sự Cố",
+    },
+    {
+      path: "/manager/incident-reports",
+      icon: "fa-chart-pie",
+      label: "Báo cáo Mất/Hỏng",
+    },
+
   ];
 
   return (
