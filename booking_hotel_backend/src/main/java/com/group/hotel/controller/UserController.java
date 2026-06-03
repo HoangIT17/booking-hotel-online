@@ -1,0 +1,59 @@
+package com.group.hotel.controller;
+
+import com.group.hotel.common.response.BaseResponse;
+import com.group.hotel.dto.request.user.UserCreateRequest;
+import com.group.hotel.dto.request.user.UserUpdateRequest;
+import com.group.hotel.dto.response.user.UserCreateResponse;
+import com.group.hotel.dto.response.user.UserResponse;
+import com.group.hotel.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/users")
+@RequiredArgsConstructor
+@PreAuthorize("hasAuthority('ADMIN')")
+public class UserController {
+
+    private final UserService userService;
+
+    @PostMapping
+    public ResponseEntity<BaseResponse<UserCreateResponse>> createAccount(@Valid @RequestBody UserCreateRequest request) {
+        UserCreateResponse responseData = userService.createUser(request);
+        return ResponseEntity.ok(BaseResponse.success(responseData, "Khởi tạo tài khoản thành công!"));
+    }
+
+    @GetMapping
+    public ResponseEntity<BaseResponse<Page<UserResponse>>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) Boolean isActive,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir
+    ) {
+        Page<UserResponse> users = userService.getAllUsers(page, size, keyword, role, isActive, sortBy, sortDir);
+        return ResponseEntity.ok(BaseResponse.success(users, "Lấy danh sách người dùng thành công"));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BaseResponse<UserResponse>> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(BaseResponse.success(userService.getUserById(id), "Lấy thông tin người dùng thành công"));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BaseResponse<UserResponse>> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateRequest request) {
+        return ResponseEntity.ok(BaseResponse.success(userService.updateUser(id, request), "Cập nhật người dùng thành công"));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BaseResponse<Void>> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok(BaseResponse.success(null, "Xóa tài khoản thành công"));
+    }
+}
