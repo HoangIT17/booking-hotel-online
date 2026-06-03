@@ -1,9 +1,12 @@
-package com.group.hotel.controller.manager;
+package com.group.hotel.controller;
 
-//import com.group.hotel.common.response.ApiResponse;
-import com.group.hotel.dto.request.IncidentDecisionRequest;
-import com.group.hotel.dto.request.ResolveRequest;
-import com.group.hotel.dto.response.*;
+import com.group.hotel.dto.request.incident.IncidentDecisionRequest;
+import com.group.hotel.dto.request.incident.ResolveRequest;
+import com.group.hotel.dto.response.ApiResponse;
+import com.group.hotel.dto.response.incident.IncidentDetailResponse;
+import com.group.hotel.dto.response.incident.IncidentListResponse;
+import com.group.hotel.dto.response.incident.IncidentReport;
+import com.group.hotel.dto.response.incident.IncidentResponse;
 import com.group.hotel.service.IncidentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
