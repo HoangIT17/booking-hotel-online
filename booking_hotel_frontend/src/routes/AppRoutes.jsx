@@ -79,20 +79,21 @@ const AppRoutes = () => {
           </PublicRoute>
         }
       />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/rooms" element={<RoomsPage />} />
-      <Route path="/offers" element={<OffersPage />} />
-      <Route path="/rooms/:roomId" element={<RoomDetailPage />} />
-      <Route path="/rooms/unavailable" element={<RoomUnavailablePage />} />
-      <Route path="/booking" element={<BookingPage />} />
-      <Route path="/reservations" element={<ReservationsPage />} />
-      <Route path="/reservations/:bookingId" element={<ReservationDetailPage />} />
-      <Route path="/payment/redirect" element={<PaymentRedirectPage />} />
-      <Route path="/payment/result" element={<PaymentResultPage />} />
-      <Route path="/payment/status" element={<PaymentStatusPage />} />
-
-      {/* Đánh giá của tôi - /history-reviews */}
-      <Route path="/history-reviews" element={<MyReviewsPage />} />
+      {/* ================= CUSTOMER LAYOUT (Header + Footer) ================= */}
+      <Route element={<CustomerLayout />}>
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/rooms" element={<RoomsPage />} />
+        <Route path="/offers" element={<OffersPage />} />
+        <Route path="/rooms/:roomId" element={<RoomDetailPage />} />
+        <Route path="/rooms/unavailable" element={<RoomUnavailablePage />} />
+        <Route path="/booking" element={<BookingPage />} />
+        <Route path="/reservations" element={<ReservationsPage />} />
+        <Route path="/reservations/:bookingId" element={<ReservationDetailPage />} />
+        <Route path="/payment/redirect" element={<PaymentRedirectPage />} />
+        <Route path="/payment/result" element={<PaymentResultPage />} />
+        <Route path="/payment/status" element={<PaymentStatusPage />} />
+        <Route path="/history-reviews" element={<MyReviewsPage />} />
+      </Route>
 
 
             {/* ================= ROLE ADMIN ================= */}
