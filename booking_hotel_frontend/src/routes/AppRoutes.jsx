@@ -21,21 +21,26 @@ import CustomerLayout from '../layouts/CustomerLayout';
 import DashboardAdmin from "../pages/admin/dashboard/Dashboard";
 import FurniturePage from "../pages/admin/furniture/FurniturePage";
 import RoomPage from "../pages/admin/rooms/RoomPage";
-import DashboardManager from "../pages/manager/dashboard/Dashboard";
+import DashboardManager from "../pages/manager/Dashboard";
 import ReceptionistDashboard from "../pages/receptionist/Dashboard";
 import ReviewPage from "../pages/admin/reviews/ReviewPage";
 import StaffHousekeepingDashboard from "../pages/staff/Dashboard";
 import HomePage from "../pages/homepage/HomePage";
-import RoomSearchPage from "../pages/customer/RoomSearchPage";
+import RoomsPage from "../pages/customer/RoomsPage";
 import RoomDetailPage from "../pages/customer/RoomDetailPage";
-import BookingPaymentPage from "../pages/customer/BookingPaymentPage";
+import BookingPage from "../pages/customer/BookingPage";
 import RoomUnavailablePage from "../pages/customer/RoomUnavailablePage";
-import MyBookingPage from "../pages/customer/MyBookingPage";
+import ReservationsPage from "../pages/customer/ReservationsPage";
 import ReservationDetailPage from "../pages/customer/ReservationDetailPage";
 import PaymentRedirectPage from "../pages/customer/PaymentRedirectPage";
 import PaymentResultPage from "../pages/customer/PaymentResultPage";
 import PaymentStatusPage from "../pages/customer/PaymentStatusPage";
 import OffersPage from "../pages/customer/OffersPage";
+import ViewCleaningTasks from "../pages/staff/ViewCleaningTasks";
+import ViewMyCleaningTasks from "../pages/staff/ViewMyCleaningTasks";
+import RoomDetail from "../pages/staff/RoomDetail";
+import BookingManagementPage from "../pages/admin/bookingmanagement/BookingManagementPage";
+import ChatHistoryList from "../pages/history-chatbot/ChatHistoryList";
 
 // Customer pages
 import MyReviewsPage from "../pages/customer/MyReviewsPage";
@@ -75,12 +80,12 @@ const AppRoutes = () => {
         }
       />
       <Route path="/home" element={<HomePage />} />
-      <Route path="/rooms" element={<RoomSearchPage />} />
+      <Route path="/rooms" element={<RoomsPage />} />
       <Route path="/offers" element={<OffersPage />} />
       <Route path="/rooms/:roomId" element={<RoomDetailPage />} />
       <Route path="/rooms/unavailable" element={<RoomUnavailablePage />} />
-      <Route path="/booking" element={<BookingPaymentPage />} />
-      <Route path="/reservations" element={<MyBookingPage />} />
+      <Route path="/booking" element={<BookingPage />} />
+      <Route path="/reservations" element={<ReservationsPage />} />
       <Route path="/reservations/:bookingId" element={<ReservationDetailPage />} />
       <Route path="/payment/redirect" element={<PaymentRedirectPage />} />
       <Route path="/payment/result" element={<PaymentResultPage />} />
@@ -125,9 +130,10 @@ const AppRoutes = () => {
                     <Route path="furnitures" element={<FurniturePage />} />
                     <Route path="rooms" element={<RoomPage />} />
                     <Route path="reviews" element={<ReviewPage />} />
+                    <Route path="bookings" element={<BookingManagementPage />} />
+                    <Route path="chat-history" element={<ChatHistoryList />} />
                     <Route path="profile" element={<ProfilePage />} />
                     <Route path="profile/edit" element={<ProfileEditPage />} />
-                    {/* Thêm chức năng quản lý tại đây */}
                 </Route>
             </Route>
 
@@ -139,7 +145,9 @@ const AppRoutes = () => {
                     <Route path="profile/edit" element={<ProfileEditPage />} />
                     <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<ReceptionistDashboard />} />
-                    {/* Thêm chức năng lễ tân: bookings, checkin-checkout... tại đây */}
+                    <Route path="bookings" element={<BookingManagementPage />} />
+                    <Route path="cleaning-tasks" element={<ViewCleaningTasks />} />
+                    <Route path="room-detail/:roomNumber" element={<RoomDetail />} />
                 </Route>
             </Route>
 
@@ -152,7 +160,9 @@ const AppRoutes = () => {
                     <Route path="profile/edit" element={<ProfileEditPage />} />
                     <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<StaffHousekeepingDashboard />} />
-                    {/* Thêm chức năng nhân viên: tasks, room-status... tại đây */}
+                    <Route path="cleaning-tasks" element={<ViewCleaningTasks />} />
+                    <Route path="my-tasks" element={<ViewMyCleaningTasks />} />
+                    <Route path="room-detail/:roomNumber" element={<RoomDetail />} />
                 </Route>
             </Route>
 
