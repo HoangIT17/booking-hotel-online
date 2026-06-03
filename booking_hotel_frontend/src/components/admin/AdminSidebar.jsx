@@ -1,9 +1,9 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { logoutThunk } from '../../redux/slices/authSlice';
-import styles from './Sidebar.module.css';
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutThunk } from "../../redux/slices/authSlice";
+import styles from "./Sidebar.module.css";
 
-import logoImg from '../../assets/images/logohotel.png';
+import logoImg from "../../assets/images/logohotel.png";
 
 const AdminSidebar = () => {
   const dispatch = useDispatch();
@@ -11,20 +11,33 @@ const AdminSidebar = () => {
 
   const onLogout = async () => {
     dispatch(logoutThunk());
-    navigate('/login');
+    navigate("/login");
   };
 
   const menuItems = [
-    { path: '/admin/dashboard', icon: 'fa-gauge-high', label: 'Trang chủ' },
-    { path: '/admin/users', icon: 'fa-users', label: 'Quản Lý Người Dùng' },
-    { path: '/admin/furnitures', icon: 'fa-couch', label: 'Quản Lý Nội Thất' },
-    { path: '/admin/rooms', icon: 'fa-door-open', label: 'Quản Lý Phòng' },
-    { path: '/admin/chatbot', icon: 'fa-robot', label: 'Quản Lý Chatbot' },
-      { path: '/admin/reviews', icon: 'fa-star', label: 'Quản Lý Reviews' },
-      { path: '/admin/bookings', icon: 'fa-calendar-check', label: 'Quản Lý Booking' },
-      { path: '/admin/vouchers', icon: 'fa-ticket', label: 'Quản Lý Vouchers' },
-      { path: '/admin/chat-history', icon: 'fa-history', label: 'Lịch Sử Chat' }
-
+    { path: "/admin/dashboard", icon: "fa-gauge-high", label: "Trang chủ" },
+    { path: "/admin/users", icon: "fa-users", label: "Quản Lý Người Dùng" },
+    { path: "/admin/furnitures", icon: "fa-couch", label: "Quản Lý Nội Thất" },
+    { path: "/admin/rooms", icon: "fa-door-open", label: "Quản Lý Phòng" },
+    {
+      path: "/admin/view-tasks",
+      icon: "fa-list-check",
+      label: "Danh Sách Phòng",
+    },
+    { path: "/admin/chatbot", icon: "fa-robot", label: "Quản Lý Chatbot" },
+    { path: "/admin/reviews", icon: "fa-star", label: "Quản Lý Reviews" },
+    {
+      path: "/admin/bookings",
+      icon: "fa-calendar-check",
+      label: "Quản Lý Booking",
+    },
+    { path: "/admin/vouchers", icon: "fa-ticket", label: "Quản Lý Vouchers" },
+    {
+      path: "/admin/incidents",
+      icon: "fa-triangle-exclamation",
+      label: "Quản Lý Sự Cố",
+    },
+    { path: "/admin/chat-history", icon: "fa-history", label: "Lịch Sử Chat" },
   ];
 
   return (

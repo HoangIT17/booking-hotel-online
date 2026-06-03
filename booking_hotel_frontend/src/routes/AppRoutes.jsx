@@ -157,6 +157,11 @@ const AppRoutes = () => {
           <Route path="reviews" element={<ReviewManagementPage />} />
           <Route path="bookings" element={<BookingManagementPage />} />
           <Route path="vouchers" element={<VoucherManagementPage />} />
+          <Route path="incidents" element={<IncidentManager />} />
+          <Route path="incident-reports" element={<IncidentReport />} />
+          <Route path="cleaning-tasks" element={<ViewCleaningTasks />} />
+          <Route path="view-tasks" element={<ViewCleaningTasks />} />
+          <Route path="my-tasks" element={<ViewMyCleaningTasks />} />
           <Route path="change-password" element={<ChangePasswordPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="profile/edit" element={<ProfileEditPage />} />

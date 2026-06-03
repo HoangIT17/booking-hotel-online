@@ -13,6 +13,9 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* KHU VỰC LOGO */
@@ -50,7 +53,11 @@
   flex-grow: 1; 
   display: flex;
   flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: flex-start;
   overflow-y: auto; 
+  overflow-x: hidden;
+  min-width: 0;
 }
 
 .navLink {
@@ -65,7 +72,8 @@
   font-weight: 500;
   font-size: 14.5px;
   transition: all 0.25s ease-in-out;
-  white-space: nowrap; 
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .navLink i {
