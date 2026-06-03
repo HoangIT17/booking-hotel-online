@@ -21,7 +21,7 @@ const ReceptionistSidebar = () => {
       label: "Trang chủ",
     },
     {
-      path: "/admin/bookings",
+      path: "/receptionist/bookings",
       icon: "fa-calendar-check",
       label: "Quản Lý Booking",
     },

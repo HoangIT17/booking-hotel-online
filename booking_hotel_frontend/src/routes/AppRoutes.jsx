@@ -202,6 +202,7 @@ const AppRoutes = () => {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<ReceptionistDashboard />} />
           {/* Thêm chức năng lễ tân: bookings, checkin-checkout... tại đây */}
+          <Route path="bookings" element={<BookingManagementPage />} />
           <Route path="cleaning-tasks" element={<ViewCleaningTasks />} />
           <Route path="room-detail/:roomNumber" element={<RoomDetail />} />
         </Route>

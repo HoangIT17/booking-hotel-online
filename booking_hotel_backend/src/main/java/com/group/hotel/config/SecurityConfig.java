@@ -80,7 +80,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/vouchers/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/v1/manager/reservation-search").hasAnyAuthority("RECEPTIONIST","ADMIN","MANAGER")
                         .requestMatchers("/api/v1/customer/reservation-search").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/customer/reviews").hasAuthority("CUSTOMER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/customer /reviews").hasAuthority("CUSTOMER")
                         .requestMatchers("/api/v1/customer/**").authenticated()
                         .requestMatchers("/api/v1/manager/reservation-update").hasAnyAuthority("RECEPTIONIST","ADMIN","MANAGER")
                         .requestMatchers("/api/v1/manager/reviews/**").permitAll()
