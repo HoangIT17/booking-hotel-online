@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { fetchReviews, replyReview } from "../../../redux/slices/reviewSlice";
+import { fetchReviews, replyReview, deleteReview } from "../../../redux/slices/reviewSlice";
 import styles from "./ReviewPage.module.css";
 
 // ── Cấu hình hiển thị trạng thái phản hồi ──
@@ -114,6 +114,17 @@ const ReviewPage = () => {
     const handleCloseModal = () => {
         setShowModal(false);
         setSelectedReview(null);
+    };
+
+    // ── Xóa đánh giá ──
+    const handleDeleteReview = async (reviewId) => {
+        if (!window.confirm("Bạn có chắc muốn xóa đánh giá này không?")) return;
+        const result = await dispatch(deleteReview(reviewId));
+        if (deleteReview.fulfilled.match(result)) {
+            toast.success("Đã xóa đánh giá!");
+        } else {
+            toast.error(result.payload || "Xóa thất bại");
+        }
     };
 
     // ── Gửi phản hồi ──
@@ -242,13 +253,13 @@ const ReviewPage = () => {
                         <table className={`table ${styles.table}`}>
                             <thead>
                                 <tr>
-                                    <th>STT</th>
-                                    <th>Khách hàng</th>
-                                    <th>Đánh giá</th>
-                                    <th>Nội dung</th>
-                                    <th>Trạng thái</th>
-                                    <th>Ngày đánh giá</th>
-                                    <th>Thao tác</th>
+                                    <th style={{ width: 44 }}>STT</th>
+                                    <th style={{ width: 110 }}>Khách hàng</th>
+                                    <th style={{ width: 90 }}>Đánh giá</th>
+                                    <th style={{ width: 160 }}>Nội dung</th>
+                                    <th style={{ width: 115, whiteSpace: "nowrap" }}>Trạng thái</th>
+                                    <th style={{ width: 95 }}>Ngày đánh giá</th>
+                                    <th style={{ width: 155, whiteSpace: "nowrap" }}>Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -279,13 +290,21 @@ const ReviewPage = () => {
                                                 </span>
                                             </td>
                                             <td>{formatDate(review.createdAt)}</td>
-                                            <td>
-                                                <button
-                                                    className={styles.btnReply}
-                                                    onClick={() => handleOpenModal(review)}
-                                                >
-                                                    {isReplied ? "Xem & Sửa" : "Phản hồi"}
-                                                </button>
+                                            <td style={{ whiteSpace: "nowrap" }}>
+                                                <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                                                    <button
+                                                        className={styles.btnReply}
+                                                        onClick={() => handleOpenModal(review)}
+                                                    >
+                                                        {isReplied ? "Xem & Sửa" : "Phản hồi"}
+                                                    </button>
+                                                    <button
+                                                        className={styles.btnDelete}
+                                                        onClick={() => handleDeleteReview(review.id)}
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     );

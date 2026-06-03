@@ -33,4 +33,5 @@ public class BookingSearchCustomerResponse {
     private LocalDateTime paymentDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private boolean hasReview;
 }

@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RoomRepository
@@ -29,7 +30,20 @@ public interface RoomRepository
     Optional<Room> findByRoomNumberAndIsDeletedFalse(String roomNumber);
     Page<Room> findByStatus(RoomStatus status, Pageable pageable);
 
+
     @Query("SELECT r.imageUrl FROM Room r WHERE r.id = :roomId AND r.isDeleted = false")
     Optional<String> findImageUrlByRoomId(Long roomId);
+
+    List<Room> findByIsDeletedFalse();
+
+    List<Room> findByFloorAndIsDeletedFalse(Integer floor);
+
+    List<Room> findByStatusAndIsDeletedFalse(RoomStatus status);
+
+    List<Room> findByFloorAndStatusAndIsDeletedFalse(
+            Integer floor,
+            RoomStatus status
+    );
+
 
 }

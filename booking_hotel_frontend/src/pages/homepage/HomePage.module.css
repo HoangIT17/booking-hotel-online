@@ -1,10 +1,13 @@
 .page {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #fafafa;
   color: #111114;
 }
 
 .main {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,18 +21,24 @@
 
 .roomGrid {
   display: grid;
+  gap: 14px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.roomGrid > * {
+  animation: roomCardSwipeUp 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.roomGrid > *:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.roomGrid > *:nth-child(3) {
+  animation-delay: 0.16s;
 }
 
 .reviews {
   width: min(100%, 1170px);
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 18px;
-  padding: 24px;
-  border: 1px solid #e4e4e7;
-  border-radius: 18px;
-  background: #ffffff;
 }
 
 .publicReviews {
@@ -37,6 +46,7 @@
   border: 1px solid #e4e4e7;
   border-radius: 14px;
   background: #ffffff;
+  overscroll-behavior: contain;
 }
 
 .publicReviews h2 {
@@ -52,6 +62,50 @@
   gap: 18px;
 }
 
+.reviewSwipeNext {
+  animation: swipeNext 0.28s ease-out;
+}
+
+.reviewSwipePrevious {
+  animation: swipePrevious 0.28s ease-out;
+}
+
+@keyframes swipeNext {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes swipePrevious {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes roomCardSwipeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 768px) {
   .main {
     gap: 56px;
@@ -61,7 +115,6 @@
 
 @media (max-width: 980px) {
   .roomGrid,
-  .reviews,
   .reviewGrid {
     grid-template-columns: 1fr;
   }

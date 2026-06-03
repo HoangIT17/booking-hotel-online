@@ -1,5 +1,6 @@
 package com.group.hotel.dto.response.room;
 
+import com.group.hotel.dto.response.incident.IncidentHistoryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,4 +29,5 @@ public class RoomDetailResponse {
     private List<RoomFurnitureResponse> furnitures;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<IncidentHistoryResponse> incidentHistory;
 }

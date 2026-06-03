@@ -8,6 +8,8 @@ const customerBookingService = {
   handleVnPayReturn: (params) => axiosInstance.get("/payments/vnpay/return", { params }),
   searchReservations: (params) => axiosInstance.get("/customer/reservation-search", { params }),
   updateReservation: (payload) => axiosInstance.put("/customer/reservation-update", payload),
+  getReviews: (params) => axiosInstance.get("/reviews", { params }),
+  createReview: ({ bookingId, ...payload }) => axiosInstance.post(`/customer/reviews/${bookingId}`, payload),
   getAvailableVouchers: () => axiosInstance.get("/customer/vouchers/available"),
 };
 

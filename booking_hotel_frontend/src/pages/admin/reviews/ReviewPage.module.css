@@ -78,6 +78,8 @@
 .table {
     margin-bottom: 0;
     font-size: 0.875rem;
+    table-layout: fixed;
+    width: 100%;
 }
 
 .table thead th {
@@ -112,7 +114,6 @@
 
 /* ── Comment truncate ── */
 .commentCell {
-    max-width: 260px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -126,6 +127,7 @@
     border-radius: 20px;
     font-size: 0.78rem;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 /* ── Action button ── */
@@ -142,6 +144,20 @@
     white-space: nowrap;
 }
 .btnReply:hover { background: #5a52d5; }
+
+.btnDelete {
+    border: none;
+    background: #dc3545;
+    color: #fff;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+.btnDelete:hover { background: #b02a37; }
 
 /* ── Pagination ── */
 .pagination {

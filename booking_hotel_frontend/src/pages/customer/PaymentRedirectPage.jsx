@@ -12,7 +12,7 @@ const PaymentRedirectPage = () => {
   useEffect(() => {
     const redirectToVnPay = async () => {
       if (!bookingId) {
-        setError("Thiếu mã đặt phòng.");
+        setError("Missing booking ID.");
         return;
       }
 
@@ -25,10 +25,10 @@ const PaymentRedirectPage = () => {
         if (response?.data?.paymentUrl) {
           window.location.href = response.data.paymentUrl;
         } else {
-          setError("Chưa có đường dẫn thanh toán.");
+          setError("Payment URL is not available.");
         }
       } catch (err) {
-        setError(err.response?.data?.message || "Không thể tạo thanh toán VNPAY.");
+        setError(err.response?.data?.message || "Unable to create VNPAY payment.");
       }
     };
 
@@ -39,11 +39,11 @@ const PaymentRedirectPage = () => {
     <CustomerPageShell active="My Reservations">
       <section className={styles.resultState}>
         <div className={styles.resultIcon}>...</div>
-        <h1>Đang chuyển hướng sang VNPAY</h1>
+        <h1>Redirecting to VNPAY</h1>
         <p>
-          {error || `Mã đặt phòng ${bookingId}. Vui lòng không đóng trang này hoặc thanh toán hai lần.`}
+          {error || `Booking #${bookingId}. Please do not close this page or pay twice.`}
         </p>
-        <button className={styles.primaryButton} disabled>Đang xử lý thanh toán</button>
+        <button className={styles.primaryButton} disabled>Processing payment</button>
       </section>
     </CustomerPageShell>
   );

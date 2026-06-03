@@ -77,7 +77,7 @@ const ProfileEditForm = ({ initialData, currentRole }) => {
                         break;
                     case 'CUSTOMER':
                     default:
-                        navigate('/customer/home');
+                        navigate('/home');
                         break;
                 }
             }, 500);
@@ -202,7 +202,14 @@ const ProfileEditForm = ({ initialData, currentRole }) => {
 
                         {/* FOOTER BUTTONS */}
                         <div className="text-end border-top pt-3 d-flex justify-content-end gap-2 mt-4">
-                            <button type="button" className="btn btn-light px-4 fw-bold text-uppercase border" onClick={() => navigate(`/${currentRole.toLowerCase()}/profile`)} disabled={loading}>
+                            <button
+                                type="button"
+                                className="btn btn-light px-4 fw-bold text-uppercase border"
+                                onClick={() =>
+                                    navigate(currentRole === "CUSTOMER" ? "/profile" : `/${currentRole.toLowerCase()}/profile`)
+                                }
+                                disabled={loading}
+                            >
                                 Hủy bỏ
                             </button>
                             <button type="submit" className="btn btn-primary px-4 fw-bold text-uppercase d-flex align-items-center gap-2" disabled={loading}>

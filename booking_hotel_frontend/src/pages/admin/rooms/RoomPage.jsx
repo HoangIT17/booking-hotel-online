@@ -89,13 +89,13 @@ const RoomPage = () => {
     useEffect(() => {
         dispatch(fetchRoomStatuses());
         dispatch(fetchRoomTypes());
-        dispatch(fetchRooms({ page: 0, size: 20, sort: "roomNumber,asc", isDeleted: false }));
+        dispatch(fetchRooms({ page: 0, size: 10, sort: "roomNumber,asc", isDeleted: false }));
     }, [dispatch]);
 
     // ── Filter helpers ────────────────────────────────────────────
     const buildParams = (page = 0) => {
         const f = filtersRef.current;
-        const params = { page, size: 20, sort: "roomNumber,asc", isDeleted: f.showDeleted };
+        const params = { page, size: 10, sort: "roomNumber,asc", isDeleted: f.showDeleted };
         if (f.roomNumber.trim()) params.roomNumber = f.roomNumber.trim();
         const floorNum = parseInt(f.floor);
         if (!isNaN(floorNum) && floorNum > 0) params.floor = floorNum;
@@ -160,7 +160,7 @@ const RoomPage = () => {
         setShowDeleted(false);
         setCurrentPage(0);
         filtersRef.current = { roomNumber: "", floor: "", roomType: "", status: "", showDeleted: false };
-        dispatch(fetchRooms({ page: 0, size: 20, sort: "roomNumber,asc", isDeleted: false }));
+        dispatch(fetchRooms({ page: 0, size: 10, sort: "roomNumber,asc", isDeleted: false }));
     };
 
     const handlePageChange = (page) => {
@@ -219,7 +219,7 @@ const RoomPage = () => {
         try {
             const [detail, furnitureResult] = await Promise.all([
                 roomService.getDetail(room.id),
-                furnitureService.getAll({ page: 0, size: 200 }),
+                furnitureService.getAll({ page: 0, size: 100 }),
             ]);
             setRoomDetail(detail);
             setInfoForm({

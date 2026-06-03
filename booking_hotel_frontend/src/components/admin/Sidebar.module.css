@@ -18,31 +18,30 @@
 /* KHU VỰC LOGO */
 .logoArea {
   display: flex;
-  flex-direction: column; /* Để logo trên, chữ dưới giống Student bạn thích */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
+  gap: 6px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
   border-bottom: 2px solid #f8f9fa;
 }
 
 .logoArea img {
-  width: 53px; /* Đã tinh chỉnh để không quá to gây "lỏ" */
+  width: 40px;
   height: auto;
   transition: transform 0.3s ease;
   object-fit: cover;
 }
 
 .logoArea span {
-  font-size: 0.95rem;
   font-weight: 800;
   color: #343a40;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-align: center;
-  white-space: nowrap; 
-  font-size: 25px;
+  white-space: nowrap;
+  font-size: 20px;
 }
 
 /* KHU VỰC MENU NAVIGATION */
@@ -56,22 +55,22 @@
 .navLink {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  margin-bottom: 6px;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 4px;
   border-radius: 10px;
-  text-decoration: none !important; /* Mất gạch chân 100% */
+  text-decoration: none !important;
   color: #495057;
   font-weight: 500;
   font-size: 14.5px;
   transition: all 0.25s ease-in-out;
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 
 .navLink i {
-  min-width: 24px;
+  min-width: 20px;
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
   flex-shrink: 0;
 }
 
@@ -79,7 +78,7 @@
 .navLink:hover {
   background-color: #f8f9fa;
   color: #0d6efd;
-  padding-left: 20px;
+  padding-left: 18px;
 }
 
 .navLinkActive {
@@ -102,12 +101,12 @@
 .logoutBtn {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  padding: 12px 14px;
-  border: none !important; /* Xóa viền đen "lỏ" */
+  padding: 10px 14px;
+  border: none !important;
   background: transparent !important;
-  color: #dc3545; /* Màu đỏ logout chuẩn */
+  color: #dc3545;
   font-weight: 600;
   font-size: 14.5px;
   border-radius: 10px;
@@ -118,7 +117,7 @@
 
 .logoutBtn:hover {
   background-color: #fff5f5 !important;
-  padding-left: 20px;
+  padding-left: 18px;
 }
 
 .footerHr {

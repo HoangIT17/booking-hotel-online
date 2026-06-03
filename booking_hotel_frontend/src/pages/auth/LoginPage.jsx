@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 // import toast from "react-hot-toast";
@@ -10,21 +10,9 @@ import style from "./LoginPage.module.css";
 import Header from "../../components/customer/Header";
 import ImageAuth from "../../assets/images/ImageAuth.png";
 
-const getSafeRedirectPath = (search) => {
-    const redirect = new URLSearchParams(search).get("redirect");
-
-    if (!redirect || !redirect.startsWith("/") || redirect.startsWith("//")) {
-        return null;
-    }
-
-    return redirect;
-};
-
 const LoginPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const location = useLocation();
-    const redirectPath = getSafeRedirectPath(location.search);
     
     const { isAuthenticated, loading, error, role } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
@@ -53,14 +41,14 @@ const LoginPage = () => {
                     navigate("/staff/dashboard", { replace: true });
                     break;
                 case "CUSTOMER":
-                    navigate(redirectPath || "/home", { replace: true });
+                    navigate("/home", { replace: true });
                     break;
                 default:
                     console.warn("GRAND_HOTEL_AUTH: Role không hợp lệ:", userRole);
                     break;
             }
         }
-    }, [isAuthenticated, role, navigate, redirectPath]);
+    }, [isAuthenticated, role, navigate]);
 
     useEffect(() => {
         if (error) {
@@ -87,15 +75,16 @@ const LoginPage = () => {
                 <div className={style.contentWrapper}>
                     {/* Cột trái: Banner 65% */}
                     <div className={style.leftBanner}>
-                        <img src={ImageAuth} alt="Khách sạn sang trọng" className={style.bannerImage} />
+                        <img src={ImageAuth} alt="Luxury Hotel" className={style.bannerImage} />
                         <div className={style.bannerOverlay}></div>
                         <div className={style.bannerText}>
                             <h1 className={style.bannerTitle}>
-                                Chào mừng trở lại <br />
+                                Welcome back to <br />
                                 <span className={style.brandHighlight}>LuxeStay</span>
                             </h1>
                             <p className={style.bannerDesc}>
-                                Đăng nhập để tiếp tục đặt phòng, quản lý đặt phòng hoặc truy cập không gian làm việc của khách sạn.
+                                Sign in to continue booking premium stays, manage reservations, chat with Luxe AI, 
+                                or access your hotel operations workspace.
                             </p>
                         </div>
                     </div>
@@ -103,27 +92,27 @@ const LoginPage = () => {
                     {/* Cột phải: Form đăng nhập 35% - CHỈ Username + Password */}
                     <div className={style.rightForm}>
                         <div className={style.formHeader}>
-                            <h2 className={style.formTitle}>Đăng nhập</h2>
+                            <h2 className={style.formTitle}>Sign in</h2>
                             <p className={style.formSubtitle}>
-                                Hệ thống sẽ xác định vai trò và chuyển bạn đến đúng khu vực sau khi đăng nhập.
+                                Your role is detected after login and routes you to the right workspace.
                             </p>
                         </div>
 
                         <form onSubmit={handleSubmit(onSubmit)} className={style.loginForm}>
                             {/* Username - CHỈ GIỮ LẠI Username */}
                             <div className={style.formGroup}>
-                                <label className={style.label}>Tên đăng nhập</label>
+                                <label className={style.label}>Username</label>
                                 <div className={style.inputWrapper}>
                                     <i className={`fa-solid fa-user ${style.inputIcon}`}></i>
                                     <input
                                         type="text"
-                                        placeholder="Nhập tên đăng nhập"
+                                        placeholder="Enter your username"
                                         className={`${style.authInput} ${errors.username ? style.inputError : ""}`}
                                         {...register("username", {
-                                            required: "Vui lòng nhập tên đăng nhập",
+                                            required: "Username is required",
                                             minLength: {
                                                 value: 3,
-                                                message: "Tên đăng nhập phải có ít nhất 3 ký tự",
+                                                message: "Username must be at least 3 characters",
                                             },
                                         })}
                                     />
@@ -137,18 +126,18 @@ const LoginPage = () => {
 
                             {/* Password - CHỈ GIỮ LẠI Password */}
                             <div className={style.formGroup}>
-                                <label className={style.label}>Mật khẩu</label>
+                                <label className={style.label}>Password</label>
                                 <div className={style.inputWrapper}>
                                     <i className={`fa-solid fa-lock ${style.inputIcon}`}></i>
                                     <input
                                         type={showPassword ? "text" : "password"}
-                                        placeholder="Nhập mật khẩu"
+                                        placeholder="Enter your password"
                                         className={`${style.authInput} ${errors.password ? style.inputError : ""}`}
                                         {...register("password", {
-                                            required: "Vui lòng nhập mật khẩu",
+                                            required: "Password is required",
                                             minLength: {
                                                 value: 6,
-                                                message: "Mật khẩu phải có ít nhất 6 ký tự",
+                                                message: "Password must be at least 6 characters",
                                             },
                                         })}
                                     />
@@ -171,10 +160,10 @@ const LoginPage = () => {
                             <div className={style.optionsRow}>
                                 <label className={style.checkboxLabel}>
                                     <input type="checkbox" className={style.rememberCheckbox} />
-                                    <span>Ghi nhớ đăng nhập</span>
+                                    <span>Remember me</span>
                                 </label>
                                 <Link to="/forgot-password" className={style.forgotLink}>
-                                    Quên mật khẩu?
+                                    Forgot Password?
                                 </Link>
                             </div>
 
@@ -187,32 +176,38 @@ const LoginPage = () => {
                                 {loading ? (
                                     <>
                                         <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: "8px" }}></i>
-                                        Đang đăng nhập...
+                                        Logging in...
                                     </>
                                 ) : (
-                                    "Đăng nhập"
+                                    "Login"
                                 )}
                             </button>
                         </form>
 
                         {/* OR CONTINUE WITH */}
                         <div className={style.divider}>
-                            <span>HOẶC TIẾP TỤC VỚI</span>
+                            <span>OR CONTINUE WITH</span>
                         </div>
 
                         {/* Google + Facebook */}
                         <div className={style.socialRow}>
-                            <button className={`${style.socialBtn} ${style.googleBtn}`} onClick={() => alert("Tiếp tục với Google")}>
+                            <button 
+                                className={`${style.socialBtn} ${style.googleBtn}`} 
+                                type="button" 
+                                onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/google"}                            >
                                 <i className="fab fa-google"></i> Google
                             </button>
-                            <button className={`${style.socialBtn} ${style.facebookBtn}`} onClick={() => alert("Tiếp tục với Facebook")}>
+                            <button 
+                                className={`${style.socialBtn} ${style.facebookBtn}`} 
+                                type="button" 
+                                onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/facebook"}>
                                 <i className="fab fa-facebook-f"></i> Facebook
                             </button>
                         </div>
 
                         {/* Register */}
                         <div className={style.switchAuth}>
-                            Chưa có tài khoản? <Link to="/register">Đăng ký</Link>
+                            Don't have account yet? <Link to="/register">Register</Link>
                         </div>
                     </div>
                 </div>

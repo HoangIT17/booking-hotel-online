@@ -6,14 +6,14 @@ const RoomFilterSidebar = ({ values, onChange, onReset, onSubmit }) => {
   return (
     <form className={styles.sidebar} onSubmit={onSubmit}>
       <div className={styles.head}>
-        <h2>Bộ lọc</h2>
-        <button type="button" onClick={onReset}>Đặt lại</button>
+        <h2>Filters</h2>
+        <button type="button" onClick={onReset}>Reset</button>
       </div>
 
       <label>
-        <span>Loại phòng</span>
+        <span>Room type</span>
         <select name="roomType" value={values.roomType} onChange={onChange}>
-          <option value="">Tất cả loại phòng</option>
+          <option value="">All room types</option>
           {roomTypes.map((type) => (
             <option value={type} key={type}>{type}</option>
           ))}
@@ -22,26 +22,26 @@ const RoomFilterSidebar = ({ values, onChange, onReset, onSubmit }) => {
 
       <div className={styles.twoCols}>
         <label>
-          <span>Giá thấp nhất</span>
+          <span>Min price</span>
           <input name="minPrice" type="number" min="0" value={values.minPrice} onChange={onChange} />
         </label>
         <label>
-          <span>Giá cao nhất</span>
+          <span>Max price</span>
           <input name="maxPrice" type="number" min="0" value={values.maxPrice} onChange={onChange} />
         </label>
       </div>
 
       <label>
-        <span>Đánh giá tối thiểu</span>
+        <span>Minimum rating</span>
         <select name="minRating" value={values.minRating} onChange={onChange}>
-          <option value="">Mọi đánh giá</option>
-          <option value="4">Từ 4 sao</option>
-          <option value="4.5">Từ 4.5 sao</option>
-          <option value="5">5 sao</option>
-          </select>
+          <option value="">Any rating</option>
+          <option value="4">From 4 stars</option>
+          <option value="4.5">From 4.5 stars</option>
+          <option value="5">5 stars</option>
+        </select>
       </label>
 
-      <button className={styles.searchButton} type="submit">Tìm kiếm</button>
+      <button className={styles.searchButton} type="submit">Search</button>
     </form>
   );
 };

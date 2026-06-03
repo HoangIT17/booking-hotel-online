@@ -9,6 +9,8 @@ import java.util.List;
 public interface VoucherService {
     List<VoucherResponse> getAll();
 
+    List<VoucherResponse> getAvailableForCustomer();
+
     VoucherResponse getDetail(Long id);
 
     VoucherResponse create(VoucherCreateRequest request);

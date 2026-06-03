@@ -1,0 +1,296 @@
+.tableContainer {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin: 10px;
+}
+
+.filterBar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .filterBar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.searchBox {
+  flex: 1;
+  max-width: 450px;
+}
+
+.searchBox input {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.searchBox input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.filterGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.filterGroup select {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #ffffff;
+  cursor: pointer;
+  outline: none;
+}
+
+.filterGroup select:focus {
+  border-color: #2563eb;
+}
+
+.resetBtn {
+  padding: 10px 16px;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  color: #374151;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.resetBtn:hover {
+  background-color: #f9fafb;
+}
+
+.totalCount {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.totalCount span {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.responsiveTable {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.mainTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.mainTable th {
+  background-color: #f9fafb;
+  color: #4b5563;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  padding: 14px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mainTable td {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #4b5563;
+  vertical-align: middle;
+}
+
+.mainTable tr:hover {
+  background-color: #f9fafb;
+}
+
+.roomNumberCell {
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Định dạng cấu trúc chung cho các viên thuốc Badge trạng thái */
+.statusBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* 🟢 READY: Màu xanh lá cây dịu nhẹ */
+.badgeCleaned {
+  background-color: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+/* 🔵 OCCUPIED: Màu xanh dương */
+.badgeOccupied {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+/* 🟡 CLEANING: Màu vàng cam ấm */
+.badgeCleaning {
+  background-color: #fef3c7;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+/* 🟠 MAINTAIN: Màu bảo trì xám đất/cam đất nhạt */
+.badgeMaintain {
+  background-color: #ffedd5;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+}
+
+/* 🔴 DIRTY: Màu bẩn hồng đỏ nhạt */
+.badgeDirty {
+  background-color: #ffe4e6;
+  color: #b91c1c;
+  border: 1px solid #fecdd3;
+}
+
+.badgeDefault {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.actionCell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.detailBtn {
+  padding: 6px 12px;
+  border: 1px solid #2563eb;
+  background-color: #ffffff;
+  color: #2563eb;
+  font-weight: 500;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.detailBtn:hover {
+  background-color: #f0f5ff;
+}
+
+.actionBtn {
+  padding: 6px 12px;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.actionBtn:hover {
+  background-color: #1d4ed8;
+}
+
+.emptyRow {
+  text-align: center !important;
+  color: #9ca3af !important;
+  padding: 40px 0 !important;
+}
+
+.loadingText {
+  padding: 24px;
+  text-align: center;
+  font-weight: 500;
+  color: #6b7280;
+}
+/* Phân trang */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+  padding: 10px 0;
+}
+
+.pageBtn {
+  padding: 8px 14px;
+  border: 1px solid #dee2e6;
+  background-color: #ffffff;
+  color: #007bff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.pageBtn:hover:not([disabled]) {
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+  color: #0056b3;
+}
+
+.pageBtn[disabled] {
+  color: #6c757d;
+  pointer-events: none;
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+  opacity: 0.6;
+}
+
+.activePage {
+  background-color: #007bff !important;
+  border-color: #007bff !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+.cleaningBtn {
+  background-color: #059669; /* Màu xanh lá chủ đạo */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cleaningBtn:hover {
+  background-color: #047857;
+}
+
+.cleaningBtn:active {
+  transform: scale(0.98);
+}

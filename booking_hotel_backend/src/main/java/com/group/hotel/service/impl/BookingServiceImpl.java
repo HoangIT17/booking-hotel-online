@@ -44,6 +44,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -111,8 +112,14 @@ public class BookingServiceImpl implements BookingService {
         Page<Booking> bookings = bookingRepository.findAll(spec, pageable);
         Map<Long, BookingDetail> bookingDetailByBookingId = getBookingDetailByBookingId(bookings.getContent());
 
-        return PageResponse.of(bookings.map(booking ->
-                bookingMapper.toCustomerSearchResponse(booking, bookingDetailByBookingId.get(booking.getId()))));
+        List<Long> bookingIds = bookings.getContent().stream().map(Booking::getId).toList();
+        Set<Long> reviewedBookingIds = new java.util.HashSet<>(reviewRepository.findBookingIdsWithReviews(bookingIds));
+
+        return PageResponse.of(bookings.map(booking -> {
+            BookingSearchCustomerResponse response = bookingMapper.toCustomerSearchResponse(booking, bookingDetailByBookingId.get(booking.getId()));
+            response.setHasReview(reviewedBookingIds.contains(booking.getId()));
+            return response;
+        }));
     }
 
     @Override
@@ -125,6 +132,7 @@ public class BookingServiceImpl implements BookingService {
         int numNights = calculateNumNights(request.getCheckIn(), request.getCheckOut());
         BigDecimal roomTotal = calculateRoomTotal(room, numNights);
         User customer = getCurrentCustomer();
+        validateCustomerProfileForBooking(customer);
         Voucher voucher = resolveVoucher(request.getVoucherCode(), roomTotal, request.getCheckIn());
         BigDecimal totalPrice = applyVoucherDiscount(roomTotal, voucher);
 
@@ -173,9 +181,6 @@ public class BookingServiceImpl implements BookingService {
         if (request.getBookingStatus() != null) {
             syncRoomStatusWithBookingStatus(room, request.getBookingStatus());
             roomRepository.save(room);
-        }
-        if (request.getPaymentMethod() != null) {
-            booking.setPaymentDate(LocalDateTime.now());
         }
 
         Booking savedBooking = bookingRepository.save(booking);
@@ -298,7 +303,7 @@ public class BookingServiceImpl implements BookingService {
         booking.setExtraCharge(BigDecimal.ZERO);
         booking.setTotalPrice(totalPrice);
         booking.setStatus(BookingStatus.PENDING);
-        booking.setPaymentDate(LocalDateTime.now());
+        booking.setPaymentDate(null);
     }
 
     private void createBookingDetail(Booking booking, Room room) {
@@ -325,6 +330,20 @@ public class BookingServiceImpl implements BookingService {
         }
         return userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RoomConflictException("Customer is required"));
+    }
+
+    private void validateCustomerProfileForBooking(User customer) {
+        Profile profile = customer.getProfile();
+        if (profile == null
+                || isBlank(profile.getFullName())
+                || isBlank(profile.getPhone())
+                || isBlank(customer.getEmail())) {
+            throw new RoomConflictException("Customer profile must include full name, email and phone");
+        }
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private void validateCurrentCustomerOwnsBooking(Long bookingId) {

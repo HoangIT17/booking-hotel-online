@@ -23,6 +23,18 @@ export const fetchReviews = createAsyncThunk(
     }
 );
 
+export const deleteReview = createAsyncThunk(
+    "review/deleteReview",
+    async (reviewId, { rejectWithValue }) => {
+        try {
+            await reviewService.deleteReview(reviewId);
+            return reviewId;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || "Lỗi xóa đánh giá");
+        }
+    }
+);
+
 export const replyReview = createAsyncThunk(
     "review/replyReview",
     async ({ reviewId, data }, { rejectWithValue }) => {
@@ -76,6 +88,11 @@ const reviewSlice = createSlice({
             .addCase(fetchReviews.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+
+            .addCase(deleteReview.fulfilled, (state, action) => {
+                state.items = state.items.filter((r) => r.id !== action.payload);
+                state.pagination.totalElements -= 1;
             })
 
             .addCase(replyReview.pending, (state) => { state.submitting = true; })

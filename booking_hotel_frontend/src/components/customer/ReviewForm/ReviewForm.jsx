@@ -2,10 +2,10 @@ import RatingStars from "../../common/RatingStars/RatingStars";
 import styles from "./ReviewForm.module.css";
 
 const ReviewForm = ({
-  title = "Viết đánh giá",
+  title = "Write a review",
   rating = 5,
-  placeholder = "Chia sẻ trải nghiệm của bạn...",
-  submitLabel = "Gửi đánh giá",
+  placeholder = "Share your experience...",
+  submitLabel = "Submit review",
   note,
   onSubmit,
 }) => {

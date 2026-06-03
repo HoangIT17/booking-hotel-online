@@ -86,7 +86,7 @@ public class AiKnowledgeController {
     // ==========================================
 
     @GetMapping("/history")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<Map<String, Object>>> getChatHistory(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) LocalDate startDate,

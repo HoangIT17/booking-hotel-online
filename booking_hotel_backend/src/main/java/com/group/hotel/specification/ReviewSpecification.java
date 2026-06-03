@@ -2,6 +2,7 @@ package com.group.hotel.specification;
 
 import com.group.hotel.entity.Review;
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
@@ -36,11 +37,14 @@ public class ReviewSpecification {
 
     public static Specification<Review> hasCustomerName(String customerName) {
         return (root, query, builder) -> {
-            Join<Object, Object> customer = root.join("customer");
-            Join<Object, Object> profile = customer.join("profile");
-            return builder.like(
-                    builder.lower(profile.get("fullName")),
-                    "%" + customerName.toLowerCase() + "%"
+            assert query != null;
+            query.distinct(true);
+            Join<Object, Object> customer = root.join("customer", JoinType.LEFT);
+            Join<Object, Object> profile = customer.join("profile", JoinType.LEFT);
+            String pattern = "%" + customerName.toLowerCase() + "%";
+            return builder.or(
+                    builder.like(builder.lower(profile.get("fullName")), pattern),
+                    builder.like(builder.lower(customer.get("username")), pattern)
             );
         };
     }

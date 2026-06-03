@@ -103,82 +103,84 @@ public class GeminiServiceImpl implements GeminiService {
                 .build();
     }
 
-//    private String callGeminiApi(String promptText) {
-//        String url = apiUrl + "?key=" + apiKey.trim();
-//
-//        Map<String, Object> body = Map.of(
-//                "contents", List.of(Map.of("parts", List.of(Map.of("text", promptText)))),
-//                "generationConfig", Map.of(
-//                        "temperature", 0.7,
-//                        "maxOutputTokens", 1024
-//                )
-//        );
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
-//
-//        try {
-//            ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
-//            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-//
-//                // 🌟 2. ĐÃ VÁ LỖI responseBody TẠI ĐÂY
-//                Map<String, Object> responseBody = response.getBody();
-//                List<?> candidates = (List<?>) responseBody.get("candidates");
-//
-//                if (candidates != null && !candidates.isEmpty()) {
-//                    Map<?, ?> firstCandidate = (Map<?, ?>) candidates.get(0);
-//                    Map<?, ?> content = (Map<?, ?>) firstCandidate.get("content");
-//                    List<?> parts = (List<?>) content.get("parts");
-//                    return ((Map<?, ?>) parts.get(0)).get("text").toString();
-//                }
-//            }
-//            return "Hệ thống AI đang bận, vui lòng thử lại sau!";
-//        } catch (Exception e) {
-//            log.error("GEMINI API ERROR: {}", e.getMessage());
-//            return "Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng liên hệ Lễ tân.";
-//        }
-//    }
-
-    // 🌟 HÀM CALL API BẬT TÍNH NĂNG "THINKING"
     private String callGeminiApi(String promptText) {
+        String url = apiUrl + "?key=" + apiKey.trim();
+
         Map<String, Object> body = Map.of(
-                "contents", List.of(
-                        Map.of("parts", List.of(Map.of("text", promptText)))
-                ),
+                "contents", List.of(Map.of("parts", List.of(Map.of("text", promptText)))),
                 "generationConfig", Map.of(
-                        // ⚡ MỞ KHÓA TÍNH NĂNG SUY NGHĨ (THINKING)
-                        "thinkingConfig", Map.of(
-                                "thinkingLevel", "low" // Để 'low' để AI suy nghĩ nhanh, tránh timeout
-                        ),
                         "temperature", 0.7,
-                        "maxOutputTokens", 2048,
-                        "topP", 0.95
+                        "maxOutputTokens", 1024
                 )
         );
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        // Nhét API Key vào Header
-        headers.set("X-goog-api-key", apiKey.trim());
-
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
         try {
-            log.info("--- Activating Gemini (Thinking Mode Enabled) ---");
-            ResponseEntity<Map> response = restTemplate.postForEntity(apiUrl, entity, Map.class);
-
+            ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
             if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-                return parseGeminiResponse(response.getBody());
-            }
-            return "Hệ thống AI đang bận suy nghĩ. Vui lòng đợi trong giây lát!";
 
+                // 🌟 2. ĐÃ VÁ LỖI responseBody TẠI ĐÂY
+                Map<String, Object> responseBody = response.getBody();
+                List<?> candidates = (List<?>) responseBody.get("candidates");
+
+                if (candidates != null && !candidates.isEmpty()) {
+                    Map<?, ?> firstCandidate = (Map<?, ?>) candidates.get(0);
+                    Map<?, ?> content = (Map<?, ?>) firstCandidate.get("content");
+                    List<?> parts = (List<?>) content.get("parts");
+                    return ((Map<?, ?>) parts.get(0)).get("text").toString();
+                }
+            }
+            return "Hệ thống AI đang bận, vui lòng thử lại sau!";
         } catch (Exception e) {
-            // Nếu model bạn đang cài ở URL không hỗ trợ Thinking, nó sẽ văng lỗi ở đây
             log.error("GEMINI API ERROR: {}", e.getMessage());
-            return "Xin lỗi, model hiện tại không hỗ trợ chế độ Thinking hoặc đang gặp sự cố kết nối.";
+            return "Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng liên hệ Lễ tân.";
         }
     }
+
+
+//    private String callGeminiApi(String promptText) {
+//        // 1. Nhét trực tiếp API Key vào URL
+//        String finalUrl = apiUrl + "?key=" + apiKey.trim();
+//
+//        Map<String, Object> body = Map.of(
+//                "contents", List.of(
+//                        Map.of("parts", List.of(Map.of("text", promptText)))
+//                ),
+//                "generationConfig", Map.of(
+//                        // 🌟 Đã gỡ thinkingConfig để tương thích với bản Flash-Latest
+//                        "temperature", 0.7,
+//                        "maxOutputTokens", 2048,
+//                        "topP", 0.95
+//                )
+//        );
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        // Không set Header X-goog-api-key nữa để tránh xung đột
+//
+//        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+//
+//        try {
+//            log.info("--- Calling Gemini API (Model: flash-latest) ---");
+//            ResponseEntity<Map> response = restTemplate.postForEntity(finalUrl, entity, Map.class);
+//
+//            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+//                return parseGeminiResponse(response.getBody());
+//            }
+//            return "Hệ thống AI đang bận. Vui lòng đợi trong giây lát!";
+//
+//        } catch (Exception e) {
+//            log.error("GEMINI API ERROR: {}", e.getMessage());
+//
+//            // 🌟 Sửa TẠM THỜI dòng này để ép nó in lỗi thật sự ra màn hình
+//            return "LỖI THẬT SỰ TỪ GOOGLE LÀ: " + e.getMessage();
+//        }
+//    }
+
+
     private String parseGeminiResponse(Map<String, Object> responseBody) {
         try {
             List<?> candidates = (List<?>) responseBody.get("candidates");

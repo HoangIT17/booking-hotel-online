@@ -13,6 +13,7 @@ const reviewService = {
         const response = await axiosInstance.get("/customer/reviews", { params });
         return response.data;
     },
+    deleteReview: (reviewId) => axiosInstance.delete(`/reviews/${reviewId}`),
 };
 
 export default reviewService;

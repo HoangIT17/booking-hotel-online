@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import chatbotAdminService from '../../services/chatbotAdminService';
 
-// --- CÁC THUNK CŨ GIỮ NGUYÊN ---
+// --- CÁC THUNK GIỮ NGUYÊN ---
 export const fetchKnowledge = createAsyncThunk('chatbot/fetchKnowledge', async ({ page = 1, size = 10, search = '' }, thunkAPI) => {
     try {
         const response = await chatbotAdminService.getAllKnowledge(page, size, search);
@@ -47,7 +47,7 @@ export const updateKnowledge = createAsyncThunk('chatbot/update', async ({ id, d
     }
 });
 
-// 🌟 THÊM MỚI: Thunk lấy lịch sử chat
+// Thunk lấy lịch sử chat
 export const fetchChatHistory = createAsyncThunk(
     'chatbot/fetchHistory',
     async ({ page = 0, size = 10, search = "", startDate = "", endDate = "" }, thunkAPI) => {
@@ -63,16 +63,14 @@ export const fetchChatHistory = createAsyncThunk(
 const chatbotSlice = createSlice({
     name: 'chatbot',
     initialState: {
-        // State cho Knowledge
         knowledgeList: [],
         pageInfo: { page: 1, pageSize: 10, totalElements: 0 },
         currentDetails: null,
         
-        // 🌟 THÊM MỚI: State cho Lịch sử Chat
+        // State cho Lịch sử Chat
         historyList: [],
         historyPageInfo: { page: 0, pageSize: 10, totalElements: 0 },
         
-        // Trạng thái chung
         isLoading: false,
         error: null,
     },
@@ -87,8 +85,8 @@ const chatbotSlice = createSlice({
             .addCase(fetchKnowledge.pending, (state) => { state.isLoading = true; })
             .addCase(fetchKnowledge.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.knowledgeList = action.payload.knowledgeBase;
-                state.pageInfo = action.payload.pageInfo;
+                state.knowledgeList = action.payload?.knowledgeBase || [];
+                state.pageInfo = action.payload?.pageInfo || { page: 1, pageSize: 10, totalElements: 0 };
             })
             .addCase(fetchKnowledge.rejected, (state, action) => {
                 state.isLoading = false;
@@ -120,21 +118,32 @@ const chatbotSlice = createSlice({
                 }
             })
             
-            // 🌟 THÊM MỚI: Xử lý Fetch History
-            .addCase(fetchChatHistory.pending, (state) => { state.isLoading = true; })
+            // 🌟 ĐÃ SỬA: Xử lý bóc tách dữ liệu an toàn cho Lịch sử chat
+            // 🌟 ĐÃ SỬA: Xử lý bóc tách khớp 100% với JSON Backend của bạn
+            .addCase(fetchChatHistory.pending, (state) => { 
+                state.isLoading = true; 
+                state.error = null;
+            })
             .addCase(fetchChatHistory.fulfilled, (state, action) => {
                 state.isLoading = false;
-                // Thay đổi các key (historyList, pageInfo) cho khớp với JSON trả về từ backend của bạn
-                state.historyList = action.payload.content || action.payload.historyList; 
+                
+                // Phá kén lớp bọc ngoài cùng (BaseResponse)
+                const serverData = action.payload?.data ? action.payload.data : action.payload;
+                
+                // 1. Trỏ đúng vào key "history" của Spring Boot
+                state.historyList = serverData?.history || []; 
+                
+                // 2. Trỏ đúng vào object "paginationInfo"
                 state.historyPageInfo = {
-                    page: action.payload.number || 0,
-                    pageSize: action.payload.size || 10,
-                    totalElements: action.payload.totalElements || 0
+                    page: serverData?.paginationInfo?.page || 0,
+                    pageSize: serverData?.paginationInfo?.pageSize || 10,
+                    totalElements: serverData?.paginationInfo?.totalElements || 0
                 };
             })
             .addCase(fetchChatHistory.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload;
+                state.historyList = []; 
             });
     },
 });

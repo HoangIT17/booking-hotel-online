@@ -18,4 +18,5 @@ public class RoomResponse {
     private boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
 }
