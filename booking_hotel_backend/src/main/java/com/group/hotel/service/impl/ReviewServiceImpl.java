@@ -9,9 +9,8 @@ import com.group.hotel.entity.Booking;
 import com.group.hotel.entity.Review;
 import com.group.hotel.entity.User;
 import com.group.hotel.enums.BookingStatus;
-import com.group.hotel.exception.ReviewConflictException;
 import com.group.hotel.exception.ReviewNotFoundException;
-import com.group.hotel.mapper.ReviewMapper;
+import com.group.hotel.exception.RoomConflictException;
 import com.group.hotel.repository.BookingRepository;
 import com.group.hotel.repository.ReviewRepository;
 import com.group.hotel.repository.UserRepository;
@@ -33,12 +32,27 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
-    private final ReviewMapper reviewMapper;
 
     private User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new ReviewConflictException("Không tìm thấy người dùng"));
+                .orElseThrow(() -> new RoomConflictException("Không tìm thấy người dùng"));
+    }
+
+    private ReviewResponse toResponse(Review review) {
+        ReviewResponse res = new ReviewResponse();
+        res.setId(review.getId());
+        res.setBookingId(review.getBooking() == null ? null : review.getBooking().getId());
+        res.setCustomerId(review.getCustomer() == null ? null : review.getCustomer().getId());
+        res.setCustomerName(review.getCustomer() == null ? null : review.getCustomer().getUsername());
+        res.setRating(review.getRating());
+        res.setComment(review.getComment());
+        res.setStaffReply(review.getStaffReply());
+        res.setRepliedByName(review.getRepliedBy() == null ? null : review.getRepliedBy().getUsername());
+        res.setRepliedAt(review.getRepliedAt());
+        res.setCreatedAt(review.getCreatedAt());
+        res.setUpdatedAt(review.getUpdatedAt());
+        return res;
     }
 
     @Override
@@ -47,25 +61,26 @@ public class ReviewServiceImpl implements ReviewService {
         User currentUser = getCurrentUser();
 
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new ReviewConflictException("Không tìm thấy đơn đặt phòng"));
+                .orElseThrow(() -> new RoomConflictException("Không tìm thấy đơn đặt phòng"));
 
         if (!booking.getCustomer().getId().equals(currentUser.getId())) {
-            throw new ReviewConflictException("Bạn không có quyền đánh giá đơn đặt phòng này");
+            throw new RoomConflictException("Bạn không có quyền đánh giá đơn đặt phòng này");
         }
-
         if (booking.getStatus() != BookingStatus.CHECKED_OUT) {
-            throw new ReviewConflictException("Chỉ có thể đánh giá sau khi trả phòng");
+            throw new RoomConflictException("Chỉ có thể đánh giá sau khi trả phòng");
         }
-
         if (reviewRepository.existsByBookingId(bookingId)) {
-            throw new ReviewConflictException("Đơn đặt phòng này đã được đánh giá");
+            throw new RoomConflictException("Đơn đặt phòng này đã được đánh giá");
         }
 
-        Review review = reviewMapper.fromCreate(request);
-        review.setCustomer(currentUser);
-        review.setBooking(booking);
+        Review saved = reviewRepository.save(Review.builder()
+                .customer(currentUser)
+                .booking(booking)
+                .rating(request.getRating())
+                .comment(request.getComment())
+                .build());
 
-        return reviewMapper.toResponse(reviewRepository.save(review));
+        return toResponse(saved);
     }
 
     @Override
@@ -74,13 +89,13 @@ public class ReviewServiceImpl implements ReviewService {
         User currentUser = getCurrentUser();
 
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ReviewNotFoundException());
+                .orElseThrow(ReviewNotFoundException::new);
 
-        reviewMapper.fromReply(request, review);
+        review.setStaffReply(request.getStaffReply());
         review.setRepliedBy(currentUser);
         review.setRepliedAt(LocalDateTime.now());
 
-        return reviewMapper.toResponse(reviewRepository.save(review));
+        return toResponse(reviewRepository.save(review));
     }
 
     @Override
@@ -104,7 +119,7 @@ public class ReviewServiceImpl implements ReviewService {
             spec = spec.and(ReviewSpecification.hasCustomerName(searchRequest.getCustomerName()));
         }
 
-        return PageResponse.of(reviewRepository.findAll(spec, pageable).map(reviewMapper::toResponse));
+        return PageResponse.of(reviewRepository.findAll(spec, pageable).map(this::toResponse));
     }
 
     @Override
@@ -123,15 +138,23 @@ public class ReviewServiceImpl implements ReviewService {
             spec = spec.and(ReviewSpecification.toDate(searchRequest.getToDate()));
         }
 
-        return PageResponse.of(reviewRepository.findAll(spec, pageable).map(reviewMapper::toResponse));
+        return PageResponse.of(reviewRepository.findAll(spec, pageable).map(this::toResponse));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ReviewResponse getByBookingId(Long bookingId) {
-        return reviewMapper.toResponse(
+        return toResponse(
                 reviewRepository.findByBookingId(bookingId)
-                        .orElseThrow(() -> new ReviewNotFoundException())
+                        .orElseThrow(ReviewNotFoundException::new)
         );
+    }
+
+    @Override
+    @Transactional
+    public void deleteReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(ReviewNotFoundException::new);
+        reviewRepository.delete(review);
     }
 }

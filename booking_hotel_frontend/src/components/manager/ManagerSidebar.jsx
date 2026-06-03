@@ -19,6 +19,11 @@ const ManagerSidebar = () => {
     { path: '/manager/furnitures', icon: 'fa-couch', label: 'Quản Lý Nội Thất' },
     { path: '/manager/rooms', icon: 'fa-door-open', label: 'Quản Lý Phòng' },
     { path: '/manager/reviews', icon: 'fa-star', label: 'Đánh Giá' },
+    { path: '/manager/bookings', icon: 'fa-calendar-check', label: 'Quản Lý Booking' },
+    { path: '/manager/vouchers', icon: 'fa-ticket', label: 'Voucher' },
+    { path: '/manager/incidents', icon: 'fa-triangle-exclamation', label: 'Quản Lý Sự Cố' },
+    { path: '/manager/chatbot', icon: 'fa-robot', label: 'Quản Lý Chatbot' },
+    { path: '/manager/chat-history', icon: 'fa-history', label: 'Lịch Sử Chat' },
   ];
 
   return (

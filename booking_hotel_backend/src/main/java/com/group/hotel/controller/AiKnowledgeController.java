@@ -30,7 +30,7 @@ public class AiKnowledgeController {
     // ==========================================
 
     @GetMapping("/knowledge")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<Map<String, Object>>> getAllKnowledge(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -52,14 +52,14 @@ public class AiKnowledgeController {
     }
 
     @PostMapping("/knowledge")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<AiKnowledgeResponse>> trainBot(@Valid @RequestBody AiKnowledgeRequest request) {
         AiKnowledgeResponse responseData = knowledgeService.trainKnowledge(request);
         return ResponseEntity.ok(BaseResponse.success(responseData, "Training data added successfully!"));
     }
 
     @PutMapping("/knowledge/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<AiKnowledgeResponse>> updateKnowledge(
             @PathVariable Long id,
             @Valid @RequestBody AiKnowledgeRequest request) {
@@ -68,14 +68,14 @@ public class AiKnowledgeController {
     }
 
     @DeleteMapping("/knowledge/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<Void>> deleteKnowledge(@PathVariable Long id) {
         knowledgeService.deleteKnowledge(id);
         return ResponseEntity.ok(BaseResponse.success(null, "Delete training data successfully!"));
     }
 
     @GetMapping("/knowledge/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<AiKnowledgeResponse>> getKnowledgeById(@PathVariable Long id) {
         AiKnowledgeResponse responseData = knowledgeService.getById(id);
         return ResponseEntity.ok(BaseResponse.success(responseData, "Lấy chi tiết dữ liệu thành công"));

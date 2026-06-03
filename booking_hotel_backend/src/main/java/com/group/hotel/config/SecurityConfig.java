@@ -3,9 +3,11 @@ package com.group.hotel.config;
 import com.group.hotel.security.CustomAccessDeniedHandler;
 import com.group.hotel.security.JwtAuthEntryPoint;
 import com.group.hotel.security.JwtAuthenticationFilter;
+import com.group.hotel.security.OAuth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -17,14 +19,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import org.springframework.web.filter.CorsFilter;
-
+import java.util.Arrays;
 import java.util.List;
-
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +35,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -50,80 +50,88 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
+                // 🌟 1. LIÊN KẾT CORS TRỰC TIẾP VỚI SPRING SECURITY
+
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception
-                        // Xử lý lỗi 401 (Chưa đăng nhập, Token sai/hết hạn)
                         .authenticationEntryPoint(jwtAuthEntryPoint)
-
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+
+                        // ── CORS preflight ─────────────────────────────────────────────────
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
+                        // ── Auth & OAuth2 ──────────────────────────────────────────────────
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/payments/vnpay/return").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/reservation-create").authenticated()
+                        .requestMatchers("/oauth2/**", "/login/oauth2/code/**").permitAll()
 
-                        .requestMatchers("/api/v1/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
-                        .requestMatchers("/api/v1/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
-                        .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers("/RoomImages/**").permitAll()
+                        // ── Static files ───────────────────────────────────────────────────
+                        .requestMatchers("/uploads/**", "/RoomImages/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/reviews/**").hasAnyAuthority("RECEPTIONIST","MANAGER","ADMIN")
-                        .requestMatchers("/api/v1/customer/reviews/**").hasAuthority("CUSTOMER")
-                        .requestMatchers("/api/v1/customer/reservation-search").authenticated()
-                        .requestMatchers("/api/v1/customer/**").permitAll()
+                        // ── Public APIs ────────────────────────────────────────────────────
+                        .requestMatchers(HttpMethod.GET,  "/api/v1/reviews").permitAll()
+                        .requestMatchers(HttpMethod.GET,  "/api/v1/customer/rooms/search/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,  "/api/v1/payments/vnpay/return").permitAll()
 
-                        .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
-                        .requestMatchers("/api/v1/vouchers/**").hasAnyAuthority("ADMIN","MANAGER")
-                        .requestMatchers("/api/v1/manager/reservation-update").hasAnyAuthority("ADMIN","MANAGER")
-                        .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
-                        .requestMatchers("/api/customer/rooms/search/**").permitAll()
-                        .requestMatchers("/api/customer/bookings/**").permitAll()
-                        .requestMatchers("/api/customer/bookings-search/**").permitAll()
-                        .requestMatchers("/api/admin/furnitures/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/admin/room-types/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")
+                        // ── Customer ───────────────────────────────────────────────────────
+                        .requestMatchers(HttpMethod.POST, "/api/v1/chatbot/ask").hasAuthority("CUSTOMER")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/reservation-create").hasAuthority("CUSTOMER")
+                        .requestMatchers("/api/v1/customer/**").hasAuthority("CUSTOMER")
 
+                        // ── Staff + Receptionist + Admin + Manager ─────────────────────────
+                        .requestMatchers("/api/v1/staff/**").hasAnyAuthority("STAFF", "RECEPTIONIST", "ADMIN", "MANAGER")
 
+                        // ── Receptionist + Admin + Manager ─────────────────────────────────
+                        .requestMatchers("/api/v1/receptionist/**").hasAnyAuthority("RECEPTIONIST", "ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/manager/reservation-search").hasAnyAuthority("RECEPTIONIST", "ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/manager/reservation-update").hasAnyAuthority("ADMIN", "MANAGER")
 
-                        // Nếu sau này bạn có API dành riêng cho Admin thì khai báo ở đây, ví dụ:
+                        // ── Incidents: Staff + Receptionist + Admin + Manager ──────────────
+                        .requestMatchers("/api/v1/incidents/**").hasAnyAuthority("STAFF", "RECEPTIONIST", "ADMIN", "MANAGER")
+
+                        // ── Reviews management ─────────────────────────────────────────────
+                        .requestMatchers(HttpMethod.PUT,    "/api/v1/reviews/**").hasAnyAuthority("RECEPTIONIST", "MANAGER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/reviews/**").hasAnyAuthority("STAFF", "RECEPTIONIST", "MANAGER", "ADMIN")
+
+                        // ── Admin + Manager ────────────────────────────────────────────────
+                        .requestMatchers("/api/v1/furnitures/**").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers("/api/v1/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers("/api/v1/vouchers/**").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers("/api/v1/maintenance/**").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers("/api/v1/chatbot/**").hasAnyAuthority("ADMIN", "MANAGER")
+
+                        // ── Admin only ─────────────────────────────────────────────────────
                         .requestMatchers("/api/v1/users/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/v1/chatbot/ask").hasAuthority("CUSTOMER")
 
-                        // Admin được cấu hình Knowledge và xem History
-                        .requestMatchers("/api/v1/chatbot/**", "/api/v1/chatbot/history").hasAuthority("ADMIN")
-
+                        // ── Any authenticated user (profile, payments...) ──────────────────
                         .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(oAuth2LoginSuccessHandler)
                 );
 
-        // Chèn filter kiểm tra Token vào trước filter xác thực mặc định
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
+    // 🌟 2. CẤU HÌNH CORS CHUẨN TỪNG MILIMET CHO SPRING SECURITY 6
     @Bean
-    public CorsFilter corsFilter () {
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-
-        // 1. Cho phép đính kèm Cookie / Token Auth hệ Stateless
-        config.setAllowCredentials(true);
-
-        // 2. 🌟 Sử dụng Pattern để chấp nhận TẤT CẢ các cổng từ localhost
-        config.setAllowedOriginPatterns(List.of("*"));
-
-        // 3. Cho phép tất cả các Header (Authorization, Content-Type,...)
-        config.setAllowedHeaders(List.of("*"));
-
-        // 4. Định nghĩa tường minh các HTTP Methods theo yêu cầu của bạn
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-        // Áp dụng cấu hình trên cho toàn bộ các endpoint API
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

@@ -41,6 +41,7 @@ public class Incident {
     private String description;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "VARCHAR(30)")
     private IncidentStatus status;
 
     @CreationTimestamp

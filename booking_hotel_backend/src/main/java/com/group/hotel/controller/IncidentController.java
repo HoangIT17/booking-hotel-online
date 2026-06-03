@@ -1,8 +1,9 @@
-package com.group.hotel.controller;
+package com.group.hotel.controller.manager;
 
+//import com.group.hotel.common.response.ApiResponse;
 import com.group.hotel.dto.request.incident.IncidentDecisionRequest;
 import com.group.hotel.dto.request.incident.ResolveRequest;
-import com.group.hotel.dto.response.ApiResponse;
+import com.group.hotel.dto.response.*;
 import com.group.hotel.dto.response.incident.IncidentDetailResponse;
 import com.group.hotel.dto.response.incident.IncidentListResponse;
 import com.group.hotel.dto.response.incident.IncidentReport;
@@ -64,7 +65,7 @@ public class IncidentController {
     }
 
     @PutMapping("/{id}/decision")
-    @PreAuthorize("hasAnyAuthority('MANAGER')") // Đảm bảo đúng role
+    @PreAuthorize("hasAnyAuthority('MANAGER', 'ADMIN')")
     public ResponseEntity<ApiResponse<IncidentDetailResponse>> decideOnIncident(
             @PathVariable Long id,
             @Valid @RequestBody IncidentDecisionRequest request) {

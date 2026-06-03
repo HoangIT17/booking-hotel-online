@@ -42,20 +42,6 @@ import ProfileEditPage from "../pages/profile/ProfileEditPage";
 // Google OAuth Callback
 import LoginSuccess from "../pages/auth/LoginSuccess";
 
-import ReviewPage from "../pages/admin/reviews/ReviewPage";
-import BookingManagementPage from "../pages/admin/bookingmanagement/BookingManagementPage";
-import VoucherManagementPage from "../pages/admin/bookingmanagement/VoucherManagementPage";
-import RoomsPage from "../pages/customer/RoomsPage";
-import RoomDetailPage from "../pages/customer/RoomDetailPage";
-import RoomUnavailablePage from "../pages/customer/RoomUnavailablePage";
-import OffersPage from "../pages/customer/OffersPage";
-import ReservationsPage from "../pages/customer/ReservationsPage";
-import ReservationDetailPage from "../pages/customer/ReservationDetailPage";
-import BookingPage from "../pages/customer/BookingPage";
-import PaymentRedirectPage from "../pages/customer/PaymentRedirectPage";
-import PaymentResultPage from "../pages/customer/PaymentResultPage";
-import PaymentStatusPage from "../pages/customer/PaymentStatusPage";
-import MyReviewsPage from "../pages/customer/MyReviewsPage";
 import IncidentManager from "../pages/manager/IncidentManager";
 import IncidentReport from "../pages/manager/IncidentReport";
 import ViewCleaningTasks from "../pages/staff/ViewCleaningTasks";
@@ -80,19 +66,6 @@ const AppRoutes = () => {
                 {/* Nếu khách có thói quen gõ /home, tự động bẻ lái về / cho chuẩn SEO */}
                 <Route path="/home" element={<Navigate to="/" replace />} />
                 
-                {/* Các trang khách hàng */}
-                <Route path="/rooms" element={<RoomsPage />} />
-                <Route path="/rooms/:roomId" element={<RoomDetailPage />} />
-                <Route path="/rooms/unavailable" element={<RoomUnavailablePage />} />
-                <Route path="/offers" element={<OffersPage />} />
-                <Route path="/reservations" element={<ReservationsPage />} />
-                <Route path="/reservations/:bookingId" element={<ReservationDetailPage />} />
-                <Route path="/booking" element={<BookingPage />} />
-                <Route path="/payment/redirect" element={<PaymentRedirectPage />} />
-                <Route path="/payment/result" element={<PaymentResultPage />} />
-                <Route path="/payment/status" element={<PaymentStatusPage />} />
-                <Route path="/history-reviews" element={<MyReviewsPage />} />
-
                 {/* 🔴 NHÓM PROTECTED: Bắt buộc phải đăng nhập (Có role CUSTOMER) */}
                 <Route path="customer">
                     {/* Bây giờ đường dẫn sẽ là /customer/change-password */}
@@ -123,10 +96,6 @@ const AppRoutes = () => {
                     <Route path="users" element={<UserManagement />} />
                     <Route path="furnitures" element={<FurniturePage />} />
                     <Route path="rooms" element={<RoomPage />} />
-                    <Route path="reviews" element={<ReviewPage />} />
-                    <Route path="bookings" element={<BookingManagementPage />} />
-                    <Route path="vouchers" element={<VoucherManagementPage />} />
-                    <Route path="incidents" element={<IncidentManager />} />
                     <Route path="change-password" element={<ChangePasswordPage />} />
                     <Route path="profile" element={<ProfilePage />} />
                     <Route path="profile/edit" element={<ProfileEditPage />} />     
@@ -145,17 +114,14 @@ const AppRoutes = () => {
                     <Route path="dashboard" element={<DashboardManager />} />
                     <Route path="furnitures" element={<FurniturePage />} />
                     <Route path="rooms" element={<RoomPage />} />
-                    <Route path="reviews" element={<ReviewPage />} />
-                    <Route path="bookings" element={<BookingManagementPage />} />
-                    <Route path="vouchers" element={<VoucherManagementPage />} />
-                    <Route path="incidents" element={<IncidentManager />} />
-                    <Route path="incident-reports" element={<IncidentReport />} />
-                    <Route path="chat-history" element={<ChatHistoryList />} />
-                    <Route path="chatbot" element={<ChatbotManagement />} />
-                    <Route path="chatbot/:id" element={<ChatbotDetailsPage />} />
-                    <Route path="chatbot/edit/:id" element={<ChatbotEditPage />} />
                     <Route path="profile" element={<ProfilePage />} />
-                    <Route path="profile/edit" element={<ProfileEditPage />} />
+                    <Route path="profile/edit" element={<ProfileEditPage />} /> 
+                    {/* Thêm chức năng quản lý tại đây */}
+                    <Route path="incidents" element={<IncidentManager />} />
+                    <Route
+                        path="/manager/incident-reports"
+                        element={<IncidentReport />}
+                    />
                 </Route>
             </Route>
             
@@ -169,7 +135,6 @@ const AppRoutes = () => {
                     <Route index element={<Navigate to="dashboard" replace />} />
                     <Route path="dashboard" element={<ReceptionistDashboard />} />
                     {/* Thêm chức năng lễ tân: bookings, checkin-checkout... tại đây */}
-                    <Route path="bookings" element={<BookingManagementPage />} />
                     <Route path="cleaning-tasks" element={<ViewCleaningTasks />} />
                     <Route
                         path="/receptionist/room-detail/:roomNumber"

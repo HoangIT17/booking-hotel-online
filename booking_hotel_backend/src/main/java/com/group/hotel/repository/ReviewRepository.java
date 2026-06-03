@@ -17,6 +17,9 @@ import java.util.Optional;
 public interface ReviewRepository extends JpaRepository<Review, Long>, JpaSpecificationExecutor<Review> {
     boolean existsByBookingId(Long bookingId);
     Optional<Review> findByBookingId(Long bookingId);
+
+    @Query("SELECT r.booking.id FROM Review r WHERE r.booking.id IN :bookingIds")
+    List<Long> findBookingIdsWithReviews(@Param("bookingIds") Collection<Long> bookingIds);
     Page<Review> findByCustomerId(Long customerId, Pageable pageable);
 
     @Query("""

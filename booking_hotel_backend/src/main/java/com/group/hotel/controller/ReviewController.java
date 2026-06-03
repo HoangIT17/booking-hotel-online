@@ -55,4 +55,10 @@ public class ReviewController {
     public ResponseEntity<BaseResponse<ReviewResponse>> getByBookingId(@PathVariable Long bookingId) {
         return ResponseEntity.ok(BaseResponse.success(reviewService.getByBookingId(bookingId)));
     }
+
+    @DeleteMapping("/api/v1/reviews/{reviewId}")
+    public ResponseEntity<BaseResponse<Void>> deleteReview(@PathVariable Long reviewId) {
+        reviewService.deleteReview(reviewId);
+        return ResponseEntity.ok(BaseResponse.success(null));
+    }
 }
