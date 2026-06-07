@@ -91,8 +91,9 @@ public class VnPayServiceImpl implements VnPayService {
 
     @Override
     public VnPayReturnResponse handleReturn(Map<String, String> params) {
+        //kiem tra cau hinh
         validateConfig();
-
+        // xac thuc chu ky bao mat
         String secureHash = params.get("vnp_SecureHash");
         Map<String, String> fields = new HashMap<>(params);
         fields.remove("vnp_SecureHash");

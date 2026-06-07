@@ -38,6 +38,7 @@ export const getRoomImageUrl = (room) => {
     room?.mainImageUrl ||
     room?.coverImageUrl ||
     room?.coverImage ||
+    room?.imagesUrl ||
     (Array.isArray(room?.images) && room.images[0]) ||
     (Array.isArray(room?.imageUrls) && room.imageUrls[0]) ||
     (Array.isArray(room?.imagesUrl) && room.imagesUrl[0]) ||
@@ -49,7 +50,7 @@ export const getRoomImageUrl = (room) => {
     if (image.startsWith("http://") || image.startsWith("https://")) {
       return image;
     }
-    return `http://localhost:8080/api/v1/${image.replace(/^\/+/, "")}`;
+    return `http://localhost:8080/${image.replace(/^\/+/, "")}`;
   }
 
   if (typeof image === "object") {

@@ -62,36 +62,36 @@ public class SecurityConfig {
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+
+                        // auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Thả cửa cho OPTIONS
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/oauth2/**", "/login/oauth2/code/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/payments/vnpay/return").permitAll()
+
+                        // booking
                         .requestMatchers(HttpMethod.POST, "/api/v1/reservation-create").authenticated()
-
-
-
-                        .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
-                        .requestMatchers("/api/v1/customer/rooms/search/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/vouchers/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/customer/vouchers/available").permitAll()
+                        .requestMatchers("/api/v1/customer/reservation-search").authenticated()
+                        .requestMatchers("/RoomImages/**").permitAll()
+                        .requestMatchers("/api/customer/rooms/search/**").permitAll()
+                        .requestMatchers("/api/customer/bookings/**").permitAll()
+                        .requestMatchers("/api/customer/bookings-search/**").permitAll()
+                        // dashboard
+                        .requestMatchers("/api/v1/admin/furnitures/**").hasAnyAuthority("ADMIN","MANAGER")
+                        .requestMatchers("/api/v1/customer/rooms/search/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/vouchers/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/vouchers/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/vouchers/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/v1/manager/reservation-search").hasAnyAuthority("RECEPTIONIST","ADMIN","MANAGER")
-                        .requestMatchers("/api/v1/customer/reservation-search").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/customer /reviews").hasAuthority("CUSTOMER")
                         .requestMatchers("/api/v1/customer/**").authenticated()
                         .requestMatchers("/api/v1/manager/reservation-update").hasAnyAuthority("RECEPTIONIST","ADMIN","MANAGER")
                         .requestMatchers("/api/v1/manager/reviews/**").permitAll()
                         .requestMatchers("/api/v1/manager/rooms/**").hasAnyAuthority("ADMIN","MANAGER")
                         .requestMatchers("/uploads/**", "/RoomImages/**").permitAll()
-                        .requestMatchers("/RoomImages/**").permitAll()
-
-
-                        .requestMatchers("/api/customer/rooms/search/**").permitAll()
-                        .requestMatchers("/api/customer/bookings/**").permitAll()
-                        .requestMatchers("/api/customer/bookings-search/**").permitAll()
                         .requestMatchers("/api/admin/furnitures/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/admin/room-types/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/manager/rooms/**").hasAnyAuthority("ADMIN", "MANAGER")

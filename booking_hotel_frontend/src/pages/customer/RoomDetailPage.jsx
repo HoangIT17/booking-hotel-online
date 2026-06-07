@@ -30,7 +30,7 @@ import {
 import styles from "./CustomerPages.module.css";
 
 const getFurnitureIcon = (name = "") => {
-  const value = name.toLowerCase();
+  const value = String(name || "").toLowerCase();
   if (value.includes("bed") || value.includes("giuong")) return BedDouble;
   if (value.includes("sofa")) return Sofa;
   if (value.includes("tv") || value.includes("television")) return Tv;
@@ -66,7 +66,8 @@ const RoomDetailPage = () => {
         setError("");
         setLoading(true);
         const response = await customerBookingService.getRoomDetail(roomId);
-        setRoom(getResponseData(response));
+        const responseData = getResponseData(response);
+        setRoom(responseData?.data ?? responseData);
       } catch (err) {
         setError(
           err.response?.data?.message || "Unable to load room details.",
@@ -103,9 +104,9 @@ const RoomDetailPage = () => {
     );
   }
 
-  const reviews = room.reviews || [];
-  const features = room.features || [];
-  const furniture = room.furniture || [];
+  const reviews = Array.isArray(room.reviews) ? room.reviews : [];
+  const features = Array.isArray(room.features) ? room.features : [];
+  const furniture = Array.isArray(room.furniture) ? room.furniture : [];
   const isCustomer = isAuthenticated && role?.toUpperCase() === "CUSTOMER";
 
   const handleStayDateChange = (event) => {
@@ -162,13 +163,13 @@ const RoomDetailPage = () => {
               <section className={styles.panel} style={{ marginTop: 18 }}>
                 <h2>Furniture</h2>
                 <ul className={styles.iconList}>
-                  {furniture.map((item) => (
-                    <li key={item.name}>
+                  {furniture.map((item, index) => (
+                    <li key={item.name || item.id || `${roomId}-${index}`}>
                       {(() => {
                         const Icon = getFurnitureIcon(item.name);
                         return <Icon size={18} />;
                       })()}
-                      <span>{item.name}</span>
+                      <span>{item.name || "Furniture"}</span>
                     </li>
                   ))}
                 </ul>

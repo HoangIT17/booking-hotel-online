@@ -43,7 +43,8 @@ const BookingPage = () => {
     const fetchRoom = async () => {
       if (!roomId) return;
       const response = await customerBookingService.getRoomDetail(roomId);
-      setRoom(getResponseData(response));
+      const responseData = getResponseData(response);
+      setRoom(responseData?.data ?? responseData);
     };
 
     fetchRoom();
